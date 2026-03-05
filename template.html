@@ -107,6 +107,45 @@
       background: var(--surface-alt);
     }
 
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .metric-card {
+      border: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .metric-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .metric-card__value {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .metric-card__label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .metric-card__trend {
+      font-size: 0.75rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .metric-card__trend--up { color: var(--ink); }
+    .metric-card__trend--down { color: var(--ink-faint); }
+
     @media (prefers-reduced-motion) {
       * {
         animation-duration: 0s !important;
@@ -139,6 +178,32 @@
       <li>Enterprise features must benefit all tiers</li>
       <li>Maintain sub-200ms p95 response times</li>
     </ul>
+  </section>
+
+  <section class="section section--wide" id="metrics">
+    <h2>Key Metrics</h2>
+    <div class="metrics">
+      <div class="metric-card" data-animate>
+        <span class="metric-card__trend metric-card__trend--up">&#9650;</span>
+        <span class="metric-card__value" data-count="12000">12,000</span>
+        <span class="metric-card__label">Active Teams</span>
+      </div>
+      <div class="metric-card" data-animate>
+        <span class="metric-card__trend metric-card__trend--up">&#9650;</span>
+        <span class="metric-card__value" data-count="2.4">$2.4M</span>
+        <span class="metric-card__label">Monthly Recurring Revenue</span>
+      </div>
+      <div class="metric-card" data-animate>
+        <span class="metric-card__trend metric-card__trend--up">&#9650;</span>
+        <span class="metric-card__value" data-count="94">94%</span>
+        <span class="metric-card__label">30-Day Retention</span>
+      </div>
+      <div class="metric-card" data-animate>
+        <span class="metric-card__trend metric-card__trend--down">&#9660;</span>
+        <span class="metric-card__value" data-count="142">142ms</span>
+        <span class="metric-card__label">P95 Response Time</span>
+      </div>
+    </div>
   </section>
 </body>
 </html>
