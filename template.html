@@ -73,6 +73,40 @@
       padding-left: 1.5em;
     }
 
+    .hero {
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero__meta {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 16px;
+    }
+
+    .hero__title {
+      font-size: 3.5rem;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero__subtitle {
+      font-size: 1.25rem;
+      color: var(--ink-light);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .callout {
+      border-left: 3px solid var(--ink);
+      padding: 16px 24px;
+      margin: 24px 0;
+      background: var(--surface-alt);
+    }
+
     @media (prefers-reduced-motion) {
       * {
         animation-duration: 0s !important;
@@ -83,6 +117,28 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <!-- Components will be added in subsequent tasks -->
+  <header class="hero">
+    <p class="hero__meta">March 2026 &middot; Product Team</p>
+    <h1 class="hero__title">Q3 Product Strategy</h1>
+    <p class="hero__subtitle">Scaling our core platform while expanding into enterprise segments</p>
+  </header>
+
+  <section class="section" id="overview">
+    <h2>Strategic Overview</h2>
+    <p>Our platform has reached a critical inflection point. With <strong>12,000 active teams</strong> and accelerating growth in the mid-market segment, we're positioned to capture the enterprise opportunity without sacrificing our core product simplicity.</p>
+    <p>This document outlines our three-pronged approach for Q3: deepening platform capabilities, expanding our go-to-market motion, and investing in the infrastructure that will support our next phase of growth.</p>
+
+    <div class="callout">
+      <p><strong>Key Insight:</strong> Enterprise prospects consistently cite our ease of onboarding as the primary differentiator. Any enterprise features must preserve this advantage.</p>
+    </div>
+
+    <h3>Guiding Principles</h3>
+    <ul>
+      <li>Ship incrementally -- no quarter-long feature bets</li>
+      <li>Measure adoption within 2 weeks of launch</li>
+      <li>Enterprise features must benefit all tiers</li>
+      <li>Maintain sub-200ms p95 response times</li>
+    </ul>
+  </section>
 </body>
 </html>
