@@ -188,6 +188,83 @@
       background: var(--surface-alt);
     }
 
+    /* Flow */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .flow__step {
+      border: 1px solid var(--border);
+      padding: 24px 20px;
+      text-align: center;
+      flex: 0 1 160px;
+    }
+    .flow__icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--surface);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin: 0 auto 12px;
+    }
+    .flow__content strong { display: block; margin-bottom: 4px; }
+    .flow__content span { font-size: 0.8rem; color: var(--ink-light); }
+    .flow__arrow { color: var(--ink-faint); font-size: 1.5rem; }
+
+    @media (max-width: 640px) {
+      .flow { flex-direction: column; }
+      .flow__arrow { transform: rotate(90deg); }
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      margin-top: 32px;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .timeline__item {
+      position: relative;
+      margin-bottom: 48px;
+    }
+    .timeline__item::before {
+      content: '';
+      position: absolute;
+      left: -40px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      background: var(--surface);
+    }
+    .timeline__date {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 4px;
+    }
+    .timeline__content strong { display: block; margin-bottom: 4px; }
+    .timeline__content p { color: var(--ink-light); font-size: 0.95rem; }
+
     @media (prefers-reduced-motion) {
       * {
         animation-duration: 0s !important;
@@ -285,6 +362,79 @@
           <tr><td>Enterprise Onboarding</td><td>Sep 15</td><td>Growth Team</td><td>Not Started</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section class="section section--wide" id="process">
+    <h2>Go-to-Market Process</h2>
+    <p>Our refined enterprise sales motion, from first touch to expansion.</p>
+    <div class="flow">
+      <div class="flow__step" data-animate>
+        <div class="flow__icon">1</div>
+        <div class="flow__content">
+          <strong>Inbound Lead</strong>
+          <span>Website, referral, or content</span>
+        </div>
+      </div>
+      <div class="flow__arrow">&rarr;</div>
+      <div class="flow__step" data-animate>
+        <div class="flow__icon">2</div>
+        <div class="flow__content">
+          <strong>Product Trial</strong>
+          <span>14-day guided experience</span>
+        </div>
+      </div>
+      <div class="flow__arrow">&rarr;</div>
+      <div class="flow__step" data-animate>
+        <div class="flow__icon">3</div>
+        <div class="flow__content">
+          <strong>Sales Engagement</strong>
+          <span>Demo + technical review</span>
+        </div>
+      </div>
+      <div class="flow__arrow">&rarr;</div>
+      <div class="flow__step" data-animate>
+        <div class="flow__icon">4</div>
+        <div class="flow__content">
+          <strong>Contract</strong>
+          <span>Annual commitment</span>
+        </div>
+      </div>
+      <div class="flow__arrow">&rarr;</div>
+      <div class="flow__step" data-animate>
+        <div class="flow__icon">5</div>
+        <div class="flow__content">
+          <strong>Expansion</strong>
+          <span>Upsell + referrals</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="roadmap">
+    <h2>Q3 Roadmap</h2>
+    <div class="timeline">
+      <div class="timeline__item" data-animate>
+        <div class="timeline__date">July</div>
+        <div class="timeline__content">
+          <strong>Foundation Phase</strong>
+          <p>SSO integration, audit logging infrastructure, enterprise trial flow.</p>
+        </div>
+      </div>
+      <div class="timeline__item" data-animate>
+        <div class="timeline__date">August</div>
+        <div class="timeline__content">
+          <strong>Build Phase</strong>
+          <p>Advanced analytics dashboard, custom roles and permissions, API rate limiting.</p>
+        </div>
+      </div>
+      <div class="timeline__item" data-animate>
+        <div class="timeline__date">September</div>
+        <div class="timeline__content">
+          <strong>Launch Phase</strong>
+          <p>Enterprise onboarding experience, dedicated support tier, case study publication.</p>
+        </div>
+      </div>
     </div>
   </section>
 
