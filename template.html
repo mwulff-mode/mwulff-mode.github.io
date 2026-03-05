@@ -265,6 +265,36 @@
     .timeline__content strong { display: block; margin-bottom: 4px; }
     .timeline__content p { color: var(--ink-light); font-size: 0.95rem; }
 
+    /* Comparison */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+    .comparison__panel {
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+    .comparison__panel h4 { margin-bottom: 16px; text-align: center; }
+    .comparison__placeholder svg { width: 100%; height: auto; }
+
+    /* Caption */
+    .caption {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      text-align: center;
+      margin-top: 16px;
+      font-style: italic;
+    }
+
+    /* Figure */
+    .figure { margin-top: 32px; }
+
+    @media (max-width: 640px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+
     @media (prefers-reduced-motion) {
       * {
         animation-duration: 0s !important;
@@ -436,6 +466,59 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="section section--wide" id="comparison">
+    <h2>Current vs. Proposed Architecture</h2>
+    <div class="comparison">
+      <div class="comparison__panel">
+        <h4>Current</h4>
+        <div class="comparison__placeholder">
+          <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+            <rect x="100" y="20" width="200" height="210" rx="4" fill="none" stroke="#111" stroke-width="2"/>
+            <text x="200" y="70" text-anchor="middle" font-size="14" fill="#111" font-weight="bold">Monolith</text>
+            <line x1="120" y1="90" x2="280" y2="90" stroke="#e0e0e0"/>
+            <text x="200" y="115" text-anchor="middle" font-size="12" fill="#666">API + Auth + Data</text>
+            <text x="200" y="140" text-anchor="middle" font-size="12" fill="#666">Processing</text>
+            <text x="200" y="165" text-anchor="middle" font-size="12" fill="#666">Storage</text>
+            <text x="200" y="205" text-anchor="middle" font-size="11" fill="#999">Single deployment</text>
+          </svg>
+        </div>
+      </div>
+      <div class="comparison__panel">
+        <h4>Proposed</h4>
+        <div class="comparison__placeholder">
+          <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="20" width="110" height="70" rx="4" fill="none" stroke="#111" stroke-width="2"/>
+            <text x="75" y="60" text-anchor="middle" font-size="12" fill="#111">API Gateway</text>
+            <rect x="150" y="20" width="110" height="70" rx="4" fill="none" stroke="#111" stroke-width="2"/>
+            <text x="205" y="60" text-anchor="middle" font-size="12" fill="#111">Auth Service</text>
+            <rect x="280" y="20" width="110" height="70" rx="4" fill="none" stroke="#111" stroke-width="2"/>
+            <text x="335" y="60" text-anchor="middle" font-size="12" fill="#111">Analytics</text>
+            <rect x="85" y="130" width="110" height="70" rx="4" fill="none" stroke="#111" stroke-width="2"/>
+            <text x="140" y="170" text-anchor="middle" font-size="12" fill="#111">Core Platform</text>
+            <rect x="215" y="130" width="110" height="70" rx="4" fill="none" stroke="#111" stroke-width="2"/>
+            <text x="270" y="170" text-anchor="middle" font-size="12" fill="#111">Data Store</text>
+            <line x1="75" y1="90" x2="140" y2="130" stroke="#999" stroke-width="1"/>
+            <line x1="205" y1="90" x2="140" y2="130" stroke="#999" stroke-width="1"/>
+            <line x1="335" y1="90" x2="270" y2="130" stroke="#999" stroke-width="1"/>
+            <line x1="195" y1="165" x2="215" y2="165" stroke="#999" stroke-width="1"/>
+            <text x="200" y="230" text-anchor="middle" font-size="11" fill="#999">Independent services</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Side-by-side comparison of current monolithic architecture versus proposed service-oriented approach.</p>
+  </section>
+
+  <section class="section" id="mockup">
+    <h2>Proposed Dashboard Redesign</h2>
+    <figure class="figure">
+      <div class="figure__placeholder" style="aspect-ratio: 16/9; background: var(--surface-alt); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">
+        <span style="color: var(--ink-faint); font-size: 0.9rem;">Image: dashboard-mockup.png</span>
+      </div>
+      <figcaption class="caption">Early wireframe of the enterprise analytics dashboard showing team-level insights.</figcaption>
+    </figure>
   </section>
 
   <script>
