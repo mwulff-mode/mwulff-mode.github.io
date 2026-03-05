@@ -295,6 +295,77 @@
       .comparison { grid-template-columns: 1fr; }
     }
 
+    /* Table of Contents */
+    .toc {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 220px;
+      height: 100vh;
+      padding: 32px 16px;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    .toc__toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 101;
+      background: var(--surface);
+    }
+    .toc__list {
+      list-style: none;
+      padding: 0;
+      margin-top: 16px;
+    }
+    .toc__list li {
+      margin-bottom: 8px;
+    }
+    .toc__list a {
+      color: var(--ink-light);
+      text-decoration: none;
+      font-size: 0.8rem;
+      display: block;
+      padding: 4px 8px;
+      border-left: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .toc__list a:hover {
+      color: var(--ink);
+    }
+    .toc__list a.active {
+      color: var(--ink);
+      border-left-color: var(--ink);
+      font-weight: 600;
+    }
+    .content {
+      margin-left: 220px;
+    }
+    @media (max-width: 768px) {
+      .toc {
+        transform: translateX(-100%);
+        width: 260px;
+      }
+      .toc.open {
+        transform: translateX(0);
+      }
+      .toc__toggle {
+        display: block;
+      }
+      .content {
+        margin-left: 0;
+      }
+    }
+
     @media (prefers-reduced-motion) {
       * {
         animation-duration: 0s !important;
@@ -305,6 +376,11 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+  <nav class="toc" id="toc">
+    <button class="toc__toggle" aria-label="Toggle table of contents">&#9776;</button>
+    <ul class="toc__list"></ul>
+  </nav>
+  <main class="content">
   <header class="hero">
     <p class="hero__meta">March 2026 &middot; Product Team</p>
     <h1 class="hero__title">Q3 Product Strategy</h1>
@@ -520,6 +596,7 @@
       <figcaption class="caption">Early wireframe of the enterprise analytics dashboard showing team-level insights.</figcaption>
     </figure>
   </section>
+  </main>
 
   <script>
     function renderBarChart() {
@@ -800,6 +877,48 @@
       renderBarChart();
       renderLineChart();
       renderDonutChart();
+
+      // TOC: auto-populate from h2 elements
+      const tocList = document.querySelector('.toc__list');
+      const sections = document.querySelectorAll('section[id]');
+      sections.forEach(section => {
+        const h2 = section.querySelector('h2');
+        if (!h2) return;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + section.id;
+        a.textContent = h2.textContent;
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+
+      // TOC: highlight current section on scroll
+      const tocLinks = tocList.querySelectorAll('a');
+      const tocObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(link => link.classList.remove('active'));
+            const activeLink = tocList.querySelector('a[href="#' + entry.target.id + '"]');
+            if (activeLink) activeLink.classList.add('active');
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '-10% 0px -80% 0px' });
+
+      sections.forEach(section => tocObserver.observe(section));
+
+      // TOC: mobile toggle
+      const tocToggle = document.querySelector('.toc__toggle');
+      const toc = document.querySelector('.toc');
+      tocToggle.addEventListener('click', () => {
+        toc.classList.toggle('open');
+      });
+
+      // Close TOC on link click (mobile)
+      tocLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          toc.classList.remove('open');
+        });
+      });
     });
   </script>
 </body>
