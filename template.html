@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q3 Product Strategy -- Presenter</title>
+  <style>
+    :root {
+      --ink: #111;
+      --ink-light: #666;
+      --ink-faint: #999;
+      --surface: #fff;
+      --surface-alt: #f7f7f7;
+      --border: #e0e0e0;
+      --accent: #111;
+      --content-width: 720px;
+      --wide-width: 960px;
+      --section-gap: 96px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 18px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      line-height: 1.6;
+    }
+
+    .section {
+      padding: var(--section-gap) 24px;
+      max-width: var(--content-width);
+      margin: 0 auto;
+    }
+
+    .section--wide {
+      max-width: var(--wide-width);
+    }
+
+    .section--alt {
+      background: var(--surface-alt);
+      max-width: none;
+    }
+
+    .section--alt > .section__inner {
+      max-width: var(--content-width);
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4 {
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5em;
+    }
+
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.4rem; }
+    h4 { font-size: 1.1rem; }
+
+    p { margin-bottom: 1em; }
+
+    ul, ol {
+      margin-bottom: 1em;
+      padding-left: 1.5em;
+    }
+
+    @media (prefers-reduced-motion) {
+      * {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+      }
+    }
+  </style>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <!-- Components will be added in subsequent tasks -->
+</body>
+</html>
