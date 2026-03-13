@@ -39,7 +39,7 @@ designed for startup teams (GMs, PMs, developers, designers).
 6. Use imagery, charts, and interactive objects when they improve comprehension, but never as decoration. Every visual should make the message faster to understand.
 7. Choose an art direction before coding: define the reading mood, the typography hierarchy,
    and where asymmetry or full-bleed moments should appear
-8. Generate a single HTML file in `output/` named descriptively
+8. Generate a single HTML file in `docs/` named descriptively
 9. Reference `template.html` for all component patterns, CSS variables, and JS patterns
 
 ## Component Reference
@@ -102,9 +102,9 @@ same spacing grid, purposeful animation.
 
 ## Output
 
-Save generated files to: `output/<descriptive-name>.html`
+Save generated files to: `docs/<descriptive-name>.html`
 
 Examples:
-- `output/q3-product-strategy.html`
-- `output/user-onboarding-redesign.html`
-- `output/infrastructure-migration-plan.html`
+- `docs/q3-product-strategy.html`
+- `docs/user-onboarding-redesign.html`
+- `docs/infrastructure-migration-plan.html`
