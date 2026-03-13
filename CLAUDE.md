@@ -17,11 +17,15 @@ designed for startup teams (GMs, PMs, developers, designers).
    this help the reader understand?" If the answer is "nothing" -- skip it
 4. **Professional, not flashy** -- high-end editorial feel, like a strategy memo
 5. **Self-contained** -- single HTML file, inline CSS/JS, D3.js from CDN only
+6. **Editorial art direction** -- prefer serif display type with a restrained sans body, warm paper surfaces, fine dividers, and strong visual rhythm
+7. **Restraint over dashboard chrome** -- avoid colorful accents, generic app cards, and default SaaS-looking layouts unless the content truly needs them
 
 ## How to Generate a Presentation
 
 1. Read the concept document the user provides
-2. Identify sections and their content types:
+2. Challenge the brief before coding. If the input is broad, ask a small number of high-value questions that force scope, audience, decision, and desired length into focus.
+3. Slim the story down to the essential sections. Prefer fewer, stronger sections over covering every detail from the source material.
+4. Identify sections and their content types:
    - Narrative/text -> headings, paragraphs, callouts
    - Key numbers -> metric cards
    - Trends/comparisons -> D3.js charts (bar, line, donut)
@@ -29,11 +33,14 @@ designed for startup teams (GMs, PMs, developers, designers).
    - Structures -> SVG architecture diagrams
    - Before/after or A/B -> comparison layouts
    - Images -> figure blocks with captions
-3. Decide if any section needs a **custom visualization** -- something beyond
+5. Decide if any section needs a **custom visualization** -- something beyond
    standard components that would explain the concept better (interactive sliders,
    animated state machines, visual metaphors, etc.)
-4. Generate a single HTML file in `output/` named descriptively
-5. Reference `template.html` for all component patterns, CSS variables, and JS patterns
+6. Use imagery, charts, and interactive objects when they improve comprehension, but never as decoration. Every visual should make the message faster to understand.
+7. Choose an art direction before coding: define the reading mood, the typography hierarchy,
+   and where asymmetry or full-bleed moments should appear
+8. Generate a single HTML file in `output/` named descriptively
+9. Reference `template.html` for all component patterns, CSS variables, and JS patterns
 
 ## Component Reference
 
@@ -69,6 +76,17 @@ explained by something custom -- build it. Examples:
 
 Custom visualizations must still follow the design language: B&W palette, system fonts,
 same spacing grid, purposeful animation.
+
+## Design Taste Requirements
+
+- Start from the premise that this is closer to an editorial document than an app UI
+- Use grayscale or warm-neutral palettes first; only introduce color when it adds real explanatory value
+- Prefer composition over ornament: asymmetry, pacing, whitespace, framing, and typography should do most of the work
+- Charts should feel premium and monochrome: differentiate with weight, dash, texture, or opacity before using color
+- Avoid "template energy": default card grids, loud gradients, pill overload, or decorative motion without narrative purpose
+- Default to brevity. A good presentation informs quickly; it should not read like a book.
+- If a source document is bloated, summarize, consolidate, or cut until only the highest-signal material remains.
+- Prefer visuals over paragraphs when the visual makes the point faster. If it does not, leave it out.
 
 ## Technical Constraints
 
