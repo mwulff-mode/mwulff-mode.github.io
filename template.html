@@ -1057,6 +1057,650 @@
       transform: translateY(0);
     }
 
+    /* ---- Act Dividers ---- */
+
+    .act-divider {
+      max-width: var(--wide-width);
+      margin: 0 auto;
+      padding: clamp(48px, 6vw, 80px) var(--gutter) clamp(24px, 3vw, 40px);
+      text-align: center;
+      position: relative;
+    }
+
+    .act-divider + .section {
+      padding-top: clamp(32px, 4vw, 56px);
+    }
+
+    .act-divider::before {
+      content: "";
+      position: absolute;
+      left: var(--gutter);
+      right: var(--gutter);
+      top: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong) 20%, var(--border-strong) 80%, transparent);
+    }
+
+    .act-divider__label {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      padding: 8px 24px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+    }
+
+    .act-divider__title {
+      font-family: var(--serif);
+      font-size: clamp(3.2rem, 7vw, 5.8rem);
+      letter-spacing: -0.04em;
+      margin-top: 24px;
+      line-height: 1;
+    }
+
+    .act-divider__sub {
+      font-size: 1rem;
+      color: var(--ink-light);
+      margin-top: 10px;
+      text-align: center;
+      max-width: none;
+    }
+
+    /* ---- Alignment Cards ---- */
+
+    .alignment-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .alignment-cards .card {
+      background: linear-gradient(180deg, var(--panel-highlight), rgba(255, 255, 255, 0)), var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px 20px 20px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .alignment-cards .card__label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+
+    .alignment-cards .card__body {
+      font-size: 0.96rem;
+      line-height: 1.55;
+      color: var(--ink-light);
+    }
+
+    /* ---- Intro Cards ---- */
+
+    .intro-cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+      max-width: var(--content-width);
+    }
+
+    .intro-card {
+      background: linear-gradient(180deg, var(--panel-highlight), rgba(255, 255, 255, 0)), var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 24px 24px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .intro-card__kicker {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+    }
+
+    .intro-card__name {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .intro-card__desc {
+      font-size: 0.92rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ---- Swatch Row ---- */
+
+    .swatch-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .swatch__circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .swatch__label {
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .swatch__hex {
+      font-size: 0.7rem;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+    }
+
+    /* ---- Type Specimen ---- */
+
+    .type-specimen {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: clamp(32px, 5vw, 56px);
+      margin-top: 28px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+      background: var(--surface);
+    }
+
+    .type-specimen__headline {
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 500;
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+
+    .type-specimen__display {
+      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .type-specimen__body {
+      font-size: clamp(1rem, 1.8vw, 1.3rem);
+      font-weight: 400;
+      color: var(--ink-faint);
+    }
+
+    /* ---- Screen Grid ---- */
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .screen-grid figure { margin: 0; }
+
+    .screen-grid img {
+      width: 100%;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+    }
+
+    /* ---- Illustration Row ---- */
+
+    .illustration-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .illustration-row figure { margin: 0; text-align: center; }
+
+    .illustration-row img {
+      width: 100%;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+    }
+
+    .illustration-row .caption { text-align: center; margin-top: 10px; }
+
+    /* ---- Character Showcase ---- */
+
+    .character-showcase {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .character-showcase figure { margin: 0; text-align: center; }
+
+    .character-showcase img {
+      width: 100%;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+    }
+
+    .character-showcase .caption { text-align: center; margin-top: 10px; }
+
+    /* ---- Voice Bubbles ---- */
+
+    .voice-examples {
+      margin-top: 28px;
+      max-width: var(--content-width);
+    }
+
+    .voice-bubble {
+      background: linear-gradient(180deg, var(--panel-highlight), rgba(255, 255, 255, 0)), var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+      max-width: 520px;
+    }
+
+    .voice-bubble__context {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .voice-bubble__text {
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      margin: 0;
+      font-style: italic;
+    }
+
+    /* ---- Prototype Link ---- */
+
+    .prototype-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 48px;
+      padding: 22px 36px;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius-md);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s ease, box-shadow 0.3s ease;
+      max-width: 480px;
+    }
+
+    .prototype-link:hover {
+      transform: translateY(-3px);
+      background: var(--ink);
+      color: var(--surface);
+      box-shadow: var(--shadow-deep);
+    }
+
+    /* ---- Feedback Grid ---- */
+
+    .feedback-grid {
+      margin-top: 36px;
+      max-width: var(--content-width);
+    }
+
+    .feedback-grid__dimension {
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-align: center;
+      margin-top: 28px;
+      margin-bottom: 6px;
+    }
+
+    .feedback-grid__row {
+      display: grid;
+      grid-template-columns: 140px 1fr 140px;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 0 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feedback-grid__row:last-child { border-bottom: none; }
+
+    .feedback-grid__label-left {
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    .feedback-grid__label-right {
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    .feedback-grid__scale {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .feedback-grid__dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .feedback-grid__dot:hover {
+      border-color: var(--ink-light);
+      transform: scale(1.15);
+    }
+
+    .feedback-grid__dot.selected {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* ---- Feedback Words ---- */
+
+    .feedback-words {
+      max-width: var(--content-width);
+      margin-top: 48px;
+    }
+
+    .feedback-words__input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--panel-bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.5;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.2s ease;
+    }
+
+    .feedback-words__input:focus {
+      outline: none;
+      border-color: var(--ink-light);
+    }
+
+    .feedback-words__input::placeholder { color: var(--ink-faint); }
+
+    /* ---- Direction Slider ---- */
+
+    .direction-slider {
+      max-width: var(--content-width);
+      margin-top: 36px;
+    }
+
+    .direction-slider__labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .direction-slider__label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink-light);
+    }
+
+    .direction-slider__input {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--ink) 0%, var(--border-strong) 50%, var(--ink) 100%);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .direction-slider__input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface-contrast);
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .direction-slider__input::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    .direction-slider__input::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface-contrast);
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+    }
+
+    .direction-slider__value {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: var(--ink-faint);
+    }
+
+    /* ---- Floating Feedback Panel ---- */
+
+    .feedback-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 320px;
+      max-height: calc(100vh - 48px);
+      background: linear-gradient(180deg, var(--panel-highlight-strong), rgba(255, 255, 255, 0)), var(--panel-bg-strong);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-deep);
+      backdrop-filter: blur(20px);
+      z-index: 90;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.4s cubic-bezier(0.19, 1, 0.22, 1), transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .feedback-float.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .feedback-float.collapsed .feedback-float__body,
+    .feedback-float.collapsed .feedback-float__footer { display: none; }
+
+    .feedback-float__header {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .feedback-float__title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .feedback-float__collapse {
+      background: none;
+      border: none;
+      color: var(--ink-faint);
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .feedback-float__collapse:hover {
+      background: var(--active-fill);
+      color: var(--ink);
+    }
+
+    .feedback-float__body {
+      padding: 14px 18px;
+      overflow-y: auto;
+      flex: 1;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: var(--ink-light);
+    }
+
+    .feedback-float__group { margin-bottom: 14px; }
+
+    .feedback-float__group-title {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 6px;
+    }
+
+    .feedback-float__line {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+    }
+
+    .feedback-float__dim { color: var(--ink-light); }
+
+    .feedback-float__val {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .feedback-float__note {
+      margin-top: 4px;
+      font-style: italic;
+      color: var(--ink-faint);
+      font-size: 0.8rem;
+      word-break: break-word;
+    }
+
+    .feedback-float__footer {
+      padding: 12px 18px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feedback-float__copy {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border: none;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--surface);
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s ease;
+    }
+
+    .feedback-float__copy:hover { transform: translateY(-1px); }
+
+    .feedback-float__copied {
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feedback-float__copied.visible { opacity: 1; }
+
+    /* ---- TOC Group Headers ---- */
+
+    .toc__group {
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      padding: 18px 14px 6px;
+      margin-top: 4px;
+      border-top: 1px solid var(--border);
+      list-style: none;
+    }
+
+    .toc__group:first-child {
+      border-top: none;
+      padding-top: 10px;
+    }
+
     @media (max-width: 1120px) {
       :root {
         --rail-width: 0px;
@@ -1097,7 +1741,8 @@
       .hero__grid,
       .simulator,
       .comparison,
-      .metrics {
+      .metrics,
+      .intro-cards {
         grid-template-columns: 1fr;
       }
 
@@ -1107,6 +1752,16 @@
 
       .flow::before {
         display: none;
+      }
+
+      .screen-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .feedback-float {
+        width: calc(100vw - 32px);
+        right: 16px;
+        bottom: 16px;
       }
 
       .hero__facts {
@@ -1594,7 +2249,251 @@
         </div>
       </div>
     </section>
+
+    <!-- ================================================================
+         ACT DIVIDER
+         Visual separator between major presentation acts.
+         Use data attributes or inner elements for the label and title.
+    ================================================================= -->
+    <div class="act-divider" id="act-a">
+      <span class="act-divider__label">Direction A</span>
+      <h2 class="act-divider__title">Example Direction</h2>
+      <p class="act-divider__sub">A brief subtitle describing this act</p>
+    </div>
+
+    <!-- ================================================================
+         INTRO CARDS
+         Two-column cards for comparing directions or options.
+    ================================================================= -->
+    <section class="section" id="intro-cards-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Approach</p>
+        <h2 class="section__title">Two Directions</h2>
+        <p class="section__lede">Compare two approaches side by side.</p>
+      </div>
+      <div class="intro-cards" data-animate>
+        <div class="intro-card">
+          <span class="intro-card__label">Option A</span>
+          <h3 class="intro-card__title">The Tool</h3>
+          <p class="intro-card__desc">Efficient, stays out of the way, focused on clarity.</p>
+        </div>
+        <div class="intro-card">
+          <span class="intro-card__label">Option B</span>
+          <h3 class="intro-card__title">The Assistant</h3>
+          <p class="intro-card__desc">Conversational, builds a relationship, warm and guiding.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SWATCH ROW
+         Display a color palette with hex labels.
+    ================================================================= -->
+    <section class="section" id="swatch-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Palette</p>
+        <h2 class="section__title">Color Swatches</h2>
+      </div>
+      <div class="swatch-row" data-animate>
+        <div class="swatch" style="--swatch-color: #2D5A3D">
+          <div class="swatch__color"></div>
+          <span class="swatch__label">#2D5A3D</span>
+        </div>
+        <div class="swatch" style="--swatch-color: #6B8F71">
+          <div class="swatch__color"></div>
+          <span class="swatch__label">#6B8F71</span>
+        </div>
+        <div class="swatch" style="--swatch-color: #D4A574">
+          <div class="swatch__color"></div>
+          <span class="swatch__label">#D4A574</span>
+        </div>
+        <div class="swatch" style="--swatch-color: #E8C9A0">
+          <div class="swatch__color"></div>
+          <span class="swatch__label">#E8C9A0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         TYPE SPECIMEN
+         Show a font family with sample characters and sizes.
+    ================================================================= -->
+    <section class="section" id="type-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Typography</p>
+        <h2 class="section__title">Type Specimen</h2>
+      </div>
+      <div class="type-specimen" data-animate>
+        <div class="type-specimen__sample" style="font-family: Georgia, serif; font-size: 3rem; letter-spacing: -0.03em">
+          Aa Bb Cc Dd
+        </div>
+        <div class="type-specimen__meta">
+          <span class="type-specimen__name">Georgia</span>
+          <span class="type-specimen__style">Serif &middot; Display</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         SCREEN GRID
+         Grid of app screenshots or mockup images.
+         Replace src with base64-encoded images or paths.
+    ================================================================= -->
+    <section class="section section--wide" id="screens-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Screens</p>
+        <h2 class="section__title">App Screenshots</h2>
+        <p class="section__lede">Key screens from the design direction.</p>
+      </div>
+      <div class="screen-grid" data-animate>
+        <!-- Replace src with actual screenshots (base64 or relative path) -->
+        <figure class="screen-grid__item">
+          <div style="width:100%;aspect-ratio:9/16;background:var(--surface-strong);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:0.82rem">Screen 1</div>
+          <figcaption>Start</figcaption>
+        </figure>
+        <figure class="screen-grid__item">
+          <div style="width:100%;aspect-ratio:9/16;background:var(--surface-strong);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:0.82rem">Screen 2</div>
+          <figcaption>Profile</figcaption>
+        </figure>
+        <figure class="screen-grid__item">
+          <div style="width:100%;aspect-ratio:9/16;background:var(--surface-strong);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:0.82rem">Screen 3</div>
+          <figcaption>Dashboard</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         VOICE BUBBLES
+         Show conversational tone examples with context labels.
+    ================================================================= -->
+    <section class="section" id="voice-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Voice &amp; Tone</p>
+        <h2 class="section__title">How It Speaks</h2>
+      </div>
+      <div class="voice-bubbles" data-animate>
+        <div class="voice-bubble">
+          <span class="voice-bubble__context">Onboarding</span>
+          <p class="voice-bubble__text">"Welcome! Let's get you set up in under a minute."</p>
+        </div>
+        <div class="voice-bubble">
+          <span class="voice-bubble__context">Achievement</span>
+          <p class="voice-bubble__text">"Nice work -- you just completed your first task."</p>
+        </div>
+        <div class="voice-bubble">
+          <span class="voice-bubble__context">Encouragement</span>
+          <p class="voice-bubble__text">"You're on a 5-day streak. Keep it going!"</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         PROTOTYPE LINK
+         Call-to-action linking to an interactive prototype.
+    ================================================================= -->
+    <section class="section" id="prototype-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Interactive</p>
+        <h2 class="section__title">Try the Prototype</h2>
+      </div>
+      <a class="prototype-link" href="#" target="_blank" data-animate>
+        <span class="prototype-link__icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </span>
+        <span class="prototype-link__text">
+          <strong>Open clickable prototype</strong>
+          <small>Interactive walkthrough of the flow</small>
+        </span>
+        <svg class="prototype-link__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </section>
+
+    <!-- ================================================================
+         FEEDBACK GRID
+         Bipolar 5-dot scale for stakeholder feedback.
+         Each row has a data-dimension and data-grid linking to a grid ID.
+    ================================================================= -->
+    <section class="section" id="feedback-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Your Input</p>
+        <h2 class="section__title">Feedback</h2>
+        <p class="section__lede">Click a dot on each row to place your rating.</p>
+      </div>
+      <div class="feedback-grid" id="demo-feedback-grid" data-animate>
+        <div class="feedback-grid__dimension">
+          <div class="feedback-grid__row" data-dimension="clarity" data-grid="demo-feedback-grid">
+            <span class="feedback-grid__label-left">Unclear</span>
+            <div class="feedback-grid__scale">
+              <button class="feedback-grid__dot" data-value="1" aria-label="1"></button>
+              <button class="feedback-grid__dot" data-value="2" aria-label="2"></button>
+              <button class="feedback-grid__dot" data-value="3" aria-label="3"></button>
+              <button class="feedback-grid__dot" data-value="4" aria-label="4"></button>
+              <button class="feedback-grid__dot" data-value="5" aria-label="5"></button>
+            </div>
+            <span class="feedback-grid__label-right">Very Clear</span>
+          </div>
+        </div>
+        <div class="feedback-grid__dimension">
+          <div class="feedback-grid__row" data-dimension="appeal" data-grid="demo-feedback-grid">
+            <span class="feedback-grid__label-left">Not Appealing</span>
+            <div class="feedback-grid__scale">
+              <button class="feedback-grid__dot" data-value="1" aria-label="1"></button>
+              <button class="feedback-grid__dot" data-value="2" aria-label="2"></button>
+              <button class="feedback-grid__dot" data-value="3" aria-label="3"></button>
+              <button class="feedback-grid__dot" data-value="4" aria-label="4"></button>
+              <button class="feedback-grid__dot" data-value="5" aria-label="5"></button>
+            </div>
+            <span class="feedback-grid__label-right">Very Appealing</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback text input -->
+      <div class="feedback-words">
+        <textarea class="feedback-words__input" id="demo-feedback-words" rows="3" placeholder="Any additional thoughts..."></textarea>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         DIRECTION SLIDER
+         Range input for A/B preference voting.
+    ================================================================= -->
+    <section class="section" id="slider-demo">
+      <div class="section__intro">
+        <p class="section__eyebrow">Your Vote</p>
+        <h2 class="section__title">Where Do You Lean?</h2>
+      </div>
+      <div class="direction-slider" data-animate>
+        <div class="direction-slider__labels">
+          <span class="direction-slider__label">Option A</span>
+          <span class="direction-slider__label">Option B</span>
+        </div>
+        <input type="range" class="direction-slider__input" id="demo-direction-slider" min="1" max="5" value="3">
+        <div class="direction-slider__value" id="demo-slider-value">Neutral</div>
+      </div>
+    </section>
   </main>
+
+  <!-- ================================================================
+       FLOATING FEEDBACK PANEL
+       Appears when the user enters any feedback. Accumulates all
+       ratings, comments, and slider position into one copyable block.
+  ================================================================= -->
+  <div class="feedback-float" id="feedback-float">
+    <div class="feedback-float__header">
+      <span class="feedback-float__title">Your Feedback</span>
+      <button class="feedback-float__collapse" id="feedback-float-toggle">Collapse</button>
+    </div>
+    <div class="feedback-float__body" id="feedback-float-body"></div>
+    <div class="feedback-float__footer">
+      <button class="feedback-float__copy" id="feedback-float-copy">Copy to clipboard</button>
+      <span class="feedback-float__copied" id="feedback-float-copied">Copied!</span>
+    </div>
+  </div>
 
   <div class="tooltip" id="tooltip"></div>
 
@@ -2395,23 +3294,50 @@
         clearAndRenderCharts();
       });
 
+      // --- TOC: build with act-divider grouping ---
       const toc = document.getElementById('toc');
       const tocToggle = document.getElementById('toc-toggle');
       const tocBackdrop = document.getElementById('toc-backdrop');
       const tocList = toc.querySelector('.toc__list');
-      const sections = document.querySelectorAll('section[id]');
+      const contentEl = document.querySelector('.content');
+      const children = contentEl.children;
+      let introInserted = false;
 
-      sections.forEach(function(section) {
-        const heading = section.querySelector('.section__title');
-        if (!heading) return;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
 
-        const listItem = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = '#' + section.id;
-        link.textContent = heading.textContent;
-        listItem.appendChild(link);
-        tocList.appendChild(listItem);
-      });
+        // Insert act-divider group headers
+        if (child.classList.contains('act-divider')) {
+          const title = child.querySelector('.act-divider__title');
+          const label = child.querySelector('.act-divider__label');
+          const groupItem = document.createElement('li');
+          groupItem.className = 'toc__group';
+          groupItem.textContent = (label ? label.textContent + ': ' : '') + (title ? title.textContent : '');
+          tocList.appendChild(groupItem);
+          continue;
+        }
+
+        if (child.tagName === 'SECTION' && child.id) {
+          const heading = child.querySelector('.section__title');
+          if (!heading) continue;
+
+          // Insert "Introduction" group before the first section (if no act-divider came first)
+          if (!introInserted) {
+            const introGroup = document.createElement('li');
+            introGroup.className = 'toc__group';
+            introGroup.textContent = 'Introduction';
+            tocList.appendChild(introGroup);
+            introInserted = true;
+          }
+
+          const listItem = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = '#' + child.id;
+          link.textContent = heading.textContent;
+          listItem.appendChild(link);
+          tocList.appendChild(listItem);
+        }
+      }
 
       function closeToc() {
         toc.classList.remove('open');
@@ -2429,21 +3355,169 @@
         link.addEventListener('click', closeToc);
       });
 
+      // --- TOC: scroll-based active tracking (replaces IntersectionObserver) ---
+      const allSections = document.querySelectorAll('section[id]');
       const tocLinks = tocList.querySelectorAll('a');
-      const tocObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (!entry.isIntersecting) return;
-          tocLinks.forEach(function(link) {
-            link.classList.remove('active');
-          });
-          const active = tocList.querySelector('a[href="#' + entry.target.id + '"]');
-          if (active) active.classList.add('active');
-        });
-      }, { threshold: 0.2, rootMargin: '-10% 0px -70% 0px' });
 
-      sections.forEach(function(section) {
-        tocObserver.observe(section);
+      function updateActiveToc() {
+        const scrollY = window.scrollY || window.pageYOffset;
+        let current = null;
+        for (let s = 0; s < allSections.length; s++) {
+          if (scrollY >= allSections[s].offsetTop - 120) {
+            current = allSections[s].id;
+          }
+        }
+        tocLinks.forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+      }
+
+      window.addEventListener('scroll', updateActiveToc, { passive: true });
+      updateActiveToc();
+
+      // --- Feedback grid dot click handlers ---
+      document.querySelectorAll('.feedback-grid__row[data-dimension]').forEach(function(row) {
+        const dots = row.querySelectorAll('.feedback-grid__dot');
+        dots.forEach(function(dot) {
+          dot.addEventListener('click', function() {
+            dots.forEach(function(d) { d.classList.remove('selected'); });
+            dot.classList.add('selected');
+            setTimeout(updateFloatingPanel, 10);
+          });
+        });
       });
+
+      // --- Direction slider ---
+      const dirSlider = document.getElementById('demo-direction-slider');
+      const dirSliderValue = document.getElementById('demo-slider-value');
+      const sliderLabels = {
+        '1': 'Strongly Option A',
+        '2': 'Leaning Option A',
+        '3': 'Neutral',
+        '4': 'Leaning Option B',
+        '5': 'Strongly Option B'
+      };
+      let sliderTouched = false;
+
+      if (dirSlider && dirSliderValue) {
+        function updateSliderLabel() {
+          dirSliderValue.textContent = sliderLabels[dirSlider.value];
+        }
+        dirSlider.addEventListener('input', function() {
+          sliderTouched = true;
+          updateSliderLabel();
+          updateFloatingPanel();
+        });
+        updateSliderLabel();
+      }
+
+      // --- Floating feedback panel ---
+      const feedbackFloat = document.getElementById('feedback-float');
+      const feedbackFloatBody = document.getElementById('feedback-float-body');
+      const feedbackFloatToggle = document.getElementById('feedback-float-toggle');
+      const feedbackFloatCopy = document.getElementById('feedback-float-copy');
+      const feedbackFloatCopied = document.getElementById('feedback-float-copied');
+      let hasFeedback = false;
+
+      function dotLabel(value, row) {
+        const left = row.querySelector('.feedback-grid__label-left');
+        const right = row.querySelector('.feedback-grid__label-right');
+        const l = left ? left.textContent.trim() : 'Left';
+        const r = right ? right.textContent.trim() : 'Right';
+        switch (value) {
+          case '1': return l;
+          case '2': return 'Slightly: ' + l;
+          case '3': return 'Just right';
+          case '4': return 'Slightly: ' + r;
+          case '5': return r;
+          default: return value + '/5';
+        }
+      }
+
+      function getGridFeedback(gridId) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return [];
+        const results = [];
+        grid.querySelectorAll('.feedback-grid__row[data-dimension]').forEach(function(row) {
+          const selected = row.querySelector('.feedback-grid__dot.selected');
+          if (!selected) return;
+          const dim = row.dataset.dimension;
+          results.push({ dim: dim, val: dotLabel(selected.dataset.value, row) });
+        });
+        return results;
+      }
+
+      function buildFeedbackText() {
+        const lines = ['Feedback', ''];
+        const gridFeedback = getGridFeedback('demo-feedback-grid');
+        if (gridFeedback.length > 0) {
+          lines.push('--- RATINGS ---');
+          gridFeedback.forEach(function(f) { lines.push(f.dim + ': ' + f.val); });
+        }
+        const comment = document.getElementById('demo-feedback-words');
+        if (comment && comment.value.trim()) {
+          lines.push('Notes: ' + comment.value.trim());
+        }
+        if (sliderTouched && dirSlider) {
+          lines.push('');
+          lines.push('--- DIRECTION PREFERENCE ---');
+          lines.push('Leaning: ' + sliderLabels[dirSlider.value]);
+        }
+        return lines.join('\n');
+      }
+
+      function updateFloatingPanel() {
+        if (!feedbackFloat) return;
+        const gridFeedback = getGridFeedback('demo-feedback-grid');
+        const comment = document.getElementById('demo-feedback-words');
+        const hasComment = comment && comment.value.trim();
+        hasFeedback = gridFeedback.length > 0 || sliderTouched || hasComment;
+
+        if (!hasFeedback) {
+          feedbackFloat.classList.remove('visible');
+          return;
+        }
+        feedbackFloat.classList.add('visible');
+
+        let html = '';
+        if (gridFeedback.length > 0) {
+          html += '<div class="feedback-float__group"><div class="feedback-float__group-title">Ratings</div>';
+          gridFeedback.forEach(function(f) {
+            html += '<div class="feedback-float__line"><span class="feedback-float__dim">' + f.dim + '</span><span class="feedback-float__val">' + f.val + '</span></div>';
+          });
+          html += '</div>';
+        }
+        if (hasComment) {
+          html += '<div class="feedback-float__note">' + comment.value.trim().replace(/\n/g, '<br>') + '</div>';
+        }
+        if (sliderTouched && dirSlider) {
+          html += '<div class="feedback-float__group"><div class="feedback-float__group-title">Direction</div>';
+          html += '<div class="feedback-float__line"><span class="feedback-float__val">' + sliderLabels[dirSlider.value] + '</span></div></div>';
+        }
+        feedbackFloatBody.innerHTML = html;
+      }
+
+      // Trigger panel update on text input
+      document.querySelectorAll('.feedback-words__input').forEach(function(input) {
+        input.addEventListener('input', function() { updateFloatingPanel(); });
+      });
+
+      if (feedbackFloatToggle) {
+        feedbackFloatToggle.addEventListener('click', function() {
+          feedbackFloat.classList.toggle('collapsed');
+          feedbackFloatToggle.textContent = feedbackFloat.classList.contains('collapsed') ? 'Expand' : 'Collapse';
+        });
+      }
+
+      if (feedbackFloatCopy) {
+        feedbackFloatCopy.addEventListener('click', function() {
+          const text = buildFeedbackText();
+          navigator.clipboard.writeText(text).then(function() {
+            feedbackFloatCopied.classList.add('visible');
+            setTimeout(function() { feedbackFloatCopied.classList.remove('visible'); }, 2000);
+          });
+        });
+      }
 
       const animateObserver = new IntersectionObserver(function(entries) {
         entries.forEach(function(entry) {

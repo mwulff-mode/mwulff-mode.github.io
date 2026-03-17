@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script defer src="./node_modules/@phosphor-icons/web/src/index.js"></script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --honey:       #FE9738;
+  --honey-mid:   #45170A;
+  --honey-light: #FDE1BA;
+  --honey-pale:  #FDE1BA;
+  --card-warm:   #FEFEFE;
+  --fox-ink:     #45170A;
+  --fox-orange:  #FE9738;
+  --fox-cream:   #FDE1BA;
+  --fox-white:   #FEFEFE;
+  --cream:       #FEFEFE;
+  --cream-warm:  #FDE1BA;
+  --cream-line:  #FDE1BA;
+  --ink:         #45170A;
+  --ink-mid:     rgba(69,23,10,0.72);
+  --ink-soft:    rgba(69,23,10,0.52);
+  --white:       #FEFEFE;
+}
+
+body {
+  background: linear-gradient(170deg, #FDF8EE, #FAF8F5, #F8F6F2, #FDF8EE);
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 24px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── PHONE ─── */
+.phone {
+  width: 375px;
+  height: 812px;
+  border-radius: 52px;
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.08),
+    0 24px 64px rgba(0,0,0,0.15),
+    0 4px 16px rgba(0,0,0,0.06);
+}
+.phone::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, #FEFEFE 0%, #FEFEFE 34%, rgba(254,254,254,0.92) 46%, rgba(254,254,254,0) 62%),
+    radial-gradient(ellipse 86% 42% at 50% 110%, rgba(254,151,56,0.22) 0%, transparent 68%),
+    radial-gradient(ellipse 68% 30% at 18% 104%, rgba(253,225,186,0.62) 0%, transparent 62%);
+  pointer-events: none; z-index: 0;
+}
+.phone::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(69,23,10,0.008) 0px,
+      rgba(69,23,10,0.008) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(254,254,254,0.035) 0px,
+      rgba(254,254,254,0.035) 1px,
+      transparent 1px,
+      transparent 7px
+    ),
+    radial-gradient(circle at 20% 18%, rgba(254,254,254,0.12) 0%, transparent 24%),
+    radial-gradient(circle at 78% 72%, rgba(254,151,56,0.02) 0%, transparent 20%);
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.island {
+  width: 120px; height: 33px;
+  background: #141210;
+  border-radius: 20px;
+  position: absolute; top: 10px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.status {
+  position: relative; z-index: 20;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 26px 0;
+  font-size: 13.5px; font-weight: 600; color: var(--ink);
+}
+.status-icons { display: flex; gap: 7px; align-items: center; }
+.status-icons svg { width: 15px; height: 15px; }
+
+/* ─── SCREENS ─── */
+.screen {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  padding: 54px 30px 72px;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
+}
+.screen.active { opacity: 1; pointer-events: auto; }
+
+.s {
+  opacity: 0; transform: translateY(18px);
+  transition:
+    opacity 460ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.s.v { opacity: 1; transform: translateY(0); }
+
+/* ─── SHARED ELEMENTS ─── */
+.btn {
+  width: 100%; padding: 17px 24px;
+  background: var(--honey); color: white;
+  border: none; border-radius: 16px;
+  font-family: 'Outfit', sans-serif; font-size: 16.5px; font-weight: 700;
+  cursor: pointer; letter-spacing: -0.15px;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn:hover  { filter: brightness(0.94); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0,0,0,0.08); }
+.btn:active { transform: scale(0.982); }
+.btn:disabled { background: var(--cream-line); color: var(--ink-soft); cursor: default; transform: none; box-shadow: none; }
+
+.back {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: none; background: rgba(30,26,18,0.06);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink); transition: background 0.18s, filter 0.18s;
+}
+.back:hover { filter: brightness(0.96); }
+.back .ph { font-size: 18px; line-height: 1; }
+
+/* Rule divider */
+.rule { width: 100%; height: 1px; background: var(--cream-line); flex-shrink: 0; }
+
+/* Savi float */
+.float { animation: saviFloat 3.8s ease-in-out infinite; }
+@keyframes saviFloat {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+.savi-media {
+  display: block;
+  object-fit: contain;
+}
+.savi-hero {
+  width: 240px;
+  height: 240px;
+}
+.savi-md {
+  width: 100px;
+  height: 100px;
+}
+.savi-sm {
+  width: 82px;
+  height: 82px;
+}
+.savi-xs {
+  width: 44px;
+  height: 44px;
+}
+
+/* Hidden SVG defs */
+
+/* ══════════════════════════════ */
+/*  S1 — WELCOME                 */
+/* ══════════════════════════════ */
+#s1 { align-items: center; text-align: center; justify-content: center; }
+
+.s1-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 52px; font-weight: 900; color: var(--ink);
+  letter-spacing: -2.5px; line-height: 1; margin-top: 18px;
+}
+.s1-name em { font-style: italic; color: var(--honey-mid); }
+
+.s1-tag {
+  font-size: 16px; font-weight: 400; color: var(--ink-mid);
+  line-height: 1.6; max-width: 255px; margin: 10px auto 0;
+}
+
+.btn-google { display:flex; align-items:center; justify-content:center; gap:10px; }
+.s1-legal { font-size: 11.5px; color: var(--ink-soft); margin-top: 12px; text-align: center; line-height: 1.5; }
+.s1-legal a { color: var(--ink-soft); text-decoration: underline; }
+
+/* ══════════════════════════════ */
+/*  S2 + S3 — QUESTIONS          */
+/* ══════════════════════════════ */
+.q-screen { padding-top: 54px; }
+
+.info-screen {
+  padding-top: 46px;
+}
+
+/* Removed — use s5-dialog for all centered Savi dialogs */
+
+.benefit-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.benefit-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--fox-white);
+  border: 1px solid rgba(69,23,10,0.08);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(69,23,10,0.035);
+}
+
+.benefit-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--fox-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.benefit-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.benefit-icon .ph {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.benefit-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fox-ink);
+  margin-bottom: 2px;
+}
+
+.benefit-copy {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(69,23,10,0.68);
+}
+
+.proof-wrap {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin: 26px 0 22px;
+}
+
+.proof-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.proof-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+  color: var(--fox-orange);
+}
+
+.proof-stars .ph {
+  font-size: 13px;
+}
+
+.proof-quote {
+  font-size: 14.5px;
+  font-weight: 400;
+  color: rgba(69,23,10,0.82);
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+
+.proof-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.proof-avatar {
+  width: 72px;
+  height: 92px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.proof-attr {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(69,23,10,0.62);
+}
+
+.q-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.q-dots { display: flex; gap: 6px; align-items: center; }
+.q-dot { width: 6px; height: 6px; border-radius: 3px; background: var(--cream-line); transition: all 0.3s; }
+.q-dot.on { width: 20px; background: var(--honey-mid); }
+
+/* Savi speaks */
+.savi-line {
+  display: flex; align-items: flex-start; gap: 13px; margin-bottom: 0;
+}
+.savi-line svg { flex-shrink: 0; }
+
+.savi-ask {
+  font-family: 'Bricolage Grotesque', sans-serif; font-style: normal;
+  font-size: 23px; font-weight: 600; color: var(--ink);
+  letter-spacing: -0.5px; line-height: 1.3;
+  padding-top: 6px;
+}
+
+/* Text-based radio options */
+.options { display: flex; flex-direction: column; flex: 1; }
+
+.opt {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 18px 0; border-bottom: 1px solid var(--cream-line);
+  cursor: pointer; transition: opacity 0.15s;
+}
+.opt:last-child { border-bottom: none; }
+.opt:hover { opacity: 0.75; }
+
+.opt-radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--cream-line); flex-shrink: 0; margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s ease;
+}
+.opt.on .opt-radio {
+  border-color: var(--honey); background: var(--honey);
+}
+.opt-radio svg { opacity: 0; transition: opacity 0.15s; }
+.opt.on .opt-radio svg { opacity: 1; }
+
+.opt-text { flex: 1; }
+.opt-main { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.opt-sub  { font-size: 13px; font-weight: 400; color: var(--ink-soft); }
+
+/* ══════════════════════════════ */
+/*  S4 — RECOMMENDATION          */
+/* ══════════════════════════════ */
+#s4 { padding-top: 54px; }
+
+/* rec-dialog removed — uses s5-dialog */
+.rec-sub {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink-mid);
+  letter-spacing: -0.2px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Choices (shared S4 + S5) */
+.choices { display: flex; flex-direction: column; gap: 7px; }
+.choice {
+  padding: 11px 14px;
+  border: 1.5px solid var(--cream-line);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, border-color 0.18s ease;
+  display: flex; align-items: center;
+  gap: 12px;
+  background: transparent;
+}
+.choice:hover {
+  border-color: rgba(69,23,10,0.16);
+  filter: brightness(0.98);
+}
+.choice:active { transform: scale(0.98); }
+
+.choice-emoji {
+  font-size: 18px; flex-shrink: 0;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border-radius: 0;
+  color: var(--honey-mid);
+}
+.choice-emoji .ph { font-size: 18px; line-height: 1; }
+
+.choice-body { flex: 1; min-width: 0; }
+.choice-label {
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  line-height: 1.3;
+}
+.choice-sub {
+  font-size: 12px; font-weight: 500; color: var(--ink-soft);
+  margin-top: 2px;
+}
+.choice .choice-arrow {
+  width: 16px; height: 16px; color: var(--cream-line);
+  flex-shrink: 0; transition: color 0.18s;
+  display: flex; align-items: center; justify-content: center;
+}
+.choice .choice-arrow .ph { font-size: 16px; line-height: 1; }
+.choice:hover .choice-arrow { color: var(--honey-mid); }
+
+/* Primary choice: warm amber filled */
+.choice.rec {
+  border-color: transparent;
+  background: var(--honey);
+  color: white;
+  box-shadow: none;
+}
+.choice.rec .choice-label { color: white; }
+.choice.rec .choice-sub { color: rgba(255,255,255,0.72); }
+.choice.rec .choice-arrow { color: rgba(255,255,255,0.5); }
+.choice.rec .choice-emoji { background: transparent; color: white; }
+.choice.rec:hover { border-color: transparent; filter: brightness(0.94); }
+.choice.rec:hover .choice-arrow { color: rgba(255,255,255,0.7); }
+
+/* ══════════════════════════════ */
+/*  S5 — HOME (conversation)     */
+/* ══════════════════════════════ */
+#s5 { gap: 0; }
+
+/* Savi message style */
+.savi-msg {
+  font-family: 'Bricolage Grotesque', sans-serif; font-style: normal;
+  font-size: 17px; font-weight: 400; color: var(--ink-mid);
+  line-height: 1.55; margin-bottom: 6px;
+}
+
+/* Balance strip */
+.bal-strip {
+  background: var(--honey-pale);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin: 4px 0 0;
+}
+.bal-amount {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 36px; font-weight: 900; color: var(--ink);
+  letter-spacing: -2px; line-height: 1; margin-bottom: 4px;
+}
+.bal-context {
+  font-size: 13.5px; color: var(--ink-mid); font-weight: 500;
+}
+.bal-context em {
+  font-family: 'Bricolage Grotesque', sans-serif; font-style: normal;
+  color: var(--ink-soft);
+}
+
+/* Featured task inline */
+.feat-inline {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0 8px;
+}
+.feat-inline img, .feat-thumb {
+  width: 48px; height: 48px; border-radius: 14px;
+  flex-shrink: 0; object-fit: cover;
+}
+.feat-thumb {
+  background: var(--honey-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.feat-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.4px; line-height: 1.2; margin-bottom: 2px;
+}
+.feat-meta {
+  font-size: 12.5px; font-weight: 500; color: var(--ink-soft);
+}
+
+/* S5 top bar */
+.s5-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0 8px;
+  flex-shrink: 0;
+}
+.s5-wallet {
+  display: flex; align-items: center; gap: 8px;
+  height: 38px;
+  background: rgba(30,26,18,0.06);
+  border-radius: 19px;
+  padding: 0 14px 0 12px;
+  cursor: pointer; transition: background 0.18s, filter 0.18s;
+}
+.s5-wallet:hover { filter: brightness(0.97); }
+.s5-wallet-amount {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 16px; font-weight: 800; color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.s5-profile {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(30,26,18,0.06);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.18s, filter 0.18s;
+}
+.s5-profile:hover { filter: brightness(0.97); }
+.s5-wallet .ph { font-size: 18px; line-height: 1; color: var(--ink); }
+.s5-profile .ph { font-size: 18px; line-height: 1; color: var(--ink); }
+.s5-dialog {
+  text-align: center;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-style: normal;
+  font-size: 23px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="island"></div>
+
+  <div class="status">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-4h2v14h-2z"/></svg>
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2C5.2 2 2.8 3.4 1 5.5l1.2 1.2C3.6 4.8 5.7 3.5 8 3.5s4.4 1.3 5.8 3.2L15 5.5C13.2 3.4 10.8 2 8 2zm0 4c-1.7 0-3.2.8-4.2 2l1.2 1.2c.7-.9 1.8-1.5 3-1.5s2.3.6 3 1.5L12.2 8C11.2 6.8 9.7 6 8 6zm0 4c-.7 0-1.3.3-1.7.8L8 12.5l1.7-1.7C9.3 10.3 8.7 10 8 10z"/></svg>
+      <svg viewBox="0 0 20 12" fill="currentColor"><rect x="0" y="1" width="16" height="10" rx="2" ry="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2" y="3" width="10" height="6" rx="1"/><path d="M17 4v4c1 0 2-.9 2-2s-1-2-2-2z"/></svg>
+    </div>
+  </div>
+
+
+  <!-- ═════════════════════════ -->
+  <!-- S1  WELCOME              -->
+  <!-- ═════════════════════════ -->
+  <div class="screen active" id="s1" style="align-items:center;text-align:center;">
+    <div class="s" style="position:relative;z-index:1;margin-top:120px;margin-bottom:-18px;">
+      <div style="width:240px;height:240px;border-radius:50%;overflow:hidden;">
+        <video class="savi-media savi-hero float" autoplay muted loop playsinline poster="savi.png" style="width:100%;height:100%;object-fit:cover;">
+          <source src="savi_intro.webm" type="video/webm">
+        </video>
+      </div>
+    </div>
+
+    <div class="s" style="position:relative;z-index:1;">
+      <div class="s1-name">Hi, I'm <em style="color:var(--fox-orange);">Savi.</em></div>
+      <div class="s1-tag">Let's turn your spare moments into real savings.</div>
+    </div>
+
+    <div class="s" style="width:100%;position:relative;z-index:1;margin-top:auto;">
+      <button class="btn btn-google" onclick="goTo('s1b')">
+        <svg width="19" height="19" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#fff" opacity=".9"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff" opacity=".8"/>
+          <path d="M5.84 14.09A6.96 6.96 0 015.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.02 11.02 0 001 12c0 1.78.43 3.46 1.18 4.93l3.66-2.84z" fill="#fff" opacity=".7"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff" opacity=".85"/>
+        </svg>
+        Continue with Google
+      </button>
+      <div class="s1-legal">By continuing you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a></div>
+    </div>
+  </div>
+
+
+  <!-- ═════════════════════════ -->
+  <!-- S1b  BENEFITS (Savi)     -->
+  <!-- ═════════════════════════ -->
+  <div class="screen info-screen" id="s1b">
+
+    <div class="s" style="display:flex;justify-content:center;margin:42px 0 18px;">
+      <img class="savi-media savi-sm float" src="savi.png" alt="Savi">
+    </div>
+
+    <div class="s5-dialog s" style="margin-bottom:24px;">
+      Let me show you how this works.
+    </div>
+
+    <div class="benefit-stack s">
+      <div class="benefit-card">
+        <div class="benefit-icon" aria-hidden="true">
+          <i class="ph ph-game-controller"></i>
+        </div>
+        <div>
+          <div class="benefit-title">Games, polls & receipts</div>
+          <div class="benefit-copy">Things you already do</div>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon" aria-hidden="true">
+          <i class="ph ph-money"></i>
+        </div>
+        <div>
+          <div class="benefit-title">Real dollars, not points</div>
+          <div class="benefit-copy">Straight to your PayPal</div>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon" aria-hidden="true">
+          <i class="ph ph-clock"></i>
+        </div>
+        <div>
+          <div class="benefit-title">5 minutes is enough</div>
+          <div class="benefit-copy">Fits around your day</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;"></div>
+
+    <div class="proof-wrap s">
+      <img class="proof-avatar" src="lisa.png" alt="Lisa">
+      <div class="proof-copy">
+        <div class="proof-quote">
+          "I found so many games I genuinely enjoy, and it even paid for a movie trip with my kids. That meant a lot."
+        </div>
+        <div class="proof-attr" style="margin-top:6px;">
+          Lisa, Ohio · member since January
+        </div>
+      </div>
+    </div>
+
+    <div class="s" style="width:100%;margin-top:auto;">
+      <button class="btn" onclick="goTo('s2')">That sounds great</button>
+    </div>
+  </div>
+
+
+  <!-- ═════════════════════════ -->
+  <!-- S2  GOAL QUESTION        -->
+  <!-- ═════════════════════════ -->
+  <div class="screen q-screen" id="s2">
+
+    <div class="q-nav s">
+      <button class="back" onclick="goTo('s1b')">
+        <i class="ph ph-caret-left"></i>
+      </button>
+      <div class="q-dots">
+        <div class="q-dot on"></div>
+        <div class="q-dot"></div>
+      </div>
+    </div>
+
+    <div class="s" style="display:flex;justify-content:center;margin:12px 0 18px;">
+      <img class="savi-media savi-sm float" src="savi_neutral.png" alt="Savi">
+    </div>
+
+    <div class="s5-dialog s">
+      What would earning extra money mean for you?
+    </div>
+
+    <div class="choices s" style="margin-top:auto;">
+      <div class="choice" onclick="goTo('s3')">
+        <div class="choice-emoji"><i class="ph ph-leaf"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">A little breathing room</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice" onclick="goTo('s3')">
+        <div class="choice-emoji"><i class="ph ph-magic-wand"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">For a special moment</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice" onclick="goTo('s3')">
+        <div class="choice-emoji"><i class="ph ph-receipt"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">One less bill to worry about</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═════════════════════════ -->
+  <!-- S3  TIME QUESTION        -->
+  <!-- ═════════════════════════ -->
+  <div class="screen q-screen" id="s3">
+
+    <div class="q-nav s">
+      <button class="back" onclick="goTo('s2')">
+        <i class="ph ph-caret-left"></i>
+      </button>
+      <div class="q-dots">
+        <div class="q-dot"></div>
+        <div class="q-dot on"></div>
+      </div>
+    </div>
+
+    <div class="s" style="display:flex;justify-content:center;margin:12px 0 18px;">
+      <img class="savi-media savi-sm float" src="savi.png" alt="Savi">
+    </div>
+
+    <div class="s5-dialog s">
+      When do you usually have a few minutes to yourself?
+    </div>
+
+    <div class="choices s" style="margin-top:auto;">
+      <div class="choice" onclick="goTo('s4')">
+        <div class="choice-emoji"><i class="ph ph-coffee"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">While my coffee brews</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice" onclick="goTo('s4')">
+        <div class="choice-emoji"><i class="ph ph-television"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">When I'm watching TV</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice" onclick="goTo('s4')">
+        <div class="choice-emoji"><i class="ph ph-sparkle"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">Whenever the mood strikes</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═════════════════════════ -->
+  <!-- S4  RECOMMENDATION       -->
+  <!-- ═════════════════════════ -->
+  <div class="screen" id="s4" style="padding-top:54px;">
+
+    <div class="s" style="display:flex;justify-content:center;margin:68px 0 18px;">
+      <img class="savi-media savi-sm float" src="savi_neutral.png" alt="Savi">
+    </div>
+
+    <div class="s5-dialog s">
+      Based on your answers, I think you'd love to start with <span style="color:var(--honey);">Candy Crush Saga</span>.
+      <div class="rec-sub">Play for about 20 minutes to reach level 2.</div>
+    </div>
+
+    <div class="choices s" style="margin-top:auto;">
+      <div class="choice" onclick="goTo('s5')">
+        <div class="choice-emoji"><i class="ph ph-shuffle"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">Maybe later — what else you got?</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice rec" onclick="goTo('s5')">
+        <div class="choice-emoji"><i class="ph ph-game-controller"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">Let's do it</div>
+          <div class="choice-sub">Start playing now</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═════════════════════════ -->
+  <!-- S5  HOME (conversation)  -->
+  <!-- ═════════════════════════ -->
+  <div class="screen" id="s5" style="padding-top:46px;">
+
+    <!-- Top bar: balance left, profile right -->
+    <div class="s5-topbar s">
+      <div class="s5-wallet" tabindex="0">
+        <i class="ph ph-wallet"></i>
+        <span class="s5-wallet-amount">$12.40</span>
+      </div>
+      <div class="s5-profile" tabindex="0">
+        <i class="ph ph-user-circle"></i>
+      </div>
+    </div>
+
+    <!-- Savi centered -->
+    <div class="s" style="display:flex;justify-content:center;margin:72px 0 18px;">
+      <img class="savi-media savi-sm float" src="savi.png" alt="Savi">
+    </div>
+
+    <!-- Greeting + question as one dialog -->
+    <div class="s5-dialog s">
+      Good morning, Lisa. Wanna continue with <span style="color:var(--honey);">Candy Crush</span> and <span style="color:var(--honey);">reach level 5</span>?
+    </div>
+
+    <!-- Response choices -->
+    <div class="choices s" style="margin-top:auto;">
+      <div class="choice">
+        <div class="choice-emoji"><i class="ph ph-lightning"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">I just have a few minutes</div>
+          <div class="choice-sub">Quick survey</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice">
+        <div class="choice-emoji"><i class="ph ph-shuffle"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">Show me something else</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+      <div class="choice rec">
+        <div class="choice-emoji"><i class="ph ph-game-controller"></i></div>
+        <div class="choice-body">
+          <div class="choice-label">Yes, let's continue</div>
+          <div class="choice-sub">Pick up where you left off</div>
+        </div>
+        <div class="choice-arrow"><i class="ph ph-caret-right"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /phone -->
+
+<script>
+let cur = 's1';
+
+function goTo(id) {
+  if (id === cur) return;
+  const prev = document.getElementById(cur);
+  const next = document.getElementById(id);
+
+  prev.querySelectorAll('.s').forEach(el => el.classList.remove('v'));
+  next.querySelectorAll('.s').forEach(el => el.classList.remove('v'));
+
+  prev.style.transition = 'opacity 250ms cubic-bezier(0.22,1,0.36,1)';
+  prev.style.opacity = '0';
+  prev.style.pointerEvents = 'none';
+  prev.classList.remove('active');
+
+  next.style.opacity = '0';
+  next.style.pointerEvents = 'none';
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    next.style.transition = 'opacity 340ms cubic-bezier(0.22,1,0.36,1)';
+    next.style.opacity = '1';
+    next.style.pointerEvents = 'auto';
+    next.classList.add('active');
+    next.querySelectorAll('.s').forEach((el, i) => {
+      setTimeout(() => el.classList.add('v'), 70 + i * 60);
+    });
+  }));
+  cur = id;
+}
+
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const screen = params.get('screen');
+  if (screen && document.getElementById(screen)) {
+    document.getElementById('s1').classList.remove('active');
+    document.getElementById('s1').style.opacity = '0';
+    document.getElementById('s1').style.pointerEvents = 'none';
+    const target = document.getElementById(screen);
+    target.classList.add('active');
+    target.style.opacity = '1';
+    target.style.pointerEvents = 'auto';
+    target.querySelectorAll('.s').forEach(el => el.classList.add('v'));
+    cur = screen;
+  } else {
+    document.querySelectorAll('#s1 .s').forEach((el, i) => {
+      setTimeout(() => el.classList.add('v'), 160 + i * 100);
+    });
+  }
+});
+</script>
+</body>
+</html>

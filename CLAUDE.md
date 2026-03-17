@@ -62,6 +62,18 @@ See `template.html` for live examples of every component:
 | SVG Diagram | Architecture, relationships, structures |
 | Image/Figure | Screenshots, mockups, photos |
 | Custom Viz | When standard components don't capture the idea |
+| Act Divider | Separating major sections (acts/chapters) in long presentations |
+| Alignment Cards | Displaying key decisions/principles in a 4-column grid |
+| Intro Cards | Side-by-side comparison of two directions/options |
+| Screen Grid | Displaying 5 app screenshots in a row |
+| Illustration Row | 3-column grid for illustrations with captions |
+| Swatch Row | Displaying color palettes with hex values |
+| Type Specimen | Showcasing typography hierarchy and brand typeface |
+| Voice Bubbles | Showing conversational tone/voice examples |
+| Feedback Grid | Interactive bipolar rating scales (5 dots per dimension) |
+| Direction Slider | Range input for preference between two options |
+| Prototype Link | Styled CTA linking to Figma, FigJam, or prototype |
+| Feedback Float | Floating panel that accumulates feedback + copy to clipboard |
 
 ## Custom Visualizations
 
@@ -88,17 +100,44 @@ same spacing grid, purposeful animation.
 - If a source document is bloated, summarize, consolidate, or cut until only the highest-signal material remains.
 - Prefer visuals over paragraphs when the visual makes the point faster. If it does not, leave it out.
 
+## Feedback & Interactivity
+
+When a presentation needs stakeholder feedback:
+
+1. Use **Feedback Grid** for structured dimensional ratings (e.g., warmth, trust, energy)
+2. Use **Feedback Words** (textarea) for open-ended comments
+3. Use **Direction Slider** when comparing two options
+4. Use **Feedback Float** -- a floating panel that appears on first interaction,
+   accumulates all feedback in real time, and has a single "Copy to Slack" button
+5. Never use multiple copy buttons -- one floating panel handles everything
+6. All external links must use `target="_blank"` to preserve feedback state
+
+The floating panel pattern replaces per-section copy buttons. It appears bottom-right,
+is collapsible, and builds a formatted text summary for clipboard.
+
+## Multi-Act Presentations
+
+For presentations comparing multiple directions or covering distinct phases:
+
+1. Use **Act Dividers** to separate major sections with a label + title + subtitle
+2. Use **TOC Grouping** -- act dividers automatically create group headers in the TOC
+3. Keep shared context (recap, audience, bridge) before the first act divider
+4. Each direction gets parallel structure: design direction, screenshots, feedback
+5. End with a comparison section and unified vote/feedback
+
 ## Technical Constraints
 
 - Single `.html` file, everything inline except D3.js
 - D3.js v7 from CDN: `https://d3js.org/d3.v7.min.js`
+- Google Fonts via `@import` when brand typefaces are needed
 - Use CSS custom properties from template.html (--ink, --surface, etc.)
 - Responsive: works on desktop and tablet (min-width ~768px)
 - Accessibility: `prefers-reduced-motion` disables all animations
 - All animations use transform/opacity only (GPU-accelerated)
 - No animation longer than 600ms
-- IntersectionObserver for scroll-triggered effects
-- Sticky TOC auto-generated from h2 elements
+- Scroll-based TOC tracking (scroll listener, not IntersectionObserver)
+- Sticky TOC auto-generated from h2 elements, with act-based grouping
+- Base64-encode images inline for self-contained files
 
 ## Output
 
