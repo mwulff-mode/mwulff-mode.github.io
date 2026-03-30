@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategic Synthesis — March 2026</title>
+  <style>
+    :root {
+      --ink: #171412; --ink-light: #5c544d; --ink-faint: #8d8379;
+      --surface: #f5efe8; --surface-alt: #fbf7f2; --surface-strong: #e8dfd3; --surface-contrast: #fffdf9;
+      --border: rgba(23,20,18,0.14); --border-strong: rgba(23,20,18,0.3);
+      --shadow-soft: 0 20px 46px rgba(23,20,18,0.07); --shadow-deep: 0 30px 72px rgba(23,20,18,0.1);
+      --series-1: #171412; --series-2: #60574f; --series-3: #9f958a; --series-4: #d6ccbf;
+      --panel-bg: rgba(255,253,249,0.74); --panel-bg-strong: rgba(255,253,249,0.84);
+      --panel-highlight: rgba(255,255,255,0.38); --panel-highlight-strong: rgba(255,255,255,0.52);
+      --glow: rgba(255,255,255,0.72); --glow-soft: rgba(255,255,255,0.45);
+      --page-speckle: rgba(255,255,255,0.14); --page-texture: rgba(23,20,18,0.012);
+      --pattern-ink: rgba(23,20,18,0.04); --active-fill: rgba(23,20,18,0.04);
+      --selection-fill: rgba(23,20,18,0.12); --backdrop: rgba(16,14,12,0.36);
+      --content-width: 760px; --wide-width: 1180px; --rail-width: 280px;
+      --section-gap: clamp(88px,11vw,140px); --gutter: clamp(20px,4vw,40px);
+      --radius-sm: 16px; --radius-md: 26px; --radius-lg: 40px;
+      --serif: "Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,"Times New Roman",ui-serif,serif;
+      --sans: ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --mono: "SF Mono","SFMono-Regular",ui-monospace,monospace;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      html:not(.light) {
+        --ink: #f1ebe3; --ink-light: #c4b9ad; --ink-faint: #92867a;
+        --surface: #12100f; --surface-alt: #181513; --surface-strong: #221d1a; --surface-contrast: #201b18;
+        --border: rgba(241,235,227,0.12); --border-strong: rgba(241,235,227,0.24);
+        --shadow-soft: 0 20px 46px rgba(0,0,0,0.32); --shadow-deep: 0 30px 72px rgba(0,0,0,0.42);
+        --series-1: #f1ebe3; --series-2: #bcae9f; --series-3: #73685c; --series-4: #3a332d;
+        --panel-bg: rgba(32,27,24,0.76); --panel-bg-strong: rgba(32,27,24,0.88);
+        --panel-highlight: rgba(255,255,255,0.05); --panel-highlight-strong: rgba(255,255,255,0.08);
+        --glow: rgba(255,255,255,0.08); --glow-soft: rgba(255,255,255,0.03);
+        --page-speckle: rgba(255,255,255,0.02); --page-texture: rgba(241,235,227,0.018);
+        --pattern-ink: rgba(241,235,227,0.06); --active-fill: rgba(241,235,227,0.05);
+        --selection-fill: rgba(241,235,227,0.18); --backdrop: rgba(0,0,0,0.52);
+        color-scheme: dark;
+      }
+    }
+    html.dark {
+      --ink: #f1ebe3; --ink-light: #c4b9ad; --ink-faint: #92867a;
+      --surface: #12100f; --surface-alt: #181513; --surface-strong: #221d1a; --surface-contrast: #201b18;
+      --border: rgba(241,235,227,0.12); --border-strong: rgba(241,235,227,0.24);
+      --shadow-soft: 0 20px 46px rgba(0,0,0,0.32); --shadow-deep: 0 30px 72px rgba(0,0,0,0.42);
+      --series-1: #f1ebe3; --series-2: #bcae9f; --series-3: #73685c; --series-4: #3a332d;
+      --panel-bg: rgba(32,27,24,0.76); --panel-bg-strong: rgba(32,27,24,0.88);
+      --panel-highlight: rgba(255,255,255,0.05); --panel-highlight-strong: rgba(255,255,255,0.08);
+      --glow: rgba(255,255,255,0.08); --glow-soft: rgba(255,255,255,0.03);
+      --page-speckle: rgba(255,255,255,0.02); --page-texture: rgba(241,235,227,0.018);
+      --pattern-ink: rgba(241,235,227,0.06); --active-fill: rgba(241,235,227,0.05);
+      --selection-fill: rgba(241,235,227,0.18); --backdrop: rgba(0,0,0,0.52);
+      color-scheme: dark;
+    }
+    html.light { color-scheme: light; }
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; scroll-behavior: smooth; background: var(--surface); }
+    body {
+      min-height: 100vh; color: var(--ink); font-family: var(--sans); line-height: 1.7;
+      background: radial-gradient(circle at top right,var(--glow),transparent 30%),
+        linear-gradient(180deg,var(--glow-soft),transparent 16%),
+        linear-gradient(180deg,var(--surface) 0%,var(--surface-strong) 44%,var(--surface-alt) 100%);
+      text-rendering: optimizeLegibility; position: relative; overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(circle at 20% 18%,var(--page-speckle),transparent 18%),
+        repeating-linear-gradient(90deg,var(--page-texture) 0,var(--page-texture) 1px,transparent 1px,transparent 18px);
+      opacity: 0.85; z-index: -1;
+    }
+    ::selection { background: var(--selection-fill); color: var(--ink); }
+    img { display: block; max-width: 100%; }
+    button,input { font: inherit; }
+    a { color: inherit; }
+    strong { font-weight: 650; }
+    svg text { font-family: var(--sans); }
+    h1,h2,h3,h4 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.04em; line-height: 0.98; text-wrap: balance; }
+    h1 { font-size: clamp(4.2rem,9vw,7.4rem); }
+    h2 { font-size: clamp(2.4rem,4.8vw,4.3rem); margin-bottom: 20px; }
+    h3 { font-size: clamp(1.45rem,2.4vw,1.95rem); margin-bottom: 18px; }
+    h4 { font-size: 1.1rem; margin-bottom: 14px; }
+    p { max-width: 70ch; margin-bottom: 1rem; }
+    ul,ol { max-width: 70ch; padding-left: 1.2rem; margin-bottom: 1rem; }
+    li + li { margin-top: 0.45rem; }
+
+    .theme-toggle,.toc__toggle {
+      border: 1px solid var(--border); background: var(--panel-bg-strong); color: var(--ink);
+      border-radius: 999px; backdrop-filter: blur(18px); box-shadow: var(--shadow-soft); cursor: pointer;
+      transition: transform 0.45s cubic-bezier(0.19,1,0.22,1),background 0.3s ease,border-color 0.3s ease;
+    }
+    .theme-toggle:hover,.toc__toggle:hover { transform: translateY(-2px); }
+    .theme-toggle:focus-visible,.toc__toggle:focus-visible,.toc__list a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .theme-toggle { position: fixed; top: 18px; right: 22px; z-index: 80; padding: 11px 18px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+
+    .toc { position: fixed; inset: 0 auto 0 0; width: var(--rail-width); padding: 28px 22px 28px 24px; border-right: 1px solid var(--border); background: var(--panel-bg); backdrop-filter: blur(18px); overflow-y: auto; z-index: 60; }
+    .toc__brand { padding: 10px 12px 18px; border-bottom: 1px solid var(--border); }
+    .toc__kicker { font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+    .toc__title { font-family: var(--serif); font-size: 1.55rem; letter-spacing: -0.03em; }
+    .toc__subtitle { font-size: 0.88rem; color: var(--ink-light); margin-top: 6px; line-height: 1.5; }
+    .toc__toggle { display: none; position: fixed; top: 18px; left: 18px; z-index: 81; padding: 11px 16px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+    .toc__list { list-style: none; padding: 20px 0 0; margin: 0; }
+    .toc__list li + li { margin-top: 4px; }
+    .toc__list a { display: block; padding: 10px 10px 10px 14px; border-left: 1px solid transparent; color: var(--ink-light); text-decoration: none; font-size: 0.84rem; line-height: 1.45; transition: transform 0.45s cubic-bezier(0.19,1,0.22,1),color 0.3s ease,border-color 0.3s ease,background 0.3s ease; }
+    .toc__list a:hover { color: var(--ink); transform: translateX(4px); }
+    .toc__list a.active { color: var(--ink); border-left-color: var(--ink); background: var(--active-fill); }
+    .toc__group { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); padding: 18px 14px 6px; margin-top: 4px; border-top: 1px solid var(--border); list-style: none; }
+    .toc__group:first-child { border-top: none; padding-top: 10px; }
+    .toc-backdrop { display: none; position: fixed; inset: 0; background: var(--backdrop); z-index: 55; }
+
+    .content { counter-reset: section; margin-left: var(--rail-width); position: relative; }
+    .hero { min-height: 100svh; display: flex; align-items: center; padding: 24px var(--gutter) clamp(82px,9vw,120px); max-width: calc(var(--wide-width) + (var(--gutter) * 2)); margin: 0 auto; position: relative; }
+    .hero::after { content: ""; position: absolute; left: var(--gutter); right: var(--gutter); bottom: 28px; height: 1px; background: linear-gradient(90deg,transparent,var(--border-strong) 12%,var(--border-strong) 88%,transparent); }
+    .hero__meta { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 24px; }
+    .hero__title { max-width: 14ch; margin-bottom: 26px; }
+    .hero__subtitle { font-size: clamp(1.12rem,2vw,1.42rem); line-height: 1.56; color: var(--ink-light); max-width: 40ch; margin: 0; }
+
+    .section { counter-increment: section; max-width: var(--wide-width); padding: var(--section-gap) var(--gutter); margin: 0 auto; position: relative; }
+    .section__intro { max-width: var(--content-width); margin-bottom: 40px; }
+    .section__eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); display: inline-flex; align-items: baseline; gap: 0.7rem; white-space: nowrap; margin-bottom: 14px; }
+    .section__eyebrow::before { content: counter(section,decimal-leading-zero); font-family: var(--sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-faint); }
+    .section__title { margin-bottom: 20px; }
+    .section__lede { font-size: 1.16rem; line-height: 1.72; color: var(--ink-light); margin-bottom: 0; }
+
+    .callout { max-width: var(--content-width); padding: 24px 28px 24px 32px; border-left: 4px solid var(--ink); background: var(--panel-bg); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 32px 0; }
+    .callout p { margin-bottom: 0; }
+
+    /* Alignment evidence cards */
+    .evidence-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 28px; }
+    .evidence-card { background: var(--panel-bg-strong); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 28px 26px; backdrop-filter: blur(12px); }
+    .evidence-card__label { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 14px; }
+    .evidence-card__title { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 14px; }
+    .evidence-card__body { font-size: 0.92rem; color: var(--ink-light); line-height: 1.6; }
+    .evidence-card__body strong { color: var(--ink); }
+
+    /* Divergence panels */
+    .divergence { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-top: 28px; background: var(--border); border-radius: var(--radius-md); overflow: hidden; }
+    .divergence__col { background: var(--surface-contrast); padding: 24px 22px; }
+    .divergence__col--resolve { background: var(--panel-bg-strong); }
+    .divergence__head { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+    .divergence__body { font-size: 0.88rem; line-height: 1.6; color: var(--ink-light); }
+    .divergence__body strong { color: var(--ink); }
+
+    /* Decision cards */
+    .decision-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 28px; }
+    .decision-card { background: var(--panel-bg-strong); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px 28px; backdrop-filter: blur(12px); display: grid; grid-template-columns: 56px 1fr; gap: 22px; align-items: start; }
+    .decision-card__num { font-family: var(--serif); font-size: 2.4rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1; color: var(--ink-faint); }
+    .decision-card__title { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 10px; }
+    .decision-card__body { font-size: 0.92rem; color: var(--ink-light); line-height: 1.6; }
+    .decision-card__body strong { color: var(--ink); }
+    .decision-card__evidence { font-size: 0.78rem; color: var(--ink-faint); margin-top: 12px; font-style: italic; }
+
+    /* Requirements table */
+    .table-wrap { overflow-x: auto; margin-top: 24px; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .data-table th { text-align: left; padding: 14px 16px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); border-bottom: 2px solid var(--border-strong); }
+    .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .priority-tag { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+    .priority-tag--p0 { background: var(--ink); color: var(--surface); }
+    .priority-tag--p1 { background: var(--series-3); color: var(--surface); }
+    .priority-tag--p2 { background: var(--surface-strong); color: var(--ink-light); border: 1px solid var(--border); }
+
+    /* Open questions */
+    .question-list { list-style: none; padding: 0; margin-top: 24px; counter-reset: q; }
+    .question-list li { counter-increment: q; padding: 20px 24px 20px 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: baseline; }
+    .question-list li::before { content: counter(q); font-family: var(--serif); font-size: 1.6rem; font-weight: 600; color: var(--ink-faint); letter-spacing: -0.04em; }
+    .question-list li:last-child { border-bottom: none; }
+    .question-list strong { display: block; margin-bottom: 4px; }
+    .question-list span { font-size: 0.88rem; color: var(--ink-light); line-height: 1.5; }
+
+    /* Team vote summary */
+    .vote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+    .vote-card { background: var(--panel-bg-strong); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 18px 20px; text-align: center; }
+    .vote-card__name { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .vote-card__vote { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; }
+    .vote-card__vote--ew { color: var(--series-1); }
+    .vote-card__vote--savi { color: var(--series-2); }
+
+    .tooltip { position: fixed; max-width: 220px; padding: 10px 12px; border-radius: 14px; background: rgba(18,16,15,0.92); color: #fffdf8; font-size: 0.76rem; line-height: 1.45; pointer-events: none; opacity: 0; transition: opacity 0.18s ease; z-index: 120; box-shadow: var(--shadow-deep); }
+    .tooltip.visible { opacity: 1; }
+
+    [data-animate] { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.19,1,0.22,1),transform 0.6s cubic-bezier(0.19,1,0.22,1); }
+    [data-animate].visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1120px) {
+      :root { --rail-width: 0px; }
+      .toc { transform: translateX(-100%); width: min(320px,calc(100vw - 32px)); box-shadow: var(--shadow-deep); transition: transform 0.45s cubic-bezier(0.19,1,0.22,1); }
+      .toc.open { transform: translateX(0); }
+      .toc__toggle { display: inline-flex; align-items: center; justify-content: center; }
+      .toc-backdrop.visible { display: block; }
+      .content { margin-left: 0; }
+      .hero { min-height: auto; padding-top: 116px; }
+    }
+    @media (max-width: 900px) {
+      .evidence-grid { grid-template-columns: 1fr; }
+      .divergence { grid-template-columns: 1fr; }
+      .vote-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      html { font-size: 16px; }
+      .theme-toggle { right: 18px; top: 70px; }
+      .hero { padding-top: 128px; }
+      .hero__title { max-width: 12ch; }
+      .vote-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0s !important; transition-duration: 0s !important; }
+      [data-animate] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <button class="toc__toggle" id="toc-toggle" aria-label="Toggle table of contents">Menu</button>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">Theme</button>
+
+  <nav class="toc" id="toc">
+    <div class="toc__brand">
+      <div class="toc__kicker">Strategy</div>
+      <div class="toc__title">Synthesis</div>
+      <p class="toc__subtitle">Team + User Data &mdash; March 26, 2026</p>
+    </div>
+    <ul class="toc__list"></ul>
+  </nav>
+  <div class="toc-backdrop" id="toc-backdrop"></div>
+
+  <main class="content">
+    <header class="hero">
+      <div>
+        <p class="hero__meta">March 26, 2026 &middot; Team (6) + Users (58) &middot; Strategic Synthesis</p>
+        <h1 class="hero__title">Two Streams, One Direction</h1>
+        <p class="hero__subtitle">
+          What happens when you filter the team's 3&ndash;3 brand split through real user data. A guide for the next iteration.
+        </p>
+      </div>
+    </header>
+
+    <!-- SECTIONS START -->
+
+    <!-- Executive Summary -->
+    <section class="section" id="summary">
+      <div class="section__intro">
+        <p class="section__eyebrow">Synthesis</p>
+        <h2 class="section__title">The Bottom Line</h2>
+      </div>
+      <div class="callout" data-animate>
+        <p><strong>Team and users agree on the core truth:</strong> trust, reliability, and respect for people's time are non-negotiable. The team's 3&ndash;3 split between EarnWise and Savi resolves when filtered through user data &mdash; users overwhelmingly want EarnWise's clarity with Savi's warmth. "Fun to use" scored 0% as a user priority. The next iteration should feel like a trusted financial tool, not a toy.</p>
+      </div>
+      <div class="vote-grid" data-animate>
+        <div class="vote-card">
+          <div class="vote-card__name">Valentina</div>
+          <div class="vote-card__vote vote-card__vote--ew">Leaning EarnWise</div>
+        </div>
+        <div class="vote-card">
+          <div class="vote-card__name">Corinna</div>
+          <div class="vote-card__vote vote-card__vote--savi">Leaning Savi</div>
+        </div>
+        <div class="vote-card">
+          <div class="vote-card__name">Matt T</div>
+          <div class="vote-card__vote vote-card__vote--savi">Leaning Savi</div>
+        </div>
+        <div class="vote-card">
+          <div class="vote-card__name">Jamil</div>
+          <div class="vote-card__vote vote-card__vote--savi">Strongly Savi</div>
+        </div>
+        <div class="vote-card">
+          <div class="vote-card__name">Aditya</div>
+          <div class="vote-card__vote vote-card__vote--ew">Leaning EarnWise</div>
+        </div>
+        <div class="vote-card">
+          <div class="vote-card__name">Matt R</div>
+          <div class="vote-card__vote vote-card__vote--ew">Leaning EarnWise</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alignment -->
+    <section class="section" id="alignment">
+      <div class="section__intro">
+        <p class="section__eyebrow">Convergence</p>
+        <h2 class="section__title">Where Team & Users Align</h2>
+        <p class="section__lede">
+          Four areas where both streams point the same direction. These are settled.
+        </p>
+      </div>
+      <div class="evidence-grid">
+        <div class="evidence-card" data-animate>
+          <div class="evidence-card__label">Settled</div>
+          <div class="evidence-card__title">Trust is the foundation</div>
+          <div class="evidence-card__body">
+            <strong>Team:</strong> 5 of 6 rated trust "just right" on at least one direction.<br>
+            <strong>Users:</strong> Reliable payouts is the #1 priority (37%). Proof of payment is the #1 acquisition trigger (35%). Scam concerns are a top-4 churn driver (43%).
+          </div>
+        </div>
+        <div class="evidence-card" data-animate>
+          <div class="evidence-card__label">Settled</div>
+          <div class="evidence-card__title">Professional, not playful</div>
+          <div class="evidence-card__body">
+            <strong>Team:</strong> Professionalism rated "just right" across both directions by nearly everyone.<br>
+            <strong>Users:</strong> "Fun to use" scored <strong>0%</strong> as a priority. 65% want reliability + value. 9% want simplicity.
+          </div>
+        </div>
+        <div class="evidence-card" data-animate>
+          <div class="evidence-card__label">Settled</div>
+          <div class="evidence-card__title">Real dollars, not points</div>
+          <div class="evidence-card__body">
+            <strong>Team:</strong> Valentina loved "seeing the real balance in money equivalent."<br>
+            <strong>Users:</strong> 51% prefer dollar amounts. Only 11% want points. Open-ended: "tasks that earn dollars instead of points or coins."
+          </div>
+        </div>
+        <div class="evidence-card" data-animate>
+          <div class="evidence-card__label">Settled</div>
+          <div class="evidence-card__title">Goals over expense anchoring</div>
+          <div class="evidence-card__body">
+            <strong>Team:</strong> Matt T: "References to gas and groceries add to my stress."<br>
+            <strong>Users:</strong> 55% spend on expenses, 41% on treats &mdash; both framings exist, but goal-based avoids the stress trigger.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Divergence -->
+    <section class="section" id="divergence">
+      <div class="section__intro">
+        <p class="section__eyebrow">Tensions</p>
+        <h2 class="section__title">Where They Diverge</h2>
+        <p class="section__lede">
+          Four areas where the team splits or conflicts with user data. Each needs a clear resolution.
+        </p>
+      </div>
+
+      <h3 data-animate>Playfulness calibration</h3>
+      <div class="divergence" data-animate>
+        <div class="divergence__col">
+          <div class="divergence__head">Team says</div>
+          <div class="divergence__body">Split. EarnWise: <strong>"too serious"</strong> (Aditya, Matt R), <strong>"too sleepy"</strong> (Matt T, Jamil). Savi: <strong>"too cute"</strong> (Matt R), <strong>"too cozy"</strong> (Matt T, Aditya).</div>
+        </div>
+        <div class="divergence__col">
+          <div class="divergence__head">Users say</div>
+          <div class="divergence__body"><strong>Fun = 0% priority.</strong> Pragmatic earners who want dependable value. Not a single respondent chose "fun" as what matters most.</div>
+        </div>
+        <div class="divergence__col divergence__col--resolve">
+          <div class="divergence__head">Resolution</div>
+          <div class="divergence__body"><strong>Warm professionalism.</strong> Think trusted credit union, not children's game. Personality through copy tone and micro-interactions, not visual playfulness.</div>
+        </div>
+      </div>
+
+      <h3 data-animate style="margin-top: 48px;">The mascot question</h3>
+      <div class="divergence" data-animate>
+        <div class="divergence__col">
+          <div class="divergence__head">Team says</div>
+          <div class="divergence__body">Mixed enthusiasm. Valentina, Corinna, Matt T all <strong>open to a mascot</strong>. But: <strong>fox overlaps competitors</strong> (Scrambly). No consensus on species.</div>
+        </div>
+        <div class="divergence__col">
+          <div class="divergence__head">Users say</div>
+          <div class="divergence__body"><strong>Nobody asked for one.</strong> Zero mentions in 46 open-ended responses. Their priorities: payouts, speed, trust.</div>
+        </div>
+        <div class="divergence__col divergence__col--resolve">
+          <div class="divergence__head">Resolution</div>
+          <div class="divergence__body"><strong>Nice-to-have, not must-have.</strong> Test a non-fox mascot variant vs. no mascot in next round. If kept, must feel mature and functional (guide, not decoration).</div>
+        </div>
+      </div>
+
+      <h3 data-animate style="margin-top: 48px;">Warmth level</h3>
+      <div class="divergence" data-animate>
+        <div class="divergence__col">
+          <div class="divergence__head">Team says</div>
+          <div class="divergence__body">Contradictory. EarnWise: "too cozy" (Matt T) vs. "too corporate" (Jamil, Matt R). Savi: "too cold" (Valentina) vs. "too cozy" (Matt T, Aditya, Matt R).</div>
+        </div>
+        <div class="divergence__col">
+          <div class="divergence__head">Users say</div>
+          <div class="divergence__body">They want reliability (37%) and value (28%). The warmth they seek is <strong>emotional safety</strong> &mdash; knowing the app won't scam them.</div>
+        </div>
+        <div class="divergence__col divergence__col--resolve">
+          <div class="divergence__head">Resolution</div>
+          <div class="divergence__body"><strong>Warmth from behavior, not aesthetics.</strong> Transparent earnings, fast payouts, clear communication. Visual: clean and confident with subtle organic touches.</div>
+        </div>
+      </div>
+
+      <h3 data-animate style="margin-top: 48px;">Gamification energy</h3>
+      <div class="divergence" data-animate>
+        <div class="divergence__col">
+          <div class="divergence__head">Team says</div>
+          <div class="divergence__body">Aditya: <strong>"EarnWise lacks the excitement gamification requires."</strong> Savi's fun element is needed for game mechanics.</div>
+        </div>
+        <div class="divergence__col">
+          <div class="divergence__head">Users say</div>
+          <div class="divergence__body">Love activities (87% videos, 79% games, 77% check-ins) but <strong>don't care if they're "fun"</strong> &mdash; they care if they pay.</div>
+        </div>
+        <div class="divergence__col divergence__col--resolve">
+          <div class="divergence__head">Resolution</div>
+          <div class="divergence__body"><strong>Rewarding, not entertaining.</strong> Progress bars toward goals, streaks with forgiveness, clear cause-and-effect. Brief, dignified celebrations &mdash; not confetti.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Five Decisions -->
+    <section class="section" id="decisions">
+      <div class="section__intro">
+        <p class="section__eyebrow">Direction</p>
+        <h2 class="section__title">Five Decisions for the Next Iteration</h2>
+        <p class="section__lede">
+          Based on combined evidence from both streams. Each has a clear rationale.
+        </p>
+      </div>
+      <div class="decision-grid">
+        <div class="decision-card" data-animate>
+          <div class="decision-card__num">1</div>
+          <div>
+            <div class="decision-card__title">Brand Tone: Trustworthy Clarity</div>
+            <div class="decision-card__body">EarnWise's visual clarity + Savi's conversational warmth, calibrated toward professionalism. The tone should feel like <strong>a friend who's good with money</strong> &mdash; straightforward, reliable, occasionally warm, never condescending.</div>
+            <div class="decision-card__evidence">Evidence: Team professionalism ratings + user 0% fun + 37% reliability priority</div>
+          </div>
+        </div>
+        <div class="decision-card" data-animate>
+          <div class="decision-card__num">2</div>
+          <div>
+            <div class="decision-card__title">Mascot: Test or Drop</div>
+            <div class="decision-card__body">Create two screen variants &mdash; one with a <strong>non-fox mascot</strong> (owl? hedgehog?) in a functional guide role, one without. Test in next round. If it survives, it appears in onboarding and empty states only.</div>
+            <div class="decision-card__evidence">Evidence: Team interest but no species consensus + user silence + competitor fox overlap</div>
+          </div>
+        </div>
+        <div class="decision-card" data-animate>
+          <div class="decision-card__num">3</div>
+          <div>
+            <div class="decision-card__title">Earnings Framing: Goals First</div>
+            <div class="decision-card__body"><strong>Primary:</strong> User-set goals with custom labels ("coffee fund," "vacation"). <strong>Secondary:</strong> Cumulative lifetime total. <strong>Optional:</strong> Expense context as a user-controlled toggle &mdash; never system-imposed.</div>
+            <div class="decision-card__evidence">Evidence: Matt T stress feedback + strategy doc revision + user 55/41 spending split</div>
+          </div>
+        </div>
+        <div class="decision-card" data-animate>
+          <div class="decision-card__num">4</div>
+          <div>
+            <div class="decision-card__title">Onboarding: Simple + Proof</div>
+            <div class="decision-card__body"><strong>From EarnWise:</strong> One-page demographics, fewer clicks. <strong>From Savi:</strong> Time-awareness questions. <strong>From users:</strong> Show proof of real payouts early. First-task-to-first-dollar in under 5 minutes. <strong>$1.00 first cashout minimum.</strong></div>
+            <div class="decision-card__evidence">Evidence: Valentina on simplicity + Corinna on personalization + 35% need proof to try</div>
+          </div>
+        </div>
+        <div class="decision-card" data-animate>
+          <div class="decision-card__num">5</div>
+          <div>
+            <div class="decision-card__title">Visual: EarnWise Palette, Savi Touches</div>
+            <div class="decision-card__body"><strong>Base:</strong> EarnWise palette and typography (stands out from competitors). <strong>Add:</strong> Savi's personalization (name, photo, custom goals) + subtle organic corners and transitions. <strong>Remove:</strong> Movie-moment illustrations, heavy mascot, cozy color washes.</div>
+            <div class="decision-card__evidence">Evidence: Valentina's palette praise + Corinna's Savi UX praise + user pragmatism data</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Requirements -->
+    <section class="section" id="requirements">
+      <div class="section__intro">
+        <p class="section__eyebrow">Product</p>
+        <h2 class="section__title">Launch Requirements</h2>
+        <p class="section__lede">
+          Non-negotiable product decisions driven directly by user survey data.
+        </p>
+      </div>
+      <div class="table-wrap" data-animate>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Requirement</th>
+              <th>User Evidence</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PayPal payouts</strong></td>
+              <td>80% use it, 69% prefer it for cashout</td>
+              <td><span class="priority-tag priority-tag--p0">P0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Fast payouts (instant / same-day)</strong></td>
+              <td>73% expect &lt;24hrs, 42% expect instant</td>
+              <td><span class="priority-tag priority-tag--p0">P0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Low cashout minimum ($1&ndash;$5)</strong></td>
+              <td>45% cite high minimums as churn driver</td>
+              <td><span class="priority-tag priority-tag--p0">P0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Dollar display (never points)</strong></td>
+              <td>51% prefer dollars, 11% want points</td>
+              <td><span class="priority-tag priority-tag--p0">P0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Videos + games + daily check-ins</strong></td>
+              <td>87%, 79%, 77% interest respectively</td>
+              <td><span class="priority-tag priority-tag--p0">P0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Surveys</strong></td>
+              <td>63% interest</td>
+              <td><span class="priority-tag priority-tag--p1">P1</span></td>
+            </tr>
+            <tr>
+              <td><strong>Receipt scanning</strong></td>
+              <td>60% interest</td>
+              <td><span class="priority-tag priority-tag--p1">P1</span></td>
+            </tr>
+            <tr>
+              <td><strong>Gift card payouts</strong></td>
+              <td>15% prefer</td>
+              <td><span class="priority-tag priority-tag--p2">P2</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Acquisition -->
+    <section class="section" id="acquisition">
+      <div class="section__intro">
+        <p class="section__eyebrow">Growth</p>
+        <h2 class="section__title">Acquisition Strategy</h2>
+        <p class="section__lede">
+          How to reach this audience, ranked by user data.
+        </p>
+      </div>
+      <div class="table-wrap" data-animate>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Evidence</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cross-promotion (MEA apps)</strong></td>
+              <td>40% &mdash; #1 discovery channel</td>
+              <td>Build cross-promo flow in existing Mode apps</td>
+            </tr>
+            <tr>
+              <td><strong>Social proof</strong></td>
+              <td>35% need "proof it pays out"</td>
+              <td>Payout screenshots, testimonials, 4.3+ app rating</td>
+            </tr>
+            <tr>
+              <td><strong>Facebook / social</strong></td>
+              <td>22% + 61% use Facebook daily</td>
+              <td>Primary paid social channel</td>
+            </tr>
+            <tr>
+              <td><strong>Sign-up bonus</strong></td>
+              <td>20% would try for a bonus</td>
+              <td>$1&ndash;$3 bonus, cashable immediately</td>
+            </tr>
+            <tr>
+              <td><strong>Referral / word of mouth</strong></td>
+              <td>9% &mdash; surprisingly low</td>
+              <td>P2 priority, not a launch investment</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Open Questions -->
+    <section class="section" id="open-questions">
+      <div class="section__intro">
+        <p class="section__eyebrow">Next Steps</p>
+        <h2 class="section__title">Open Questions</h2>
+        <p class="section__lede">
+          Five things that need resolution through testing or team discussion in the next round.
+        </p>
+      </div>
+      <ol class="question-list" data-animate>
+        <li>
+          <div></div>
+          <div>
+            <strong>Mascot: yes or no?</strong>
+            <span>Test both variants in next prototype. If yes, which species? (Not fox.)</span>
+          </div>
+        </li>
+        <li>
+          <div></div>
+          <div>
+            <strong>Color palette warmth</strong>
+            <span>EarnWise base is confirmed, but does it need any warmth injection from Savi's palette?</span>
+          </div>
+        </li>
+        <li>
+          <div></div>
+          <div>
+            <strong>Gamification depth</strong>
+            <span>How much gamification energy can the EarnWise visual system support? (Aditya's concern)</span>
+          </div>
+        </li>
+        <li>
+          <div></div>
+          <div>
+            <strong>Onboarding proof moment</strong>
+            <span>What specific "proof" do we show early? Testimonials? Live payout feed? Earnings calculator?</span>
+          </div>
+        </li>
+        <li>
+          <div></div>
+          <div>
+            <strong>Expense anchoring toggle</strong>
+            <span>Is the optional expense context worth building, or should we cut scope and go goals-only?</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- SECTIONS END -->
+  </main>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    var tooltip = document.getElementById('tooltip');
+    var rmq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function reduceMotionEnabled() { return rmq.matches; }
+    function token(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+    function currentTheme() {
+      var r = document.documentElement;
+      if (r.classList.contains('dark')) return 'dark';
+      if (r.classList.contains('light')) return 'light';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function applyThemeLabel() { document.getElementById('theme-toggle').textContent = currentTheme() === 'dark' ? 'Light' : 'Dark'; }
+    function readStoredTheme() { try { return localStorage.getItem('presenter-theme'); } catch(e) { return null; } }
+    function persistTheme(t) { try { localStorage.setItem('presenter-theme', t); } catch(e) {} }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var st = readStoredTheme();
+      if (st === 'dark' || st === 'light') document.documentElement.classList.add(st);
+      applyThemeLabel();
+
+      document.getElementById('theme-toggle').addEventListener('click', function() {
+        var h = document.documentElement, n = currentTheme() === 'dark' ? 'light' : 'dark';
+        h.classList.remove('dark','light'); h.classList.add(n);
+        persistTheme(n); applyThemeLabel();
+      });
+
+      /* TOC */
+      var toc = document.getElementById('toc'), toggle = document.getElementById('toc-toggle'),
+          bd = document.getElementById('toc-backdrop'), list = toc.querySelector('.toc__list'),
+          content = document.querySelector('.content'), ch = content.children, intro = false;
+      for (var i = 0; i < ch.length; i++) {
+        var c = ch[i];
+        if (c.tagName === 'SECTION' && c.id) {
+          var h2 = c.querySelector('.section__title');
+          if (!h2) continue;
+          if (!intro) { var g = document.createElement('li'); g.className = 'toc__group'; g.textContent = 'Overview'; list.appendChild(g); intro = true; }
+          var li = document.createElement('li'), a = document.createElement('a');
+          a.href = '#' + c.id; a.textContent = h2.textContent;
+          li.appendChild(a); list.appendChild(li);
+        }
+      }
+      function closeToc() { toc.classList.remove('open'); bd.classList.remove('visible'); }
+      toggle.addEventListener('click', function() { toc.classList.toggle('open'); bd.classList.toggle('visible'); });
+      bd.addEventListener('click', closeToc);
+      list.querySelectorAll('a').forEach(function(l) { l.addEventListener('click', closeToc); });
+
+      var secs = document.querySelectorAll('section[id]'), links = list.querySelectorAll('a');
+      function updateToc() {
+        var sy = window.scrollY || window.pageYOffset, cur = null;
+        for (var s = 0; s < secs.length; s++) { if (sy >= secs[s].offsetTop - 120) cur = secs[s].id; }
+        links.forEach(function(l) { l.classList.toggle('active', l.getAttribute('href') === '#' + cur); });
+      }
+      window.addEventListener('scroll', updateToc, { passive: true }); updateToc();
+
+      /* Animations */
+      var obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (!e.isIntersecting) return;
+          var el = e.target, p = el.parentElement, sibs = p ? p.querySelectorAll(':scope > [data-animate]') : [];
+          if (sibs.length > 1 && !reduceMotionEnabled()) { el.style.transitionDelay = (Array.prototype.indexOf.call(sibs, el) * 80) + 'ms'; }
+          el.classList.add('visible'); obs.unobserve(el);
+        });
+      }, { threshold: 0.14 });
+      document.querySelectorAll('[data-animate]').forEach(function(el) { obs.observe(el); });
+    });
+  </script>
+</body>
+</html>

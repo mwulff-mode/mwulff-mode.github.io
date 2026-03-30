@@ -1,0 +1,7 @@
+{
+  "name": "direction2-prototype",
+  "private": true,
+  "dependencies": {
+    "@phosphor-icons/web": "^2.1.1"
+  }
+}

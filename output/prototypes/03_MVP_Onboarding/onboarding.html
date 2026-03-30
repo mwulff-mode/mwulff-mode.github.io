@@ -1,0 +1,2760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarnWise — MVP Onboarding v3</title>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--cream-deep); border-radius: 4px; border-right: 4px solid transparent; background-clip: padding-box; }
+
+  :root {
+    --cream: #FAF8F5;
+    --cream-deep: #F2EDE6;
+    --cream-warm: #F8F3EC;
+    --primary: #2B6B4F;
+    --primary-light: #E2F0E8;
+    --primary-pale: #F0F7F3;
+    --primary-dark: #1F5A40;
+    --accent: #C25060;
+    --accent-light: #F4DEE2;
+    --accent-pale: #FAF0F2;
+    --secondary: #3A8A7A;
+    --secondary-light: #D0EDE8;
+    --task-video: #7B68EE;
+    --task-video-bg: #F0EDFF;
+    --task-survey: #A3BDD8;
+    --task-survey-bg: #F5F8FC;
+    --task-game: #E8913A;
+    --task-game-bg: #FFF6EE;
+    --task-checkin: #1A7A6A;
+    --task-checkin-bg: #E0F5F0;
+    --task-offers: #C4845E;
+    --task-offers-bg: #FFF6F2;
+    --task-receipts: #B89B4A;
+    --task-receipts-bg: #FFFBF2;
+    --progress: #0C8A6E;
+    --progress-light: #D0F0E6;
+    --ink: #3B3230;
+    --ink-secondary: #6B5E58;
+    --ink-tertiary: #8A7D76;
+    --white: #FFFFFF;
+    --radius-card: 20px;
+    --radius-lg: 24px;
+    --shadow-card: 0 1px 3px rgba(45, 42, 38, 0.06), 0 4px 12px rgba(45, 42, 38, 0.04), inset 0 1px 0 rgba(255,255,255,0.6);
+    --shadow-hover: 0 4px 20px rgba(45, 42, 38, 0.09);
+  }
+
+  body {
+    background: linear-gradient(170deg, #F0EBE4, #E8E2DA);
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── PHONE FRAME ─── */
+  .phone {
+    width: 375px;
+    height: 812px;
+    background: var(--cream);
+    border-radius: 48px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.08),
+      0 20px 60px rgba(0,0,0,0.12),
+      0 4px 16px rgba(0,0,0,0.06);
+  }
+  /* Paper texture overlay */
+  #paperOverlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    background-repeat: repeat;
+    mix-blend-mode: multiply;
+    border-radius: 48px;
+  }
+  @keyframes warmShift {
+    0% { background-position: 0% 0%; }
+    25% { background-position: 100% 50%; }
+    50% { background-position: 50% 100%; }
+    75% { background-position: 0% 50%; }
+    100% { background-position: 0% 0%; }
+  }
+
+  .island {
+    width: 120px; height: 32px;
+    background: #1a1a1a;
+    border-radius: 24px;
+    position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+  }
+
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    position: relative;
+    z-index: 20;
+    background: linear-gradient(to top, rgba(250,248,245,0) 0%, var(--cream) 35%);
+  }
+  .status-icons { display: flex; gap: 8px; align-items: center; }
+  .status-icons svg { width: 16px; height: 16px; }
+
+  /* ─── FLOATING PETALS ─── */
+  .petals {
+    position: absolute; inset: 0;
+    overflow: hidden; pointer-events: none; z-index: 0;
+  }
+  .petal {
+    position: absolute;
+    bottom: -20px;
+    left: var(--x);
+    width: var(--w);
+    height: var(--h);
+    border-radius: 50% 0 50% 0;
+    background: #FFFFFF;
+    opacity: 0;
+    animation: petalRise var(--dur) var(--delay) ease-in-out infinite;
+  }
+  @keyframes petalRise {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    6% { opacity: 0.5; }
+    30% { transform: translateY(-250px) translateX(calc(var(--sway) * 0.5)) rotate(60deg); }
+    60% { transform: translateY(-500px) translateX(calc(var(--sway) * -0.4)) rotate(150deg); opacity: 0.4; }
+    85% { opacity: 0.2; }
+    100% { transform: translateY(-850px) translateX(var(--sway)) rotate(260deg); opacity: 0; }
+  }
+
+  /* ─── SCREENS ─── */
+  .screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 56px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+    visibility: hidden;
+    background: var(--cream);
+  }
+  .screen.active { opacity: 1; pointer-events: auto; visibility: visible; }
+
+  /* Stagger animation elements */
+  .s {
+    opacity: 0; transform: translateY(16px);
+    transition:
+      opacity 460ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .s.v { opacity: 1; transform: translateY(0); }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    width: 100%; padding: 18px 24px;
+    background: var(--primary); color: var(--white);
+    border: none; border-radius: 16px;
+    font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 600;
+    cursor: pointer; letter-spacing: -0.2px;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(26,122,106,0.2); }
+  .btn:active { transform: scale(0.985); }
+
+  .btn-google {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+
+  .btn-outline {
+    width: 100%; padding: 16px 24px;
+    background: transparent; color: var(--primary);
+    border: 1.5px solid rgba(26,122,106,0.3); border-radius: 16px;
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .btn-outline:hover { border-color: var(--primary); background: var(--primary-pale); }
+
+  .or-divider {
+    display: flex; align-items: center; gap: 16px; margin: 4px 0;
+  }
+  .or-divider::before,
+  .or-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--cream-deep);
+  }
+  .or-divider span {
+    font-size: 13px; font-weight: 500; color: var(--ink-tertiary);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  .email-input {
+    width: 100%; padding: 16px 20px;
+    border: 1.5px solid var(--cream-deep); border-radius: 100px;
+    background: var(--white);
+    font-family: 'Outfit', sans-serif; font-size: 16px; color: var(--ink);
+    outline: none; min-height: 52px;
+    transition: border-color 0.2s;
+  }
+  .email-input::placeholder { color: var(--ink-tertiary); }
+  .email-input:focus { border-color: var(--primary); }
+
+  .back-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--cream-deep); border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink);
+    transition: background 0.18s;
+    position: absolute; top: 56px; left: 24px; z-index: 5;
+  }
+  .back-btn:hover { background: #EAE4DC; }
+
+  /* ─── CHIPS ─── */
+  .chip-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
+  .chip {
+    padding: 14px 22px;
+    border-radius: 100px;
+    background: var(--cream-deep);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
+    border: 2px solid transparent;
+    cursor: pointer; transition: all 0.2s ease; user-select: none;
+    min-height: 48px;
+    display: inline-flex; align-items: center;
+  }
+  .chip:hover { background: #EAE4DC; }
+  .chip.selected { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+  /* ─── TEXT INPUT ─── */
+  .text-input {
+    width: 100%; padding: 16px 20px;
+    background: var(--white); color: var(--ink);
+    border: 2px solid var(--cream-deep); border-radius: 14px;
+    font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 500;
+    outline: none; transition: border-color 0.2s ease;
+    margin-bottom: 24px;
+  }
+  .text-input:focus { border-color: var(--primary); }
+  .text-input::placeholder { color: var(--ink-tertiary); }
+
+  /* ─── PROGRESS RING ─── */
+  .ring-wrap {
+    width: 170px; height: 170px;
+    position: relative; flex-shrink: 0;
+  }
+  .ring-label {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  /* Cashout marker on ring */
+  .cashout-marker {
+    position: absolute;
+    width: 28px; height: 28px;
+    cursor: pointer;
+    z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    /* positioned by JS based on goal */
+  }
+  .cashout-marker-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 2.5px solid var(--primary-light);
+    box-shadow: 0 0 0 2px rgba(43, 107, 79, 0.15);
+  }
+  .cashout-tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    width: 180px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 250ms ease, transform 250ms ease;
+    z-index: 10;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .cashout-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .cashout-tip.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Ring animations */
+  .ring-wrap .ring-bg,
+  .ring-wrap .ring-fill {
+    transition: stroke-dasharray 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+
+  /* ─── LEGAL ─── */
+  .legal { font-size: 12px; color: var(--ink-tertiary); line-height: 1.5; margin-top: 12px; }
+  .legal a { color: var(--ink-tertiary); text-decoration: underline; }
+
+  /* ─── SCREEN 1: WELCOME ─── */
+  .screen-welcome {
+    align-items: center; text-align: center;
+  }
+  .screen-welcome .welcome-top {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .app-logo {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 4px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .app-name {
+    font-size: 38px; font-weight: 800; color: var(--ink);
+    letter-spacing: -1.5px; margin-bottom: 2px;
+    opacity: 0; transform: translateY(12px);
+    animation: textIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  }
+  .app-tagline {
+    font-size: 17px; font-weight: 500; color: var(--ink-secondary);
+    margin-bottom: 32px;
+    opacity: 0; transform: translateY(12px);
+    animation: textIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+  }
+  @keyframes textIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Social proof strip */
+  .proof-strip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    background: var(--white);
+    border-radius: 100px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 28px;
+    opacity: 0; transform: translateY(12px);
+    animation: textIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
+  }
+  .proof-strip .avatars {
+    display: flex;
+  }
+  .proof-strip .avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-left: -8px;
+  }
+  .proof-strip .avatar:first-child { margin-left: 0; }
+  .proof-strip span {
+    font-size: 14px; font-weight: 600; color: var(--ink-secondary);
+  }
+  .store-rating {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 500; color: var(--ink-tertiary);
+    opacity: 0; animation: textIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
+  }
+  .star-sm { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ─── SCREEN 2: VALUE PROP ─── */
+  .vp-headline {
+    font-size: 28px; font-weight: 800; color: var(--ink);
+    text-align: center; letter-spacing: -0.8px; line-height: 1.18;
+    margin-top: 48px; margin-bottom: 28px;
+  }
+  .benefit-list { display: flex; flex-direction: column; gap: 18px; margin-bottom: 24px; }
+  .benefit-row { display: flex; align-items: center; gap: 14px; }
+  .benefit-icon {
+    width: 46px; height: 46px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .benefit-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .benefit-sub { font-size: 15px; font-weight: 400; color: var(--ink-secondary); }
+
+  /* Testimonial */
+  .testimonial {
+    background: var(--white);
+    border-radius: var(--radius-card);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 24px;
+  }
+  .stars { display: flex; gap: 2px; margin-bottom: 10px; }
+  .star { width: 14px; height: 14px; color: #D4A843; }
+  .testi-quote {
+    font-size: 15px; font-weight: 500; color: var(--ink);
+    line-height: 1.5; margin-bottom: 8px; font-style: italic;
+  }
+  .testi-attr { font-size: 14px; font-weight: 500; color: var(--ink-secondary); }
+
+  /* ─── SCREEN 3: CONVERSATIONAL ─── */
+  .conv-step {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    padding: 56px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .conv-step.active { opacity: 1; pointer-events: auto; }
+
+  .conv-intro {
+    font-size: 15px; font-weight: 500; color: var(--ink-secondary);
+    margin-top: 72px; margin-bottom: 8px;
+    opacity: 0; transform: translateY(8px);
+  }
+  .conv-intro.v {
+    opacity: 1; transform: translateY(0);
+    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .conv-question {
+    font-size: 24px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.6px; line-height: 1.3;
+  }
+  .conv-question:first-child {
+    margin-top: 72px;
+  }
+  /* Typewriter */
+  .conv-question .tw-text {
+    display: inline;
+  }
+  .conv-question .tw-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--primary);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: twBlink 0.6s steps(2) infinite;
+  }
+  .conv-question .tw-cursor.done {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  @keyframes twBlink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* ─── BIG NAME INPUT ─── */
+  .big-name-wrap {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    min-height: 60px;
+  }
+  .big-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -1.5px;
+    line-height: 1;
+    font-size: 52px;
+    transition: font-size 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    word-break: break-word;
+    text-align: center;
+  }
+  .big-name:empty {
+    display: none;
+  }
+  .big-cursor {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    color: var(--primary);
+    font-size: 52px;
+    line-height: 1;
+    animation: cursorBlink 1s steps(2) infinite;
+    margin-left: 2px;
+    transition: font-size 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0; height: 0;
+  }
+
+  /* ─── FAKE KEYBOARD (Gboard) ─── */
+  .fake-kb {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: #E8EAED;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 20;
+    overflow: hidden;
+  }
+  .fake-kb.visible { transform: translateY(0); }
+
+  .kb-toolbar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #D1D4D9;
+  }
+  .kb-tb-icon {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #444746;
+    border-radius: 50%;
+  }
+  .kb-tb-accent {
+    background: #C2D9F7; color: #1A73E8; font-size: 12px;
+  }
+  .kb-tb-sep {
+    width: 1px; height: 20px; background: #C4C7CC; margin: 0 4px;
+  }
+
+  .kb-keys { padding: 6px 3px 4px; }
+  .kb-row {
+    display: flex; gap: 4px; justify-content: center; margin-bottom: 6px;
+  }
+  .kb-row-inset { padding: 0 14px; }
+  .kb-row span {
+    flex: 1; max-width: 32px; height: 42px;
+    background: #FFFFFF;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: -apple-system, 'Roboto', sans-serif;
+    font-size: 18px; font-weight: 400;
+    color: #1C1C1E;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+  }
+  .kb-fn {
+    max-width: 42px !important; flex: 0 0 42px !important;
+    font-size: 16px !important;
+  }
+  .kb-accent {
+    background: #C2D9F7 !important; color: #1A73E8 !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.12) !important;
+  }
+  .kb-gray {
+    background: #C8CBD0 !important; color: #1C1C1E !important;
+    font-size: 13px !important; font-weight: 600 !important;
+    max-width: 48px !important; flex: 0 0 48px !important;
+    border-radius: 20px !important;
+  }
+  .kb-comma, .kb-period {
+    max-width: 36px !important; flex: 0 0 36px !important;
+    font-size: 18px !important;
+  }
+  .kb-emoji {
+    max-width: 36px !important; flex: 0 0 36px !important;
+    font-size: 18px !important;
+  }
+  .kb-space {
+    flex: 1 1 auto !important; max-width: none !important;
+    border-radius: 20px !important;
+  }
+  .kb-enter-blue {
+    background: #A8C7F5 !important; color: #1A73E8 !important;
+    max-width: 48px !important; flex: 0 0 48px !important;
+    border-radius: 50% !important; height: 42px !important;
+    font-size: 20px !important;
+  }
+
+  .kb-bottom-bar {
+    display: flex; align-items: center; justify-content: center;
+    padding: 6px 0 8px;
+    position: relative;
+    background: #F0F0F0;
+  }
+  .kb-dismiss {
+    position: absolute; left: 16px;
+    font-size: 18px; color: #666;
+  }
+  .kb-home-indicator {
+    width: 100px; height: 4px;
+    background: #1C1C1E; border-radius: 2px;
+    opacity: 0.2;
+  }
+
+  /* When keyboard is up, shift content */
+  .conv-step.kb-up {
+    padding-bottom: 290px;
+  }
+
+  .conv-choices {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .conv-choice {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px;
+    background: var(--white);
+    border: 1.5px solid var(--cream-deep);
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 60px;
+    box-shadow: var(--shadow-card);
+  }
+  .conv-choice:hover {
+    border-color: var(--primary);
+    background: var(--primary-pale);
+  }
+  .conv-choice:active { transform: scale(0.98); }
+  .conv-choice-emoji {
+    font-size: 22px; flex-shrink: 0;
+    width: 36px; display: flex; align-items: center; justify-content: center;
+  }
+  .conv-choice-label {
+    flex: 1; font-size: 16px; font-weight: 600; color: var(--ink);
+  }
+  .conv-choice svg, .conv-choice > i { flex-shrink: 0; }
+  .conv-choice-body { flex: 1; }
+  .conv-proof {
+    display: flex; justify-content: center;
+    margin-top: 20px;
+  }
+  .conv-choice-detail {
+    display: block;
+    font-size: 13px; font-weight: 400; color: var(--ink-tertiary);
+    margin-top: 2px;
+  }
+  .conv-trust-badge {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 13px; font-weight: 500; color: var(--progress);
+    margin-top: 16px;
+  }
+
+  .field-label {
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  /* ─── SCREEN 4: GOAL SETUP ─── */
+  .goal-headline {
+    font-size: 26px; font-weight: 800; color: var(--ink);
+    letter-spacing: -0.8px; line-height: 1.2;
+    margin-top: 72px; margin-bottom: 6px;
+  }
+  .goal-sub {
+    font-size: 14px; font-weight: 400; color: var(--ink-tertiary);
+    margin-bottom: 28px;
+  }
+  .goal-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+  .goal-chip {
+    padding: 14px 20px;
+    border-radius: 16px;
+    background: var(--white);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
+    border: 2px solid var(--cream-deep);
+    cursor: pointer; transition: all 0.2s ease; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+    min-height: 48px;
+  }
+  .goal-chip:hover { border-color: var(--primary); background: var(--primary-pale); }
+  .goal-chip.selected { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+  .goal-chip .emoji { font-size: 18px; }
+
+  .amount-chips { display: flex; gap: 12px; margin-bottom: 24px; }
+  .amount-chip {
+    flex: 1; padding: 14px 8px;
+    border-radius: 14px;
+    background: var(--white);
+    color: var(--ink); text-align: center;
+    font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;
+    border: 2px solid var(--cream-deep);
+    cursor: pointer; transition: all 0.2s ease; user-select: none;
+    min-height: 48px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .amount-chip:hover { border-color: var(--primary); }
+  .amount-chip.selected { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+
+  .goal-preview {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; padding: 20px;
+    background: var(--white);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    margin-bottom: 24px;
+  }
+
+  /* ─── GIFT OVERLAY (home screen) ─── */
+  .gift-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 55;
+    pointer-events: none;
+    background: var(--cream);
+  }
+  .gift-overlay.show {
+    display: flex;
+  }
+  .gift-overlay.fade-out {
+    transition: opacity 600ms ease;
+    opacity: 0;
+  }
+  .gift-icon-wrap {
+    margin-bottom: 16px;
+    opacity: 0;
+  }
+  .gift-icon {
+    width: 96px; height: 96px;
+    background: linear-gradient(135deg, var(--primary) 0%, #2BA08E 100%);
+    border-radius: 28px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 12px 40px rgba(26,122,106,0.3);
+  }
+  .gift-label {
+    font-size: 22px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.4px; margin-bottom: 8px; opacity: 0;
+    padding: 0 40px; text-align: center; line-height: 1.3;
+  }
+  .gift-amount {
+    font-size: 64px; font-weight: 800; color: var(--primary);
+    letter-spacing: -3px; line-height: 1; margin-bottom: 8px; opacity: 0;
+  }
+  .gift-sub-text {
+    font-size: 15px; font-weight: 400; color: var(--ink-tertiary);
+    opacity: 0;
+  }
+
+  /* ─── STREAK TOAST (inline, on-brand) ─── */
+  .streak-toast {
+    position: absolute;
+    top: 54px; left: 20px; right: 20px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(45, 42, 38, 0.12);
+    z-index: 58;
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1), transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .streak-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .streak-toast.fade-out {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  .streak-toast-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    background: #FFF0E8;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .streak-toast-icon i {
+    font-size: 22px;
+    color: #FF6B35;
+    position: relative;
+    z-index: 2;
+  }
+  /* Warm glow behind icon */
+  .streak-toast-icon::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 18px;
+    background: radial-gradient(circle, rgba(255,107,53,0.2) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  .streak-toast.show .streak-toast-icon::after {
+    animation: streakGlow 600ms 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes streakGlow {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.3); }
+    100% { opacity: 0; transform: scale(1.5); }
+  }
+  .streak-toast-text {
+    flex: 1;
+  }
+  .streak-toast-title {
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    margin-bottom: 1px;
+  }
+  .streak-toast-sub {
+    font-size: 14px; font-weight: 400; color: var(--ink-secondary);
+  }
+
+  /* Home content hidden during gift */
+  .home-content {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .home-content.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Getting started section */
+  .getting-started {
+    margin-bottom: 20px;
+  }
+
+  /* Animations */
+  @keyframes giftBounceIn {
+    0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+    60% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes giftAmountIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes giftFadeUp {
+    0% { transform: translateY(12px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  /* ─── DAY 0 TASKS ─── */
+
+  .day0-section { margin-bottom: 16px; }
+  .day0-section-title {
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .day0-task {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px;
+    background: var(--white);
+    border-radius: 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 68px;
+    border-left: 4px solid transparent;
+    box-shadow: 0 1px 4px rgba(45, 42, 38, 0.07);
+  }
+  .day0-task:active { transform: scale(0.98); }
+  .day0-task.completed {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  .day0-task.completed .day0-task-action i {
+    color: var(--progress) !important;
+  }
+  .day0-task-icon {
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .day0-task-icon i { font-size: 26px !important; }
+  .day0-task-text { flex: 1; }
+  .day0-task-title {
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .day0-task-meta {
+    font-size: 14px; font-weight: 400; color: var(--ink-secondary);
+  }
+  .day0-task-action {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .day0-total {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 14px; font-weight: 500; color: var(--ink-secondary);
+    margin-bottom: 16px;
+  }
+  .day0-total strong { color: var(--progress); }
+
+  /* ─── SCREEN 6: HOME ─── */
+  .screen-home { padding: 56px 24px 0; overflow-y: auto; }
+
+  .home-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; margin-bottom: 24px;
+  }
+  .home-greeting {
+    font-size: 20px; font-weight: 600; color: var(--ink);
+  }
+  /* Multi-select preference choices */
+  .multi-choice { transition: all 0.2s ease; }
+  .multi-choice.selected {
+    background: var(--primary-pale);
+    border: 1.5px solid var(--primary);
+  }
+  .multi-choice .multi-check { transition: all 0.2s ease; }
+  .multi-choice.selected .multi-check {
+    color: var(--primary) !important;
+  }
+  .pref-continue {
+    transition: opacity 0.3s ease, pointer-events 0s;
+  }
+
+  .conv-card.home-content { margin-top: 12px; margin-bottom: 28px; }
+  .home-icons { display: flex; gap: 10px; }
+  .icon-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--cream-deep);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink-secondary);
+    transition: background 0.18s;
+  }
+  .icon-btn:hover { background: #EAE4DC; }
+
+  .balance-card {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .balance-label {
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .balance-amount {
+    font-size: 48px; font-weight: 800; color: var(--ink);
+    letter-spacing: -2.5px; line-height: 1; margin-bottom: 8px;
+  }
+  .balance-today {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; color: var(--progress);
+    background: var(--progress-light);
+    padding: 6px 14px; border-radius: 100px;
+  }
+
+  /* Goal ring on home */
+  .goal-ring-label {
+    font-size: 14px; font-weight: 600; color: var(--ink-tertiary);
+    margin-top: 4px;
+  }
+
+  /* Streak */
+  .streak-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 24px;
+  }
+  .streak-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #FF9500, #FF5E3A);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .streak-text { flex: 1; }
+  .streak-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .streak-sub { font-size: 13px; font-weight: 400; color: var(--ink-tertiary); }
+  .streak-dots { display: flex; gap: 4px; }
+  .streak-dot {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--ink-tertiary);
+  }
+  .streak-dot.done { background: var(--progress-light); color: var(--progress); }
+
+  /* Section header */
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .section-title { font-size: 16px; font-weight: 600; color: var(--ink); }
+  .section-link { font-size: 14px; font-weight: 600; color: var(--primary); text-decoration: none; cursor: pointer; padding: 12px 0; min-height: 48px; display: flex; align-items: center; }
+
+  /* Quick earn cards */
+  .earn-row { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; }
+  .earn-item {
+    min-width: 140px; flex-shrink: 0;
+    background: var(--white);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .earn-item:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .earn-item-icon {
+    width: 44px; height: 44px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .earn-item-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .earn-item-meta { font-size: 14px; font-weight: 500; color: var(--ink-secondary); margin-bottom: 6px; }
+  .earn-item-reward { font-size: 16px; font-weight: 700; color: var(--progress); }
+
+  /* Daily check-in */
+  .checkin-card {
+    background: var(--white);
+    border-radius: var(--radius-card);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-card);
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .checkin-card:hover { box-shadow: var(--shadow-hover); }
+  .checkin-icon {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    background: var(--task-checkin-bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .checkin-text { flex: 1; }
+  .checkin-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .checkin-sub { font-size: 15px; font-weight: 400; color: var(--ink-secondary); }
+  .checkin-badge {
+    padding: 10px 20px;
+    background: var(--primary);
+    color: var(--white);
+    border-radius: 100px;
+    font-size: 15px; font-weight: 600;
+    min-height: 48px;
+    display: flex; align-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* Games entry card */
+  .games-entry {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--white);
+    border-radius: var(--radius-card);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 72px;
+  }
+  .games-entry:hover { box-shadow: var(--shadow-hover); }
+  .games-entry-icons {
+    display: flex; gap: 4px; align-items: center;
+    background: var(--task-game-bg);
+    border-radius: 14px;
+    padding: 10px 12px;
+    flex-shrink: 0;
+  }
+  .games-entry-text { flex: 1; }
+  .games-entry-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .games-entry-sub { font-size: 14px; font-weight: 400; color: var(--ink-secondary); }
+
+  /* ─── CAROUSEL (Screen 2) ─── */
+  .carousel {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .carousel-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .carousel-slide .carousel-emoji,
+  .carousel-slide .carousel-title {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: opacity 450ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .carousel-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .carousel-slide.active .carousel-emoji {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 80ms;
+  }
+  .carousel-slide.active .carousel-title {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 200ms;
+  }
+  /* Exit animation */
+  .carousel-slide.exiting .carousel-emoji {
+    opacity: 0;
+    transform: translateY(-16px) scale(1.1);
+    transition-delay: 0ms;
+    transition-duration: 300ms;
+  }
+  .carousel-slide.exiting .carousel-title {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+    transition-delay: 50ms;
+    transition-duration: 250ms;
+  }
+  .carousel-emoji {
+    font-size: 88px;
+    line-height: 1;
+    margin-bottom: 32px;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.1));
+  }
+  .carousel-slide.active .carousel-emoji {
+    animation: emojiBounce 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 80ms both;
+  }
+  @keyframes emojiBounce {
+    0% { transform: translateY(24px) scale(0.7); opacity: 0; }
+    50% { transform: translateY(-6px) scale(1.05); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .carousel-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.8px;
+    margin-bottom: 10px;
+  }
+  .carousel-pill {
+    position: relative;
+    width: 64px; height: 64px; min-height: 64px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    flex-shrink: 0;
+  }
+  .carousel-pill-ring {
+    position: absolute; inset: 0;
+    width: 64px; height: 64px;
+  }
+  .carousel-pill-arc {
+    transition: stroke-dasharray 50ms linear;
+  }
+  .carousel-pill-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    letter-spacing: -0.3px;
+    line-height: 1;
+  }
+
+  /* ─── TRUST QUOTE ─── */
+  .trust-quote {
+    background: var(--white);
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .trust-quote-text {
+    font-size: 14px; font-weight: 500; font-style: italic;
+    color: var(--ink-secondary); line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .trust-quote-attr {
+    font-size: 13px; font-weight: 600; color: var(--ink-tertiary);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .trust-quote-stars {
+    display: flex; gap: 2px; margin-bottom: 10px;
+  }
+  .trust-quote-stars i {
+    font-size: 13px; color: #D4A843;
+  }
+
+  /* ─── TRUST STRIP ─── */
+  .trust-strip {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 12px 16px;
+    background: var(--primary-pale);
+    border-radius: 14px;
+    margin-bottom: 20px;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--primary);
+    white-space: nowrap;
+  }
+  .trust-divider {
+    width: 1px; height: 16px;
+    background: rgba(26,122,106,0.2);
+    flex-shrink: 0;
+  }
+
+  /* ─── STREAK BADGE ─── */
+  .streak-badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    background: #FFF4ED;
+    border-radius: 100px;
+    min-height: 40px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .streak-count {
+    font-size: 15px; font-weight: 700; color: #FF6B35;
+  }
+
+  /* ─── CONVERSATIONAL CARD (replaces static greeting) ─── */
+  .conv-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: var(--white);
+    border-radius: 18px;
+    box-shadow: 0 1px 4px rgba(45, 42, 38, 0.07);
+    border: 1px solid rgba(45, 42, 38, 0.08);
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 60px;
+  }
+  .conv-card:active { transform: scale(0.98); }
+  .conv-card.updating .conv-card-icon,
+  .conv-card.updating .conv-card-text {
+    animation: convSlideIn 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .conv-card.updating .conv-card-icon {
+    animation-name: convIconPop;
+  }
+  @keyframes convSlideIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes convIconPop {
+    0% { opacity: 0; transform: scale(0.5); }
+    60% { transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .conv-card-icon {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: var(--primary-pale);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .conv-card-text {
+    flex: 1; min-width: 0;
+  }
+  .conv-card-msg {
+    font-size: 15px; font-weight: 500; color: var(--ink);
+    line-height: 1.4;
+  }
+
+  /* ─── MY JOURNEY SCREEN ─── */
+  .screen-journey {
+    padding: 56px 24px 0;
+    overflow-y: auto;
+    display: flex; flex-direction: column;
+  }
+  .journey-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 12px; margin-bottom: 28px;
+  }
+  .journey-title {
+    font-size: 22px; font-weight: 700; color: var(--ink);
+    flex: 1;
+  }
+  .journey-close {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream-deep);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: none; font-size: 18px; color: var(--ink);
+    transition: background 0.15s;
+  }
+  .journey-close:hover { background: #E8E2DA; }
+
+  .journey-day {
+    margin-bottom: 24px;
+  }
+  .journey-day-label {
+    font-size: 13px; font-weight: 600; color: var(--ink-tertiary);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding-left: 20px;
+  }
+  .journey-entry {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--cream-deep);
+  }
+  .journey-entry:last-child { border-bottom: none; }
+  .journey-icon {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .journey-content { flex: 1; min-width: 0; }
+  .journey-msg {
+    font-size: 15px; font-weight: 500; color: var(--ink);
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+  .journey-msg em {
+    font-style: normal; font-weight: 600; color: var(--primary);
+  }
+  .journey-context {
+    font-size: 13px; font-weight: 400; color: var(--ink-tertiary);
+    line-height: 1.35;
+  }
+  .journey-time {
+    font-size: 12px; font-weight: 400; color: var(--ink-tertiary);
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .journey-empty {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: var(--ink-tertiary); text-align: center;
+    padding: 40px 20px;
+  }
+  .journey-empty i { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+  .journey-empty p { font-size: 15px; font-weight: 500; }
+
+  /* ─── TASK TILES ─── */
+  .task-tile {
+    flex: 1;
+    background: var(--white);
+    border-radius: var(--radius-card);
+    padding: 16px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid rgba(45, 42, 38, 0.04);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 48px;
+  }
+  .task-tile:hover { box-shadow: var(--shadow-hover); }
+  .task-tile-icon {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+    font-size: 28px;
+    border-radius: 12px;
+  }
+  .task-tile-icon i { font-size: 28px !important; }
+  .task-tile-title { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .task-tile-sub { font-size: 13px; font-weight: 400; color: var(--ink-tertiary); }
+
+  /* ─── EARN MORE (locked state) ─── */
+  .earn-more-lock {
+    color: var(--ink);
+    transition: opacity 0.4s ease, width 0.4s ease, margin 0.4s ease;
+    display: inline-block;
+  }
+  .earn-more-hint {
+    font-size: 13px; font-weight: 500; color: var(--ink-tertiary);
+    margin-bottom: 12px;
+    transition: opacity 0.4s ease, height 0.4s ease;
+  }
+  .earn-more-tiles {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(0.6);
+    transition: all 0.5s ease;
+  }
+  .earn-more-section.unlocked .earn-more-tiles {
+    opacity: 1;
+    pointer-events: auto;
+    filter: none;
+  }
+  .earn-more-section.unlocked .earn-more-lock {
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+  .earn-more-section.unlocked .earn-more-hint {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* ─── BOTTOM NAV ─── */
+  .bottom-nav {
+    position: sticky;
+    bottom: 0;
+    display: flex; justify-content: center;
+    z-index: 20;
+    padding: 24px 0 24px;
+    margin-top: auto;
+    flex-shrink: 0;
+    background: linear-gradient(to bottom, rgba(250,248,245,0) 0%, var(--cream) 35%);
+  }
+  .nav-bar {
+    background: var(--primary);
+    border-radius: 28px;
+    padding: 6px;
+    display: flex; gap: 2px;
+    box-shadow: 0 4px 24px rgba(26,122,106,0.3);
+  }
+  .nav-item {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 14px 20px;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    min-width: 48px; min-height: 48px;
+  }
+  .nav-item.active { background: rgba(255,255,255,0.95); }
+  .nav-item svg, .nav-item i { width: 20px; height: 20px; color: rgba(255,255,255,0.75); flex-shrink: 0; font-size: 20px; }
+  .nav-item.active svg, .nav-item.active i { color: var(--primary); }
+  .nav-label {
+    font-size: 13px; font-weight: 600; color: var(--primary);
+    display: none;
+  }
+  .nav-item.active .nav-label { display: block; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(14,158,126,0.3); }
+    50% { box-shadow: 0 0 0 12px rgba(14,158,126,0); }
+  }
+
+  /* Ring fill animation */
+  @keyframes fillRing {
+    from { stroke-dasharray: 0 251.3; }
+  }
+
+  /* Balance count-up handled in JS */
+
+  /* ─── SCREEN PICKER + ANNOTATIONS ─── */
+  body {
+    justify-content: center;
+    gap: 0;
+  }
+  .annotations {
+    position: fixed;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 340px;
+    z-index: 100;
+    font-family: 'Outfit', sans-serif;
+  }
+  .anno-card {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .anno-card.active { display: flex; }
+  .anno-screen-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--ink-tertiary);
+  }
+  .anno-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .anno-desc {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink-secondary);
+    line-height: 1.6;
+  }
+  .anno-features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .anno-feature {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 15px;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+  }
+  .anno-feature i {
+    font-size: 18px;
+    color: var(--primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .screen-picker {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 100;
+  }
+  .sp-item {
+    padding: 8px 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #999;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .sp-item:hover { color: #333; background: rgba(0,0,0,0.04); }
+  .sp-item.active { color: var(--primary); font-weight: 700; background: var(--primary-light); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div id="paperOverlay"></div>
+  <div class="island"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v4H1zm4-3h2v7H5zm4-3h2v10H9zm4-4h2v14h-2z"/></svg>
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2C5.2 2 2.8 3.4 1 5.5l1.2 1.2C3.6 4.8 5.7 3.5 8 3.5s4.4 1.3 5.8 3.2L15 5.5C13.2 3.4 10.8 2 8 2zm0 4c-1.7 0-3.2.8-4.2 2l1.2 1.2c.7-.9 1.8-1.5 3-1.5s2.3.6 3 1.5L12.2 8C11.2 6.8 9.7 6 8 6zm0 4c-.7 0-1.3.3-1.7.8L8 12.5l1.7-1.7C9.3 10.3 8.7 10 8 10z"/></svg>
+      <svg viewBox="0 0 20 12" fill="currentColor"><rect x="0" y="1" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2" y="3" width="10" height="6" rx="1"/><path d="M17 4v4c1 0 2-.9 2-2s-1-2-2-2z"/></svg>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ -->
+  <!-- SCREEN 1: WELCOME      -->
+  <!-- ═══════════════════════ -->
+  <div class="screen screen-welcome active" id="screen1">
+
+    <div class="welcome-top">
+      <!-- Animated logo video -->
+      <video class="app-logo" autoplay muted playsinline id="logoVideo">
+        <source src="logo_animation.webm" type="video/webm">
+      </video>
+      <div class="app-name">EarnWise</div>
+      <div class="app-tagline">Turn your spare moments<br>into real dollars.</div>
+
+      <div class="proof-strip">
+        <div class="avatars">
+          <div class="avatar">L</div>
+          <div class="avatar">D</div>
+          <div class="avatar">C</div>
+        </div>
+        <span>People like you earn ~$47/month</span>
+      </div>
+    </div>
+
+    <div style="width:100%;flex-shrink:0;display:flex;flex-direction:column;gap:12px;">
+      <button class="btn btn-google" onclick="goTo(2)">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#fff" opacity="0.9"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#fff" opacity="0.8"/>
+          <path d="M5.84 14.09A6.96 6.96 0 015.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.02 11.02 0 001 12c0 1.78.43 3.46 1.18 4.93l3.66-2.84z" fill="#fff" opacity="0.7"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#fff" opacity="0.85"/>
+        </svg>
+        Continue with Google
+      </button>
+      <button class="btn-outline" onclick="goTo(2)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+        Continue with Apple
+      </button>
+      <div class="or-divider"><span>or</span></div>
+      <input class="email-input" type="email" placeholder="Email address" onclick="goTo(2)" readonly>
+      <div class="legal" style="text-align:center;">
+        By continuing you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ -->
+  <!-- SCREEN 2: TRUST & VALUE    -->
+  <!-- ═══════════════════════════ -->
+  <div class="screen" id="screen2">
+
+    <!-- Step indicator -->
+    <div class="carousel-pill" id="carouselPill" style="margin-top:48px;">
+      <svg class="carousel-pill-ring" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="29" fill="none" stroke="var(--cream-deep)" stroke-width="2.5"/>
+        <circle class="carousel-pill-arc" id="carouselArc" cx="32" cy="32" r="29" fill="none" stroke="var(--primary)" stroke-width="2.5"
+          stroke-linecap="round" stroke-dasharray="0 182.2" transform="rotate(-90 32 32)"/>
+      </svg>
+      <span class="carousel-pill-label" id="carouselLabel">1/3</span>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-bottom:72px;">
+      <!-- Carousel -->
+      <div class="carousel">
+        <div class="carousel-slide active" data-slide="0">
+          <div class="carousel-emoji"><i class="ph-duotone ph-play-circle" style="color:var(--task-video);"></i></div>
+          <div class="carousel-title">Watch, play, earn real dollars</div>
+        </div>
+        <div class="carousel-slide" data-slide="1">
+          <div class="carousel-emoji"><i class="ph-duotone ph-lightning" style="color:var(--task-game);"></i></div>
+          <div class="carousel-title">Cash out same day, straight to PayPal</div>
+        </div>
+        <div class="carousel-slide" data-slide="2">
+          <div class="carousel-emoji"><i class="ph-duotone ph-shield-check" style="color:var(--primary);"></i></div>
+          <div class="carousel-title">No tricks — just real money</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-quote s">
+      <div class="trust-quote-stars">
+        <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
+      </div>
+      <div class="trust-quote-text">$47 last month just from my couch. I play Candy Crush anyway — now I earn while I do it.</div>
+      <div class="trust-quote-attr">— Diane, Ohio · cashed out 3 times</div>
+    </div>
+    <button class="btn s" onclick="goTo(3)">Let's get started</button>
+  </div>
+
+  <!-- ═══════════════════════════ -->
+  <!-- SCREEN 3: QUICK PROFILE    -->
+  <!-- ═══════════════════════════ -->
+  <div class="screen screen-conv" id="screen3">
+    <button class="back-btn" onclick="goTo(2)">
+      <i class="ph-bold ph-arrow-left" style="font-size:20px;"></i>
+    </button>
+
+    <!-- Step 1: Earning preferences (multi-select) -->
+    <div class="conv-step active" id="convStep1">
+      <div class="conv-question s" data-tw="Which of these sound like your kind of thing?" style="margin-top:72px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
+      <div class="conv-hint s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;font-size:14px;color:var(--ink-tertiary);margin-top:8px;">Pick your top 3 — we'll start you there</div>
+      <div style="flex:1;"></div>
+      <div class="conv-choices s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;">
+          <div class="conv-choice multi-choice" onclick="togglePref(this)">
+            <span class="conv-choice-emoji"><i class="ph ph-game-controller" style="font-size:22px;color:var(--task-game);"></i></span>
+            <span class="conv-choice-label">Play games while I earn</span>
+            <i class="ph ph-circle multi-check" style="font-size:22px;color:var(--cream-deep);"></i>
+          </div>
+          <div class="conv-choice multi-choice" onclick="togglePref(this)">
+            <span class="conv-choice-emoji"><i class="ph ph-video-camera" style="font-size:22px;color:var(--task-video);"></i></span>
+            <span class="conv-choice-label">Watch short videos</span>
+            <i class="ph ph-circle multi-check" style="font-size:22px;color:var(--cream-deep);"></i>
+          </div>
+          <div class="conv-choice multi-choice" onclick="togglePref(this)">
+            <span class="conv-choice-emoji"><i class="ph ph-clipboard-text" style="font-size:22px;color:var(--task-survey);"></i></span>
+            <span class="conv-choice-label">Share my opinions</span>
+            <i class="ph ph-circle multi-check" style="font-size:22px;color:var(--cream-deep);"></i>
+          </div>
+          <div class="conv-choice multi-choice" onclick="togglePref(this)">
+            <span class="conv-choice-emoji"><i class="ph ph-tag" style="font-size:22px;color:var(--task-offers);"></i></span>
+            <span class="conv-choice-label">Check out deals & offers</span>
+            <i class="ph ph-circle multi-check" style="font-size:22px;color:var(--cream-deep);"></i>
+          </div>
+          <div class="conv-choice multi-choice" onclick="togglePref(this)">
+            <span class="conv-choice-emoji"><i class="ph ph-receipt" style="font-size:22px;color:var(--task-receipts);"></i></span>
+            <span class="conv-choice-label">Scan my receipts</span>
+            <i class="ph ph-circle multi-check" style="font-size:22px;color:var(--cream-deep);"></i>
+          </div>
+        </div>
+      <button class="btn s pref-continue" id="prefContinue" onclick="convNext(2)" style="opacity:0.4;pointer-events:none;margin-top:12px;">Continue</button>
+    </div>
+
+    <!-- Step 2: Time -->
+    <div class="conv-step" id="convStep2">
+      <div class="conv-question s" data-tw="When do you usually have a few minutes to yourself?" style="margin-top:72px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
+      <div style="flex:1;"></div>
+      <div class="conv-choices s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;">
+          <div class="conv-choice" onclick="convNext(3)">
+            <span class="conv-choice-emoji"><i class="ph ph-coffee" style="font-size:22px;color:var(--task-offers);"></i></span>
+            <div class="conv-choice-body">
+              <span class="conv-choice-label">Morning, with my coffee</span>
+              <span class="conv-choice-detail">around 7–9am</span>
+            </div>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+          <div class="conv-choice" onclick="convNext(3)">
+            <span class="conv-choice-emoji"><i class="ph ph-sun" style="font-size:22px;color:var(--task-game);"></i></span>
+            <div class="conv-choice-body">
+              <span class="conv-choice-label">Midday, on a break</span>
+              <span class="conv-choice-detail">around 12–2pm</span>
+            </div>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+          <div class="conv-choice" onclick="convNext(3)">
+            <span class="conv-choice-emoji"><i class="ph ph-television" style="font-size:22px;color:var(--task-video);"></i></span>
+            <div class="conv-choice-body">
+              <span class="conv-choice-label">Evening, on the couch</span>
+              <span class="conv-choice-detail">around 7–10pm</span>
+            </div>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+          <div class="conv-choice" onclick="convNext(3)">
+            <span class="conv-choice-emoji"><i class="ph ph-sparkle" style="font-size:22px;color:var(--task-receipts);"></i></span>
+            <span class="conv-choice-label">It changes day to day</span>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Earnings goal -->
+    <div class="conv-step" id="convStep3">
+      <div class="conv-question s" data-tw="What would make it feel worth your time?" style="margin-top:72px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
+      <div style="flex:1;"></div>
+      <div class="conv-choices s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;">
+          <div class="conv-choice" onclick="setGoal(25);convNext(4)">
+            <span class="conv-choice-emoji"><i class="ph ph-coin" style="font-size:22px;color:var(--primary);"></i></span>
+            <div class="conv-choice-body">
+              <span class="conv-choice-label">Around $25</span>
+              <span class="conv-choice-detail">A few minutes a day</span>
+            </div>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+          <div class="conv-choice" onclick="setGoal(50);convNext(4)">
+            <span class="conv-choice-emoji"><i class="ph ph-target" style="font-size:22px;color:var(--task-game);"></i></span>
+            <div class="conv-choice-body">
+              <span class="conv-choice-label">Around $50</span>
+              <span class="conv-choice-detail">About 30 minutes a day</span>
+            </div>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+          <div class="conv-choice" onclick="setGoal(75);convNext(4)">
+            <span class="conv-choice-emoji"><i class="ph ph-rocket" style="font-size:22px;color:var(--task-video);"></i></span>
+            <div class="conv-choice-body">
+              <span class="conv-choice-label">$75 or more</span>
+              <span class="conv-choice-detail">About an hour a day</span>
+            </div>
+            <i class="ph-bold ph-caret-right" style="font-size:18px;color:var(--ink-tertiary);"></i>
+          </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Name -->
+    <div class="conv-step" id="convStep4" onclick="focusNameInput()">
+      <div class="conv-question s">One last thing —<br>what should we call you?</div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+        <div class="big-name-wrap s">
+          <span class="big-name" id="bigName">Lisa</span><span class="big-cursor" id="bigCursor">|</span>
+        </div>
+      </div>
+      <input class="hidden-input" type="text" id="nameInput" value="Lisa" autocomplete="off" autocorrect="off" autocapitalize="words">
+      <button class="btn s" style="margin-top:auto;" onclick="convNext(99)">That's me</button>
+      <!-- Fake keyboard (Gboard) -->
+      <div class="fake-kb" id="fakeKb">
+        <div class="kb-toolbar">
+          <span class="kb-tb-icon kb-tb-accent">&#9664;</span>
+          <span class="kb-tb-icon">&#128444;</span>
+          <span class="kb-tb-icon" style="font-weight:800;font-size:13px;">GIF</span>
+          <span class="kb-tb-icon">&#128203;</span>
+          <span class="kb-tb-icon">&#9881;</span>
+          <span class="kb-tb-sep"></span>
+          <span class="kb-tb-icon">&#8943;</span>
+          <span class="kb-tb-icon">&#127908;</span>
+        </div>
+        <div class="kb-keys">
+          <div class="kb-row"><span>q</span><span>w</span><span>e</span><span>r</span><span>t</span><span>y</span><span>u</span><span>i</span><span>o</span><span>p</span></div>
+          <div class="kb-row kb-row-inset"><span>a</span><span>s</span><span>d</span><span>f</span><span>g</span><span>h</span><span>j</span><span>k</span><span>l</span></div>
+          <div class="kb-row"><span class="kb-fn kb-accent">&#8679;</span><span>z</span><span>x</span><span>c</span><span>v</span><span>b</span><span>n</span><span>m</span><span class="kb-fn kb-accent">&#9003;</span></div>
+          <div class="kb-row"><span class="kb-fn kb-gray">?123</span><span class="kb-comma">,</span><span class="kb-emoji">&#9786;</span><span class="kb-space"></span><span class="kb-period">.</span><span class="kb-fn kb-enter-blue">&#8617;</span></div>
+        </div>
+        <div class="kb-bottom-bar">
+          <span class="kb-dismiss">&#8964;</span>
+          <div class="kb-home-indicator"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ -->
+  <!-- SCREEN 5: HOME             -->
+  <!-- ═══════════════════════════ -->
+  <!-- Gift overlay (outside home screen scroll container) -->
+  <div class="gift-overlay" id="giftOverlay">
+    <div class="gift-icon-wrap" id="giftIcon">
+      <div class="gift-icon">
+        <i class="ph-fill ph-gift" style="font-size:48px;color:#fff;"></i>
+      </div>
+    </div>
+    <div class="gift-amount" id="giftAmount">$1.00</div>
+    <div class="gift-label" id="giftLabel">A little head start, Lisa</div>
+    <div class="gift-sub-text" id="giftSub"></div>
+  </div>
+
+  <!-- Streak toast (inline, on-brand) -->
+  <div class="streak-toast" id="streakToast">
+    <div class="streak-toast-icon">
+      <i class="ph-fill ph-flame"></i>
+    </div>
+    <div class="streak-toast-text">
+      <div class="streak-toast-title">1-day streak — nice start</div>
+      <div class="streak-toast-sub">Come back tomorrow to keep it going</div>
+    </div>
+  </div>
+
+  <div class="screen screen-home" id="screen5">
+    <!-- Conversational greeting card -->
+    <div class="conv-card home-content" id="convCard" onclick="goTo(6)">
+      <div class="conv-card-icon" id="convCardIcon"><i class="ph-duotone ph-hand-waving" style="font-size:20px;color:var(--primary);"></i></div>
+      <div class="conv-card-text">
+        <div class="conv-card-msg" id="convCardMsg">Hey Lisa, let's start earning</div>
+      </div>
+    </div>
+
+    <!-- Balance + Goal Ring -->
+    <div class="balance-card home-content">
+      <div style="flex:1;">
+        <div class="balance-label">Your balance</div>
+        <div class="balance-amount" id="homeBalance">$1.00</div>
+        <div class="balance-today">
+          <i class="ph-bold ph-arrow-up" style="font-size:14px;"></i>
+          $1.00 today
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div class="ring-wrap" id="homeRing">
+          <svg width="170" height="170" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#E5DDD4" stroke-width="10" stroke-linecap="round"/>
+            <circle id="homeRingFill" cx="50" cy="50" r="40" fill="none" stroke="var(--progress)" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="0 251.3" transform="rotate(-90 50 50)"
+              style="transition: stroke-dasharray 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;"/>
+          </svg>
+          <!-- Cashout marker -->
+          <div class="cashout-marker" id="cashoutMarker" onclick="showCashoutTip(event)">
+            <div class="cashout-marker-dot"></div>
+          </div>
+          <!-- Tooltip -->
+          <div class="cashout-tip" id="cashoutTip">
+            <div class="cashout-tip-text">You can cash out once you hit $10</div>
+          </div>
+          <div class="ring-label">
+            <span style="font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-1px;line-height:1;" id="homeRingPct">4%</span>
+            <span style="font-size:13px;font-weight:500;color:var(--ink-tertiary);margin-top:2px;display:block;" id="homeRingGoal">of $25</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Today's tasks (recommended) -->
+    <div class="getting-started home-content" id="gettingStarted">
+      <div class="section-header" style="margin-bottom:14px;">
+        <div class="section-title">Based on your answers, start here</div>
+      </div>
+
+      <div class="day0-task" id="task-survey" onclick="completeDay0Task('survey')" style="border-left-color:var(--task-survey);">
+        <div class="day0-task-icon">
+          <i class="ph-duotone ph-clipboard-text" style="color:var(--task-survey);"></i>
+        </div>
+        <div class="day0-task-text">
+          <div class="day0-task-title">Quick welcome survey</div>
+          <div class="day0-task-meta">~2 min</div>
+        </div>
+        <div class="day0-task-action"><i class="ph-fill ph-play-circle" style="font-size:36px;color:var(--primary);"></i></div>
+      </div>
+
+      <div class="day0-task" id="task-videos" onclick="completeDay0Task('videos')" style="border-left-color:var(--task-video);">
+        <div class="day0-task-icon">
+          <i class="ph-duotone ph-video-camera" style="color:var(--task-video);"></i>
+        </div>
+        <div class="day0-task-text">
+          <div class="day0-task-title">Watch 3 short videos</div>
+          <div class="day0-task-meta">~2 min</div>
+        </div>
+        <div class="day0-task-action"><i class="ph-fill ph-play-circle" style="font-size:36px;color:var(--primary);"></i></div>
+      </div>
+
+      <div class="day0-task" id="task-game" onclick="completeDay0Task('game')" style="border-left-color:var(--task-game);">
+        <div class="day0-task-icon">
+          <i class="ph-duotone ph-game-controller" style="color:var(--task-game);"></i>
+        </div>
+        <div class="day0-task-text">
+          <div class="day0-task-title">Play Candy Crush</div>
+          <div class="day0-task-meta">~5 min</div>
+        </div>
+        <div class="day0-task-action"><i class="ph-fill ph-play-circle" style="font-size:36px;color:var(--primary);"></i></div>
+      </div>
+    </div>
+
+    <!-- Earn more -->
+    <div class="home-content earn-more-section" id="earnMoreSection" style="margin-bottom:20px;margin-top:12px;">
+      <div class="section-header" style="margin-bottom:4px;">
+        <div class="section-title"><i class="ph ph-lock-simple earn-more-lock" id="earnMoreLock" style="font-size:14px;margin-right:6px;"></i>Earn more</div>
+      </div>
+      <div class="earn-more-hint" id="earnMoreHint">Finish your first 3 tasks to unlock these</div>
+
+      <div style="display:flex;gap:12px;" class="earn-more-tiles" id="earnMoreTiles">
+        <div class="task-tile">
+          <div class="task-tile-icon" style="background:var(--task-offers-bg);">
+            <i class="ph-duotone ph-tag" style="color:var(--task-offers);"></i>
+          </div>
+          <div class="task-tile-title">Offers</div>
+          <div class="task-tile-sub">Save & earn</div>
+        </div>
+        <div class="task-tile">
+          <div class="task-tile-icon" style="background:var(--task-receipts-bg);">
+            <i class="ph-duotone ph-receipt" style="color:var(--task-receipts);"></i>
+          </div>
+          <div class="task-tile-title">Receipts</div>
+          <div class="task-tile-sub">Earn cashback</div>
+        </div>
+        <div class="task-tile">
+          <div class="task-tile-icon" style="background:var(--task-game-bg);">
+            <i class="ph-duotone ph-game-controller" style="color:var(--task-game);"></i>
+          </div>
+          <div class="task-tile-title">Games</div>
+          <div class="task-tile-sub">Play & earn</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav home-content">
+      <div class="nav-bar">
+        <div class="nav-item active">
+          <i class="ph-fill ph-house" style="font-size:20px;"></i>
+          <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item">
+          <i class="ph ph-wallet" style="font-size:20px;"></i>
+        </div>
+        <div class="nav-item">
+          <i class="ph ph-user" style="font-size:20px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ -->
+  <!-- SCREEN 6: MY JOURNEY       -->
+  <!-- ═══════════════════════════ -->
+  <div class="screen screen-journey" id="screen6">
+    <div class="journey-header">
+      <div class="journey-title">My Journey</div>
+      <button class="journey-close" onclick="goTo(5)">
+        <i class="ph-bold ph-x"></i>
+      </button>
+    </div>
+
+    <div id="journeyEntries">
+      <!-- Entries will be populated by JS based on app state -->
+    </div>
+  </div>
+
+</div>
+
+<!-- Annotations panel (left side) -->
+<div class="annotations" id="annotations">
+
+  <div class="anno-card active" data-screen="1">
+    <div class="anno-screen-label">Screen 1</div>
+    <div class="anno-title">Welcome</div>
+    <div class="anno-desc">First impression. Establish trust fast, minimize friction to sign-up.</div>
+    <div class="anno-features">
+      <div class="anno-feature"><i class="ph ph-users-three"></i>Social proof strip with real earning average</div>
+      <div class="anno-feature"><i class="ph ph-lightning"></i>One-tap auth (Google/Apple) before email fallback</div>
+    </div>
+  </div>
+
+  <div class="anno-card" data-screen="2">
+    <div class="anno-screen-label">Screen 2</div>
+    <div class="anno-title">Value props</div>
+    <div class="anno-desc">Three auto-rotating slides sell the core promise. A real testimonial anchors credibility.</div>
+    <div class="anno-features">
+      <div class="anno-feature"><i class="ph ph-timer"></i>Auto-advance carousel with progress ring</div>
+      <div class="anno-feature"><i class="ph ph-quotes"></i>Real quote with specifics ($47, cashed out 3x)</div>
+      <div class="anno-feature"><i class="ph ph-pencil-simple"></i>Icons are placeholders — will be replaced with animated illustrations</div>
+    </div>
+  </div>
+
+  <div class="anno-card" data-screen="3a">
+    <div class="anno-screen-label">Screen 3a</div>
+    <div class="anno-title">Earning preferences</div>
+    <div class="anno-desc">Multi-select up to 3. Maps directly to our earning modes — Games, Videos, Surveys, Offers, Receipts.</div>
+    <div class="anno-features">
+      <div class="anno-feature"><i class="ph ph-chat-dots"></i>Conversational framing hides the data collection</div>
+      <div class="anno-feature"><i class="ph ph-target"></i>Selections drive the starter tasks on Home</div>
+      <div class="anno-feature"><i class="ph ph-check-square"></i>Multi-select gives richer signal than single-pick</div>
+    </div>
+  </div>
+
+  <div class="anno-card" data-screen="3b">
+    <div class="anno-screen-label">Screen 3b</div>
+    <div class="anno-title">Availability</div>
+    <div class="anno-desc">Understand when the user earns so we can time notifications and task suggestions.</div>
+  </div>
+
+  <div class="anno-card" data-screen="3c">
+    <div class="anno-screen-label">Screen 3c</div>
+    <div class="anno-title">Earnings goal</div>
+    <div class="anno-desc">User-chosen goal powers the progress ring on Home. Goal framing, not expense anchoring.</div>
+    <div class="anno-features">
+      <div class="anno-feature"><i class="ph ph-chart-line-up"></i>Each option sets a realistic expectation with time commitment</div>
+    </div>
+  </div>
+
+  <div class="anno-card" data-screen="3d">
+    <div class="anno-screen-label">Screen 3d</div>
+    <div class="anno-title">Your name</div>
+    <div class="anno-desc">Personal touch. The name carries through to greetings, the journey log, and celebrations.</div>
+  </div>
+
+  <div class="anno-card" data-screen="5">
+    <div class="anno-screen-label">Screen 4</div>
+    <div class="anno-title">Home</div>
+    <div class="anno-desc">The daily hub. Designed to reduce decision fatigue and build momentum from day one.</div>
+    <div class="anno-features">
+      <div class="anno-feature"><i class="ph ph-chat-circle-text"></i>Conversational card — a living feed that makes the app feel personal. Tap to see full journey history</div>
+      <div class="anno-feature"><i class="ph ph-list-checks"></i>Curated starter tasks — we always recommend what to do next so the user never stares at a menu</div>
+      <div class="anno-feature"><i class="ph ph-lock-simple"></i>Earn More is locked until first 3 tasks are done — reduces overwhelm, builds early completion habits</div>
+      <div class="anno-feature"><i class="ph ph-circle-wavy-check"></i>Goal ring tracks progress toward the user's own target, not an arbitrary number</div>
+    </div>
+  </div>
+
+  <div class="anno-card" data-screen="6">
+    <div class="anno-screen-label">Screen 5</div>
+    <div class="anno-title">My Journey</div>
+    <div class="anno-desc">A micro-journal the app writes for you. Every milestone, task, and streak lives here.</div>
+    <div class="anno-features">
+      <div class="anno-feature"><i class="ph ph-path"></i>Creates a sense of progress even on day one</div>
+      <div class="anno-feature"><i class="ph ph-arrow-counter-clockwise"></i>Scroll back to see how far you've come — retention hook</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Screen picker -->
+<div class="screen-picker">
+  <div class="sp-item active" onclick="jumpTo(1)">1. Welcome</div>
+  <div class="sp-item" onclick="jumpTo(2)">2. Carousel</div>
+  <div class="sp-item" onclick="jumpTo(3,'1')">3a. Downtime</div>
+  <div class="sp-item" onclick="jumpTo(3,'2')">3b. Time</div>
+  <div class="sp-item" onclick="jumpTo(3,'3')">3c. Goal</div>
+  <div class="sp-item" onclick="jumpTo(3,'4')">3d. Name</div>
+  <div class="sp-item" onclick="jumpTo(5)">5. Home</div>
+  <div class="sp-item" onclick="jumpTo(6)">6. Journey</div>
+</div>
+
+<script>
+let currentScreen = 1;
+let userName = 'Lisa';
+let selectedGoal = 'Coffee fund';
+let selectedAmount = 25;
+let screen5Played = false;
+let tasksCompleted = 0;
+const totalTasks = 3;
+
+// ─── JOURNEY LOG ───
+const journeyLog = [];
+
+const journeyIcons = {
+  welcome: {icon: 'ph-duotone ph-hand-waving', color: 'var(--primary)', bg: 'var(--primary-pale)'},
+  money: {icon: 'ph-duotone ph-coin', color: 'var(--task-receipts)', bg: 'var(--task-receipts-bg)'},
+  task: {icon: 'ph-duotone ph-check-circle', color: 'var(--progress)', bg: 'var(--progress-light)'},
+  streak: {icon: 'ph-fill ph-flame', color: '#FF6B35', bg: '#FFF4ED'},
+  unlock: {icon: 'ph-duotone ph-lock-simple-open', color: 'var(--primary)', bg: 'var(--primary-pale)'},
+  survey: {icon: 'ph-duotone ph-clipboard-text', color: 'var(--task-survey)', bg: 'var(--task-survey-bg)'},
+  video: {icon: 'ph-duotone ph-video-camera', color: 'var(--task-video)', bg: 'var(--task-video-bg)'},
+  game: {icon: 'ph-duotone ph-game-controller', color: 'var(--task-game)', bg: 'var(--task-game-bg)'},
+};
+
+function addJourneyEntry(msg, context, iconType) {
+  const now = new Date();
+  const iconData = journeyIcons[iconType] || journeyIcons.welcome;
+  journeyLog.unshift({
+    msg, context, iconData,
+    time: now.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}),
+    date: 'Today'
+  });
+  // Animate the conversational card update with typewriter
+  const card = document.getElementById('convCard');
+  const cardMsg = document.getElementById('convCardMsg');
+  const cardIcon = document.getElementById('convCardIcon');
+  if (card && cardMsg && cardIcon) {
+    // Fade out current content
+    card.style.transition = 'opacity 150ms ease';
+    card.style.opacity = '0.4';
+    setTimeout(() => {
+      // Swap icon
+      cardIcon.innerHTML = '<i class="' + iconData.icon + '" style="font-size:20px;color:' + iconData.color + ';"></i>';
+      cardIcon.style.background = iconData.bg;
+      // Clear text and start typewriter
+      const plainMsg = msg.replace(/<[^>]*>/g, ''); // strip HTML for typewriter
+      cardMsg.textContent = '';
+      card.style.opacity = '1';
+      card.classList.remove('updating');
+      void card.offsetWidth;
+      card.classList.add('updating');
+      // Typewriter effect
+      let i = 0;
+      const speed = 25;
+      function tickCard() {
+        if (i < plainMsg.length) {
+          cardMsg.textContent += plainMsg[i];
+          i++;
+          setTimeout(tickCard, speed);
+        }
+      }
+      tickCard();
+    }, 150);
+  }
+  renderJourney();
+}
+
+function renderJourney() {
+  const container = document.getElementById('journeyEntries');
+  if (!container) return;
+
+  // Group by date
+  const groups = {};
+  journeyLog.forEach(e => {
+    if (!groups[e.date]) groups[e.date] = [];
+    groups[e.date].push(e);
+  });
+
+  let html = '';
+  for (const [date, entries] of Object.entries(groups)) {
+    html += '<div class="journey-day">';
+    html += '<div class="journey-day-label">' + date + '</div>';
+    entries.forEach(e => {
+      const ic = e.iconData || journeyIcons.welcome;
+      html += '<div class="journey-entry">';
+      html += '  <div class="journey-icon" style="background:' + ic.bg + ';">';
+      html += '    <i class="' + ic.icon + '" style="font-size:16px;color:' + ic.color + ';"></i>';
+      html += '  </div>';
+      html += '  <div class="journey-content">';
+      html += '    <div class="journey-msg">' + e.msg + '</div>';
+      if (e.context) {
+        html += '    <div class="journey-context">' + e.context + '</div>';
+      }
+      html += '  </div>';
+      html += '  <div class="journey-time">' + e.time + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  if (journeyLog.length === 0) {
+    html = '<div class="journey-empty"><i class="ph-duotone ph-path"></i><p>Your journey starts here</p></div>';
+  }
+  container.innerHTML = html;
+}
+
+const MIN_CASHOUT = 10;
+
+function setGoal(amount) {
+  selectedAmount = amount;
+  document.getElementById('homeRingGoal').textContent = 'of $' + amount;
+  const pct = Math.round((1 / amount) * 100);
+  document.getElementById('homeRingPct').textContent = pct + '%';
+  positionCashoutMarker(amount);
+}
+
+function positionCashoutMarker(goalAmount) {
+  const marker = document.getElementById('cashoutMarker');
+  if (!marker) return;
+  const pct = MIN_CASHOUT / goalAmount;
+  // Ring: center at 85,85 (half of 170), radius 85 * (40/50) = 68
+  const angle = -Math.PI / 2 + pct * 2 * Math.PI;
+  const cx = 85, cy = 85, r = 68;
+  const x = cx + r * Math.cos(angle) - 14;
+  const y = cy + r * Math.sin(angle) - 14;
+  marker.style.left = x + 'px';
+  marker.style.top = y + 'px';
+}
+
+function showCashoutTip(e) {
+  e.stopPropagation();
+  const tip = document.getElementById('cashoutTip');
+  tip.classList.add('show');
+  setTimeout(() => tip.classList.remove('show'), 2500);
+}
+
+// Position marker on load with default goal
+setTimeout(() => positionCashoutMarker(selectedAmount), 100);
+// ─── Multi-select preferences ───
+let prefCount = 0;
+function togglePref(el) {
+  const isSelected = el.classList.contains('selected');
+  const check = el.querySelector('.multi-check');
+  if (isSelected) {
+    el.classList.remove('selected');
+    check.className = 'ph ph-circle multi-check';
+    prefCount--;
+  } else {
+    if (prefCount >= 3) return; // max 3
+    el.classList.add('selected');
+    check.className = 'ph-fill ph-check-circle multi-check';
+    prefCount++;
+  }
+  // Enable/disable continue button
+  const btn = document.getElementById('prefContinue');
+  if (prefCount >= 1) {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  } else {
+    btn.style.opacity = '0.4';
+    btn.style.pointerEvents = 'none';
+  }
+}
+
+// Speed up logo video
+const logoVideo = document.getElementById('logoVideo');
+if (logoVideo) logoVideo.playbackRate = 2;
+
+const spring = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+// ─── Conversational onboarding (Screen 3) ───
+// ─── Big name input ───
+function focusNameInput() {
+  document.getElementById('nameInput').focus();
+}
+
+function updateBigName() {
+  const input = document.getElementById('nameInput');
+  const display = document.getElementById('bigName');
+  const cursor = document.getElementById('bigCursor');
+  const val = input.value;
+  display.textContent = val;
+
+  // Scale font size based on length
+  let size = 52;
+  if (val.length > 12) size = 32;
+  else if (val.length > 9) size = 36;
+  else if (val.length > 6) size = 42;
+  display.style.fontSize = size + 'px';
+  cursor.style.fontSize = size + 'px';
+}
+
+document.getElementById('nameInput').addEventListener('input', updateBigName);
+updateBigName();
+
+function showKeyboard() {
+  const kb = document.getElementById('fakeKb');
+  const step4 = document.getElementById('convStep4');
+  if (kb && step4) {
+    setTimeout(() => {
+      kb.classList.add('visible');
+      step4.classList.add('kb-up');
+      document.getElementById('nameInput').focus();
+    }, 500);
+  }
+}
+
+function hideKeyboard() {
+  const kb = document.getElementById('fakeKb');
+  const step4 = document.getElementById('convStep4');
+  if (kb) kb.classList.remove('visible');
+  if (step4) step4.classList.remove('kb-up');
+}
+
+// ─── TYPEWRITER ───
+function typewrite(el, callback) {
+  const text = el.getAttribute('data-tw');
+  if (!text) { if (callback) callback(); return; }
+  const span = el.querySelector('.tw-text');
+  const cursor = el.querySelector('.tw-cursor');
+  span.textContent = '';
+  if (cursor) cursor.classList.remove('done');
+  let i = 0;
+  const speed = 28; // ms per character
+  function tick() {
+    if (i < text.length) {
+      span.textContent += text[i];
+      i++;
+      setTimeout(tick, speed);
+    } else {
+      if (cursor) cursor.classList.add('done');
+      if (callback) callback();
+    }
+  }
+  tick();
+}
+
+function showChoicesAfterType(stepEl) {
+  const q = stepEl.querySelector('.conv-question[data-tw]');
+  const choices = stepEl.querySelector('.conv-choices');
+  const hint = stepEl.querySelector('.conv-hint');
+  if (q && choices) {
+    typewrite(q, () => {
+      if (hint) { hint.style.opacity = '1'; hint.style.transform = 'translateY(0)'; }
+      choices.style.opacity = '1';
+      choices.style.transform = 'translateY(0)';
+    });
+  }
+}
+
+function convNext(step) {
+  // Hide keyboard when leaving step 3
+  hideKeyboard();
+
+  // Show keyboard when entering step 4 (name)
+  if (step === 4) {
+    setTimeout(() => showKeyboard(), 400);
+  }
+
+  // Capture name when leaving step 4 (via "That's me" → step 99)
+  if (step === 99) {
+    const nameVal = document.getElementById('nameInput').value.trim();
+    if (nameVal) userName = nameVal;
+    document.getElementById('convCardMsg').textContent = 'Hey ' + userName + ', let\'s start earning';
+    document.getElementById('giftLabel').textContent = 'A little head start, ' + userName;
+    document.getElementById('homeBalance').textContent = '$1.00';
+    goTo(5);
+    return;
+  }
+
+  // Transition within screen 3
+  document.querySelectorAll('.conv-step').forEach(s => s.classList.remove('active'));
+  const next = document.getElementById('convStep' + step);
+  next.classList.add('active');
+
+  // Reset choices to hidden
+  const choices = next.querySelector('.conv-choices');
+  if (choices) {
+    choices.style.opacity = '0';
+    choices.style.transform = 'translateY(12px)';
+  }
+
+  // Stagger in elements, then typewrite
+  const els = next.querySelectorAll('.s');
+  els.forEach(el => el.classList.remove('v'));
+  setTimeout(() => {
+    els.forEach((el, i) => {
+      setTimeout(() => el.classList.add('v'), 100 + i * 80);
+    });
+    // Start typewriter after question fades in
+    setTimeout(() => showChoicesAfterType(next), 300);
+  }, 150);
+
+  updatePicker(3, '' + step);
+}
+
+// ─── Carousel (Screen 2) ───
+let carouselIndex = 0;
+let carouselTimer = null;
+let carouselProgress = null;
+const CAROUSEL_INTERVAL = 3000;
+
+const ARC_CIRCUMFERENCE = 182.2; // 2 * PI * 29
+
+function setCarouselSlide(index) {
+  const slides = document.querySelectorAll('.carousel-slide');
+  const current = document.querySelector('.carousel-slide.active');
+
+  // Exit animation on current
+  if (current && parseInt(current.dataset.slide) !== index) {
+    current.classList.add('exiting');
+    current.classList.remove('active');
+    setTimeout(() => current.classList.remove('exiting'), 350);
+  }
+
+  // Enter new slide after brief gap
+  setTimeout(() => {
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
+  }, current ? 150 : 0);
+
+  carouselIndex = index;
+  document.getElementById('carouselLabel').textContent = (index + 1) + '/3';
+  startCarouselProgress();
+}
+
+function startCarouselProgress() {
+  const arc = document.getElementById('carouselArc');
+  if (!arc) return;
+  // Reset arc
+  arc.style.transition = 'none';
+  arc.setAttribute('stroke-dasharray', '0 ' + ARC_CIRCUMFERENCE);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      arc.style.transition = 'stroke-dasharray ' + CAROUSEL_INTERVAL + 'ms linear';
+      arc.setAttribute('stroke-dasharray', ARC_CIRCUMFERENCE + ' 0');
+    });
+  });
+}
+
+function advanceCarousel() {
+  setCarouselSlide((carouselIndex + 1) % 3);
+  startCarousel();
+}
+
+function startCarousel() {
+  stopCarousel();
+  carouselTimer = setInterval(() => {
+    setCarouselSlide((carouselIndex + 1) % 3);
+  }, CAROUSEL_INTERVAL);
+  startCarouselProgress();
+}
+
+function stopCarousel() {
+  if (carouselTimer) { clearInterval(carouselTimer); carouselTimer = null; }
+}
+
+// Tap anywhere on screen 2 to advance (except CTA button)
+document.getElementById('screen2').addEventListener('click', (e) => {
+  if (e.target.closest('.btn')) return;
+  advanceCarousel();
+});
+
+function goTo(target) {
+  if (target === currentScreen) return;
+  const current = document.getElementById('screen' + currentScreen);
+  const next = document.getElementById('screen' + target);
+
+  // Reset conv steps when returning to screen 3
+  if (target === 3) {
+    hideKeyboard();
+    document.querySelectorAll('.conv-step').forEach(s => s.classList.remove('active'));
+    const step1 = document.getElementById('convStep1');
+    step1.classList.add('active');
+    updatePicker(3, '1');
+
+    // Reset and trigger typewriter for step 1
+    const choices1 = step1.querySelector('.conv-choices');
+    if (choices1) { choices1.style.opacity = '0'; choices1.style.transform = 'translateY(12px)'; }
+
+    setTimeout(() => {
+      step1.querySelectorAll('.s').forEach((el, i) => {
+        setTimeout(() => el.classList.add('v'), 100 + i * 80);
+      });
+      setTimeout(() => showChoicesAfterType(step1), 300);
+    }, 300);
+  }
+  if (currentScreen === 3) {
+    hideKeyboard();
+  }
+
+  // Reset stagger elements
+  const staggerEls = next.querySelectorAll('.s');
+  staggerEls.forEach(el => el.classList.remove('v'));
+  current.querySelectorAll('.s').forEach(el => el.classList.remove('v'));
+
+  // Transition out
+  current.style.transition = 'opacity 300ms ' + spring;
+  current.style.opacity = '0';
+  current.style.pointerEvents = 'none';
+  setTimeout(() => { current.style.visibility = 'hidden'; }, 300);
+
+  // Set up next
+  next.style.visibility = 'visible';
+  next.style.transition = 'none';
+  next.style.opacity = '0';
+  next.style.pointerEvents = 'none';
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      next.style.transition = 'opacity 400ms ' + spring;
+      next.style.opacity = '1';
+      next.style.pointerEvents = 'auto';
+
+      staggerEls.forEach((el, i) => {
+        setTimeout(() => el.classList.add('v'), 150 + i * 60);
+      });
+    });
+  });
+
+  current.classList.remove('active');
+  next.classList.add('active');
+
+  // Start/stop carousel
+  if (target === 2) { startCarousel(); }
+  if (currentScreen === 2) { stopCarousel(); }
+
+  // Gift animation + home reveal on screen 5
+  if (target === 5 && !screen5Played) {
+    screen5Played = true;
+    const overlay = document.getElementById('giftOverlay');
+    const icon = document.getElementById('giftIcon');
+    const label = document.getElementById('giftLabel');
+    const amount = document.getElementById('giftAmount');
+    const giftSub = document.getElementById('giftSub');
+
+    // Show overlay
+    overlay.classList.add('show');
+
+    // Phase 1: Gift elements animate in
+    setTimeout(() => { icon.style.animation = 'giftBounceIn 600ms cubic-bezier(0.34,1.56,0.64,1) both'; }, 200);
+    setTimeout(() => { amount.style.animation = 'giftAmountIn 800ms cubic-bezier(0.22,1,0.36,1) both'; }, 500);
+    setTimeout(() => { label.style.animation = 'giftFadeUp 500ms ease both'; }, 900);
+    // Phase 2: Fade out overlay, reveal home
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+    }, 2600);
+
+    setTimeout(() => {
+      overlay.classList.remove('show');
+      // Stagger reveal home content
+      const items = document.querySelectorAll('.home-content');
+      items.forEach((el, i) => {
+        setTimeout(() => el.classList.add('revealed'), i * 80);
+      });
+      // Add initial journey entries (staggered so user can read each)
+      addJourneyEntry('<em>$1.00</em> to get you started', 'Welcome gift', 'money');
+      setTimeout(() => {
+        addJourneyEntry('Hey ' + userName + ', let\'s start earning', 'You joined EarnWise', 'welcome');
+      }, 2500);
+    }, 3200);
+
+    // Animate ring to initial percentage
+    setTimeout(() => {
+      const pct = Math.round((1 / selectedAmount) * 100);
+      const circumference = 251.3;
+      const fillVal = (pct / 100) * circumference;
+      document.getElementById('homeRingFill').style.strokeDasharray = fillVal + ' ' + (circumference - fillVal);
+      document.getElementById('homeRingPct').textContent = pct + '%';
+      document.getElementById('homeRingGoal').textContent = 'of $' + selectedAmount;
+    }, 3600);
+  }
+
+  // Animate home screen ring (when navigating back)
+  if (target === 5 && screen5Played) {
+    setTimeout(() => {
+      const fill = document.getElementById('homeRingFill');
+      fill.style.strokeDasharray = '2.5 248.8'; // ~1%
+    }, 400);
+  }
+
+  currentScreen = target;
+  if (target !== 3) updatePicker(target);
+}
+
+// Chip selection
+document.querySelectorAll('.chip-group, .goal-chips, .amount-chips').forEach(group => {
+  group.addEventListener('click', e => {
+    const chip = e.target.closest('.chip, .goal-chip, .amount-chip');
+    if (!chip) return;
+
+    // Multi-select for .multi groups, single-select otherwise
+    if (group.classList.contains('multi')) {
+      chip.classList.toggle('selected');
+    } else {
+      group.querySelectorAll('.chip, .goal-chip, .amount-chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+    }
+
+    if (group.classList.contains('amount-chips')) {
+      selectedAmount = parseInt(chip.dataset.value);
+      document.getElementById('goalPreviewAmount').textContent = '$0 / $' + selectedAmount;
+      document.getElementById('homeRingGoal').textContent = 'of $' + selectedAmount;
+    }
+  });
+});
+
+// Day 0 task completion
+let day0Earned = 1.00; // profile bonus already credited
+const taskValues = { survey: 0.75, videos: 0.15, game: 2.00 };
+
+function completeDay0Task(task) {
+  const el = document.getElementById('task-' + task);
+  if (el.classList.contains('completed')) return;
+
+  el.classList.add('completed');
+  day0Earned += taskValues[task];
+
+  // Swap play icon to check icon
+  const actionIcon = el.querySelector('.day0-task-action i');
+  if (actionIcon) {
+    actionIcon.className = 'ph-fill ph-check-circle';
+    actionIcon.style.fontSize = '28px';
+    actionIcon.style.color = 'var(--progress)';
+  }
+
+  // Update balance with animation
+  const balEl = document.getElementById('homeBalance');
+  balEl.style.transition = 'transform 200ms ease';
+  balEl.style.transform = 'scale(1.1)';
+  balEl.textContent = '$' + day0Earned.toFixed(2);
+  setTimeout(() => { balEl.style.transform = 'scale(1)'; }, 200);
+
+  // Track completion + journey entries
+  tasksCompleted++;
+  const taskNames = { survey: 'Quick welcome survey', videos: '3 short videos', game: 'Candy Crush' };
+  const taskEarned = { survey: '$0.75', videos: '$0.15', game: '$2.00' };
+  const taskIconTypes = { survey: 'survey', videos: 'video', game: 'game' };
+  addJourneyEntry('Earned ' + taskEarned[task] + ' — ' + taskNames[task], 'Task completed', taskIconTypes[task] || 'task');
+
+  if (tasksCompleted === 1) {
+    setTimeout(() => {
+      addJourneyEntry('1-day streak — nice start!', 'Come back tomorrow to keep it going', 'streak');
+      showStreakCelebration();
+    }, 2000);
+  }
+
+  // Update ring
+  const pct = Math.round((day0Earned / selectedAmount) * 100);
+  document.getElementById('homeRingPct').textContent = pct + '%';
+  const circumference = 251.3;
+  const fill = (pct / 100) * circumference;
+  document.getElementById('homeRingFill').style.strokeDasharray = fill + ' ' + (circumference - fill);
+
+  // Unlock "Earn more" when all tasks done
+  if (tasksCompleted >= totalTasks) {
+    setTimeout(() => {
+      document.getElementById('earnMoreSection').classList.add('unlocked');
+      addJourneyEntry('All starter tasks done — <em>Earn More</em> unlocked!', 'Offers, Receipts & Games are now available', 'unlock');
+    }, 2000);
+  }
+}
+
+// ─── STREAK TOAST (calm, on-brand) ───
+function showStreakCelebration() {
+  const toast = document.getElementById('streakToast');
+
+  // Update streak badge
+  const badge = document.getElementById('streakBadge');
+  badge.style.transition = 'transform 300ms cubic-bezier(0.22, 1, 0.36, 1)';
+  badge.style.transform = 'scale(1.2)';
+  document.getElementById('streakCount').textContent = '1';
+  setTimeout(() => { badge.style.transform = 'scale(1)'; }, 300);
+
+  // Show toast
+  setTimeout(() => toast.classList.add('show'), 200);
+
+  // Auto-dismiss after 3.5s
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    setTimeout(() => toast.classList.remove('show', 'fade-out'), 400);
+  }, 3500);
+}
+
+// Screen picker
+function jumpTo(screen, convStep) {
+  // Hide all screens immediately
+  document.querySelectorAll('.screen').forEach(s => {
+    s.style.transition = 'none';
+    s.style.opacity = '0';
+    s.style.pointerEvents = 'none';
+    s.style.visibility = 'hidden';
+    s.classList.remove('active');
+  });
+
+  const target = document.getElementById('screen' + screen);
+  target.style.visibility = 'visible';
+  target.style.opacity = '1';
+  target.style.pointerEvents = 'auto';
+  target.classList.add('active');
+  currentScreen = screen;
+
+  // Show all stagger elements immediately
+  target.querySelectorAll('.s').forEach(el => el.classList.add('v'));
+
+  // Handle conv steps
+  if (screen === 3 && convStep) {
+    hideKeyboard();
+    document.querySelectorAll('.conv-step').forEach(s => s.classList.remove('active'));
+    const step = document.getElementById('convStep' + convStep);
+    step.classList.add('active');
+    step.querySelectorAll('.s').forEach(el => el.classList.add('v'));
+    if (convStep === '4') setTimeout(() => showKeyboard(), 300);
+  }
+
+  // Home screen: skip gift, show content immediately
+  if (screen === 5) {
+    screen5Played = true;
+    const overlay = document.getElementById('giftOverlay');
+    if (overlay) overlay.classList.remove('show');
+    document.querySelectorAll('.home-content').forEach(el => el.classList.add('revealed'));
+  }
+
+  // Start carousel
+  if (screen === 2) startCarousel();
+  else stopCarousel();
+
+  // Update picker
+  updatePicker(screen, convStep);
+}
+
+// Generate paper noise texture
+(function() {
+  const c = document.createElement('canvas');
+  c.width = 150; c.height = 150;
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(150, 150);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = Math.random() * 180;
+    img.data[i] = 120 + v * 0.3;     // warm red
+    img.data[i+1] = 110 + v * 0.25;  // warm green
+    img.data[i+2] = 90 + v * 0.2;    // warm blue (less = warmer)
+    img.data[i+3] = 23;
+  }
+  ctx.putImageData(img, 0, 0);
+  document.getElementById('paperOverlay').style.backgroundImage = 'url(' + c.toDataURL() + ')';
+})();
+
+function updatePicker(screen, convStep) {
+  const pickerMap = { '1': 0, '2': 1, '3-1': 2, '3-2': 3, '3-3': 4, '3-4': 5, '5': 6, '6': 7 };
+  const key = convStep ? screen + '-' + convStep : '' + screen;
+  const idx = pickerMap[key];
+  document.querySelectorAll('.sp-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+
+  // Update annotations
+  const annoMap = { '1': '1', '2': '2', '3-1': '3a', '3-2': '3b', '3-3': '3c', '3-4': '3d', '5': '5', '6': '6' };
+  const annoKey = annoMap[key] || '' + screen;
+  document.querySelectorAll('.anno-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.screen === annoKey);
+  });
+}
+</script>
+
+</body>
+</html>

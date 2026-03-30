@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Inter, sans-serif; padding: 24px; color: #333; }
+    h2 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    p.subtitle { font-size: 12px; color: #888; margin-bottom: 20px; }
+    .option { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.15s; }
+    .option:hover { border-color: #999; }
+    .option.selected { border-color: #333; background: #f7f7f7; }
+    .option input { margin-top: 3px; }
+    .option-text h3 { font-size: 13px; font-weight: 600; }
+    .option-text p { font-size: 11px; color: #666; margin-top: 2px; }
+    button { width: 100%; padding: 12px; background: #333; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 16px; }
+    button:hover { background: #555; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <h2>[APP_NAME] Design System</h2>
+  <p class="subtitle">Generate a complete design system with variables, styles, and components.</p>
+
+  <div class="option" data-value="direction-a" onclick="select(this)">
+    <input type="radio" name="direction" value="direction-a">
+    <div class="option-text">
+      <h3>Soft Piggy Bank</h3>
+      <p>Warm, nurturing, pastel. Nunito font. Rounded corners.</p>
+    </div>
+  </div>
+
+  <div class="option" data-value="direction-b" onclick="select(this)">
+    <input type="radio" name="direction" value="direction-b">
+    <div class="option-text">
+      <h3>Smart &amp; Clean</h3>
+      <p>Confident, minimal, premium. DM Sans font. Moderate corners.</p>
+    </div>
+  </div>
+
+  <div class="option" data-value="both" onclick="select(this)">
+    <input type="radio" name="direction" value="both">
+    <div class="option-text">
+      <h3>Both (switchable modes)</h3>
+      <p>Creates both directions as variable modes. Switch instantly in Figma.</p>
+    </div>
+  </div>
+
+  <button id="generate" disabled onclick="generate()">Generate Design System</button>
+
+  <script>
+    let selected = null;
+    function select(el) {
+      document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      el.querySelector('input').checked = true;
+      selected = el.dataset.value;
+      document.getElementById('generate').disabled = false;
+    }
+    function generate() {
+      parent.postMessage({ pluginMessage: { type: 'generate', direction: selected } }, '*');
+    }
+  </script>
+</body>
+</html>

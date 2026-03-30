@@ -1,0 +1,107 @@
+# Soft Piggy Bank Home Screen Iterations
+
+> **Date:** 2026-03-06
+> **Purpose:** Four ImageGen-ready home screen concepts for the "Soft Piggy Bank" visual direction
+> **Source inputs:** `docs/BRAND.md`, `docs/TARGET_AUDIENCE.md`, `docs/plans/2026-03-06-visual-design-directions.md`, Figma token files in `figma-plugin/src/data/`
+
+## Shared Brief
+
+All four concepts should follow these constraints:
+
+- iPhone-style mobile app home screen, portrait, premium product mockup
+- Audience: women 45+, welcoming to all, trust-first, calm, useful
+- Visual direction: Soft Piggy Bank
+- Palette: soft sage `#5E8A60`, sage tint `#D4E6D5`, blush `#A36B63`, blush tint `#F2DCD9`, lavender `#7568A0`, lavender tint `#E2DCF0`, warm cream `#FAF8F5`, warm ink `#2D2A26`
+- Typography feel: Nunito-like rounded sans, large friendly numerals, clean readable body text
+- UI feel: rounded corners, generous spacing, soft shadows, quiet depth, no hard black, no neon, no finance-bro styling
+- Product framing: real dollar amounts are the hero, one obvious primary action, no gamified coins/gems/points, no hype, no fake urgency
+- Include believable app UI text, but keep copy minimal and calm
+- Show a realistic status bar, top navigation, balance card, task list, and bottom navigation
+
+## Iteration 1: Morning Balance
+
+### Intent
+The safest, most mainstream version. This is the strongest "Lisa with her morning coffee" direction.
+
+### Prompt
+
+```text
+Design a polished mobile app home screen for a savings-and-rewards app called Soft Piggy Bank, optimized for women 45 plus in the United States. The mood is calm, warm, trustworthy, and organized. Show an iPhone portrait screen with a soft cream background, rounded sage balance card, gentle blush and lavender accents, and large friendly Nunito-style typography.
+
+The hero section shows "Good morning, Lisa" and a large balance of $12.40 with a smaller line under it reading "Today's value: $1.25". Below the hero card, show one clear primary button labeled "See tasks". Add a secondary quiet link for "How it works". Under that, show three simple task cards with clear time and value labels such as "3 min  $0.40", "5 min  $0.75", and "Receipt scan  $0.60". Include subtle category icons, very soft shadows, large spacing, and highly legible UI. The bottom navigation has Home, Activity, Rewards, and Profile.
+
+Make it look like a real shipped fintech-quality app, but softer and more human. Use muted sage green, blush beige, light lavender, and warm off-white. Rounded corners everywhere, no sharp edges, no neon, no clutter, no childish pig mascot, no exaggerated gamification. Emphasize the dollar balance and calm clarity.
+```
+
+### What to watch for
+
+- Balance should dominate the first fold
+- Task cards should feel easy, not busy
+- Avoid overly editorial or fashion-brand styling
+
+## Iteration 2: Soft Jar
+
+### Intent
+Leans into the piggy-bank metaphor without becoming childish. Best if the team wants a more distinctive brand asset.
+
+### Prompt
+
+```text
+Create a premium mobile app home screen concept for Soft Piggy Bank, a calm earning app that feels like an everyday savings jar. The visual language should be soft, adult, and emotionally warm, designed for a practical 45 plus audience that deletes scammy apps immediately. Portrait iPhone screen, subtle product mockup, realistic mobile UI.
+
+At the top, include a rounded header with a small elegant illustrated glass jar or ceramic piggy bank icon, minimal and sophisticated, not cartoonish. The main balance area shows "$18.75" in large rounded type with a smooth progress indicator toward a cashout milestone, written as "$18.75 of $25.00". Add a short reassuring line like "Small wins add up." Below that, show a horizontal strip of today's simple actions: quick poll, receipt, short survey. Then show a section titled "Good options right now" with two large rounded cards and one compact card.
+
+Use a warm cream background with layered blush, sage, and lavender surfaces, paper-like softness, subtle grain, and soft ambient shadows. The UI should feel tactile and comforting, as if inspired by Calm or Flo but still clearly a money product. Dollar amounts must be the focus. No loud celebration graphics, no confetti, no casino energy, no bright pink.
+```
+
+### What to watch for
+
+- The jar/piggy symbol should be understated and tasteful
+- The milestone line should read as progress, not pressure
+- Keep the illustration secondary to the balance
+
+## Iteration 3: Helpful Planner
+
+### Intent
+Positions the product as a respectful daily routine helper. This is the most utility-forward variant within the soft direction.
+
+### Prompt
+
+```text
+Generate a realistic mobile app home screen for Soft Piggy Bank with a calm, task-planning feel. This is a trustworthy home screen for a rewards app aimed at adults 45 plus who want clear value for their time. Use a portrait smartphone layout, warm neutral background, sage primary color, blush secondary highlights, lavender tertiary accents, rounded cards, and large readable rounded sans-serif type.
+
+The top section shows the current balance "$9.60" and a simple line saying "You have 8 minutes? Here are 3 things worth doing." Below that, show a clean stack of recommended tasks organized by available time: "Under 3 minutes", "Around 5 minutes", and "Best value today". Each task row shows the task name, estimated time, and dollar amount in a calm organized layout. Include one soft callout card for "Your last payout arrived" with a small checkmark and a PayPal-style payout reference, reinforcing trust.
+
+The design should feel deeply usable, mature, and breathing with space. No cute mascots, no excessive decoration, no dense dashboards, no high-contrast black and white, no trendy startup gradients. The impression should be: calm productivity, familiar, legitimate, worth checking every morning.
+```
+
+### What to watch for
+
+- Time-aware grouping is the differentiator
+- Trust proof should be visible but understated
+- Keep the layout open; avoid turning it into a data-heavy dashboard
+
+## Iteration 4: Soft Editorial
+
+### Intent
+The most brand-forward option. Keeps the product calm but adds a more elevated magazine-like composition.
+
+### Prompt
+
+```text
+Design an elevated editorial-style mobile app home screen for Soft Piggy Bank. The product is a calm savings and rewards app for adults 45 plus, with a brand personality that is warm, respectful, and quietly premium. Show a portrait iPhone interface with elegant whitespace, rounded modular cards, muted pastel surfaces, and a refined Nunito-like type system. The screen should look like a real app UI, not a landing page.
+
+Use a layered composition: a softly tinted top banner with the line "Your everyday piggy bank", a main card with a large dollar balance of "$24.10", then a two-column section of curated opportunities with clear values, then a single wide card showing weekly progress. Include tiny touches of illustration, such as a hand-drawn leaf, jar, or coin slot motif, but keep them minimal and sophisticated. Bottom navigation should be simple and familiar.
+
+Color palette: warm cream background, sage green primary surfaces, blush and lavender highlight blocks, warm brown-gray text. Shadows should be feathered and subtle. The UI should feel premium, trustworthy, feminine-friendly but not exclusively feminine. No hype copy, no countdowns, no badges shouting "hot", no hard-edged fintech styling, no glossy 3D icons.
+```
+
+### What to watch for
+
+- Editorial composition should not reduce clarity
+- Decorative elements must stay minimal
+- Bottom navigation and task cards still need to feel product-real
+
+## Recommendation
+
+Start generation with Iteration 1 and Iteration 3. Those are the strongest trust builders for the current brand brief and target audience. Use Iteration 2 only if the team wants a stronger piggy-bank metaphor, and Iteration 4 if the team wants a more ownable branded look.

@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Survey Report — March 2026</title>
+  <style>
+    :root {
+      --ink: #171412;
+      --ink-light: #5c544d;
+      --ink-faint: #8d8379;
+      --surface: #f5efe8;
+      --surface-alt: #fbf7f2;
+      --surface-strong: #e8dfd3;
+      --surface-contrast: #fffdf9;
+      --border: rgba(23, 20, 18, 0.14);
+      --border-strong: rgba(23, 20, 18, 0.3);
+      --shadow-soft: 0 20px 46px rgba(23, 20, 18, 0.07);
+      --shadow-deep: 0 30px 72px rgba(23, 20, 18, 0.1);
+      --series-1: #171412;
+      --series-2: #60574f;
+      --series-3: #9f958a;
+      --series-4: #d6ccbf;
+      --panel-bg: rgba(255, 253, 249, 0.74);
+      --panel-bg-strong: rgba(255, 253, 249, 0.84);
+      --panel-highlight: rgba(255, 255, 255, 0.38);
+      --panel-highlight-strong: rgba(255, 255, 255, 0.52);
+      --glow: rgba(255, 255, 255, 0.72);
+      --glow-soft: rgba(255, 255, 255, 0.45);
+      --page-speckle: rgba(255, 255, 255, 0.14);
+      --page-texture: rgba(23, 20, 18, 0.012);
+      --pattern-ink: rgba(23, 20, 18, 0.04);
+      --active-fill: rgba(23, 20, 18, 0.04);
+      --selection-fill: rgba(23, 20, 18, 0.12);
+      --backdrop: rgba(16, 14, 12, 0.36);
+      --content-width: 760px;
+      --wide-width: 1180px;
+      --rail-width: 280px;
+      --section-gap: clamp(88px, 11vw, 140px);
+      --gutter: clamp(20px, 4vw, 40px);
+      --radius-sm: 16px;
+      --radius-md: 26px;
+      --radius-lg: 40px;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", ui-serif, serif;
+      --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SF Mono", "SFMono-Regular", ui-monospace, monospace;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html:not(.light) {
+        --ink: #f1ebe3;
+        --ink-light: #c4b9ad;
+        --ink-faint: #92867a;
+        --surface: #12100f;
+        --surface-alt: #181513;
+        --surface-strong: #221d1a;
+        --surface-contrast: #201b18;
+        --border: rgba(241, 235, 227, 0.12);
+        --border-strong: rgba(241, 235, 227, 0.24);
+        --shadow-soft: 0 20px 46px rgba(0, 0, 0, 0.32);
+        --shadow-deep: 0 30px 72px rgba(0, 0, 0, 0.42);
+        --series-1: #f1ebe3;
+        --series-2: #bcae9f;
+        --series-3: #73685c;
+        --series-4: #3a332d;
+        --panel-bg: rgba(32, 27, 24, 0.76);
+        --panel-bg-strong: rgba(32, 27, 24, 0.88);
+        --panel-highlight: rgba(255, 255, 255, 0.05);
+        --panel-highlight-strong: rgba(255, 255, 255, 0.08);
+        --glow: rgba(255, 255, 255, 0.08);
+        --glow-soft: rgba(255, 255, 255, 0.03);
+        --page-speckle: rgba(255, 255, 255, 0.02);
+        --page-texture: rgba(241, 235, 227, 0.018);
+        --pattern-ink: rgba(241, 235, 227, 0.06);
+        --active-fill: rgba(241, 235, 227, 0.05);
+        --selection-fill: rgba(241, 235, 227, 0.18);
+        --backdrop: rgba(0, 0, 0, 0.52);
+        color-scheme: dark;
+      }
+    }
+
+    html.dark {
+      --ink: #f1ebe3;
+      --ink-light: #c4b9ad;
+      --ink-faint: #92867a;
+      --surface: #12100f;
+      --surface-alt: #181513;
+      --surface-strong: #221d1a;
+      --surface-contrast: #201b18;
+      --border: rgba(241, 235, 227, 0.12);
+      --border-strong: rgba(241, 235, 227, 0.24);
+      --shadow-soft: 0 20px 46px rgba(0, 0, 0, 0.32);
+      --shadow-deep: 0 30px 72px rgba(0, 0, 0, 0.42);
+      --series-1: #f1ebe3;
+      --series-2: #bcae9f;
+      --series-3: #73685c;
+      --series-4: #3a332d;
+      --panel-bg: rgba(32, 27, 24, 0.76);
+      --panel-bg-strong: rgba(32, 27, 24, 0.88);
+      --panel-highlight: rgba(255, 255, 255, 0.05);
+      --panel-highlight-strong: rgba(255, 255, 255, 0.08);
+      --glow: rgba(255, 255, 255, 0.08);
+      --glow-soft: rgba(255, 255, 255, 0.03);
+      --page-speckle: rgba(255, 255, 255, 0.02);
+      --page-texture: rgba(241, 235, 227, 0.018);
+      --pattern-ink: rgba(241, 235, 227, 0.06);
+      --active-fill: rgba(241, 235, 227, 0.05);
+      --selection-fill: rgba(241, 235, 227, 0.18);
+      --backdrop: rgba(0, 0, 0, 0.52);
+      color-scheme: dark;
+    }
+
+    html.light { color-scheme: light; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 17px; scroll-behavior: smooth; background: var(--surface); }
+
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      background:
+        radial-gradient(circle at top right, var(--glow), transparent 30%),
+        linear-gradient(180deg, var(--glow-soft), transparent 16%),
+        linear-gradient(180deg, var(--surface) 0%, var(--surface-strong) 44%, var(--surface-alt) 100%);
+      text-rendering: optimizeLegibility;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 18%, var(--page-speckle), transparent 18%),
+        repeating-linear-gradient(90deg, var(--page-texture) 0, var(--page-texture) 1px, transparent 1px, transparent 18px);
+      opacity: 0.85;
+      z-index: -1;
+    }
+
+    ::selection { background: var(--selection-fill); color: var(--ink); }
+    img { display: block; max-width: 100%; }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    strong { font-weight: 650; }
+    svg text { font-family: var(--sans); }
+
+    h1, h2, h3, h4 {
+      font-family: var(--serif);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    h1 { font-size: clamp(4.2rem, 9vw, 7.4rem); }
+    h2 { font-size: clamp(2.4rem, 4.8vw, 4.3rem); margin-bottom: 20px; }
+    h3 { font-size: clamp(1.45rem, 2.4vw, 1.95rem); margin-bottom: 18px; }
+    h4 { font-size: 1.1rem; margin-bottom: 14px; }
+    p  { max-width: 70ch; margin-bottom: 1rem; }
+    ul, ol { max-width: 70ch; padding-left: 1.2rem; margin-bottom: 1rem; }
+    li + li { margin-top: 0.45rem; }
+
+    .theme-toggle, .toc__toggle {
+      border: 1px solid var(--border);
+      background: var(--panel-bg-strong);
+      color: var(--ink);
+      border-radius: 999px;
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .theme-toggle:hover, .toc__toggle:hover { transform: translateY(-2px); }
+    .theme-toggle:focus-visible, .toc__toggle:focus-visible, .toc__list a:focus-visible {
+      outline: 2px solid var(--ink); outline-offset: 3px;
+    }
+
+    .theme-toggle {
+      position: fixed; top: 18px; right: 22px; z-index: 80;
+      padding: 11px 18px; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    .toc {
+      position: fixed; inset: 0 auto 0 0; width: var(--rail-width);
+      padding: 28px 22px 28px 24px; border-right: 1px solid var(--border);
+      background: var(--panel-bg); backdrop-filter: blur(18px);
+      overflow-y: auto; z-index: 60;
+    }
+
+    .toc__brand { padding: 10px 12px 18px; border-bottom: 1px solid var(--border); }
+    .toc__kicker {
+      font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 10px;
+    }
+    .toc__title { font-family: var(--serif); font-size: 1.55rem; letter-spacing: -0.03em; }
+    .toc__subtitle { font-size: 0.88rem; color: var(--ink-light); margin-top: 6px; line-height: 1.5; }
+
+    .toc__toggle {
+      display: none; position: fixed; top: 18px; left: 18px; z-index: 81;
+      padding: 11px 16px; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    .toc__list { list-style: none; padding: 20px 0 0; margin: 0; }
+    .toc__list li + li { margin-top: 4px; }
+    .toc__list a {
+      display: block; padding: 10px 10px 10px 14px;
+      border-left: 1px solid transparent; color: var(--ink-light);
+      text-decoration: none; font-size: 0.84rem; line-height: 1.45;
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .toc__list a:hover { color: var(--ink); transform: translateX(4px); }
+    .toc__list a.active { color: var(--ink); border-left-color: var(--ink); background: var(--active-fill); }
+    .toc__group {
+      font-size: 0.66rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-faint);
+      padding: 18px 14px 6px; margin-top: 4px;
+      border-top: 1px solid var(--border); list-style: none;
+    }
+    .toc__group:first-child { border-top: none; padding-top: 10px; }
+
+    .toc-backdrop { display: none; position: fixed; inset: 0; background: var(--backdrop); z-index: 55; }
+
+    .content { counter-reset: section; margin-left: var(--rail-width); position: relative; }
+
+    .hero {
+      min-height: 100svh; display: flex; align-items: center;
+      padding: 24px var(--gutter) clamp(82px, 9vw, 120px);
+      max-width: calc(var(--wide-width) + (var(--gutter) * 2));
+      margin: 0 auto; position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute;
+      left: var(--gutter); right: var(--gutter); bottom: 28px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong) 12%, var(--border-strong) 88%, transparent);
+    }
+    .hero__meta {
+      font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 24px;
+    }
+    .hero__title { max-width: 14ch; margin-bottom: 26px; }
+    .hero__subtitle {
+      font-size: clamp(1.12rem, 2vw, 1.42rem); line-height: 1.56;
+      color: var(--ink-light); max-width: 38ch; margin: 0;
+    }
+
+    .section {
+      counter-increment: section;
+      max-width: var(--wide-width);
+      padding: var(--section-gap) var(--gutter);
+      margin: 0 auto; position: relative;
+    }
+    .section__intro { max-width: var(--content-width); margin-bottom: 40px; }
+    .section__eyebrow {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-faint);
+      display: inline-flex; align-items: baseline; gap: 0.7rem;
+      white-space: nowrap; margin-bottom: 14px;
+    }
+    .section__eyebrow::before {
+      content: counter(section, decimal-leading-zero);
+      font-family: var(--sans); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .section__title { margin-bottom: 20px; }
+    .section__lede { font-size: 1.16rem; line-height: 1.72; color: var(--ink-light); margin-bottom: 0; }
+
+    /* Metrics */
+    .metrics {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+      margin-top: 32px;
+    }
+    .metric-card {
+      background: var(--panel-bg-strong); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 28px 24px;
+      backdrop-filter: blur(12px);
+    }
+    .metric-card__trend {
+      display: block; font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 8px;
+    }
+    .metric-card__value {
+      display: block; font-family: var(--serif); font-size: 2.8rem;
+      font-weight: 600; letter-spacing: -0.04em; line-height: 1;
+      margin-bottom: 6px;
+    }
+    .metric-card__label {
+      display: block; font-size: 0.82rem; color: var(--ink-light); line-height: 1.4;
+    }
+
+    /* Callout */
+    .callout {
+      max-width: var(--content-width);
+      padding: 24px 28px 24px 32px;
+      border-left: 4px solid var(--ink);
+      background: var(--panel-bg);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 32px 0;
+      position: relative;
+    }
+    .callout p { margin-bottom: 0; }
+
+    /* Bar chart */
+    .chart-shell {
+      background: var(--panel-bg-strong); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 32px 28px;
+      backdrop-filter: blur(12px); margin-top: 24px;
+      overflow: hidden;
+    }
+    .chart-shell svg { width: 100%; height: auto; display: block; }
+    .chart-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px; }
+
+    /* Data table */
+    .table-wrap { overflow-x: auto; margin-top: 24px; }
+    .data-table {
+      width: 100%; border-collapse: collapse; font-size: 0.92rem;
+    }
+    .data-table th {
+      text-align: left; padding: 14px 16px; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--ink-faint); border-bottom: 2px solid var(--border-strong);
+    }
+    .data-table td {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .num { text-align: right; font-family: var(--mono); font-size: 0.88rem; }
+    .data-table .bar-cell { width: 40%; }
+    .mini-bar {
+      height: 8px; border-radius: 4px; background: var(--series-1);
+      transition: width 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    /* Quote grid */
+    .quote-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+      margin-top: 24px;
+    }
+    .quote-card {
+      background: var(--panel-bg-strong); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 22px 24px;
+      font-size: 0.92rem; line-height: 1.6; color: var(--ink-light);
+      font-style: italic;
+    }
+    .quote-card strong {
+      display: block; font-style: normal; font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: fixed; max-width: 220px; padding: 10px 12px;
+      border-radius: 14px; background: rgba(18, 16, 15, 0.92);
+      color: #fffdf8; font-size: 0.76rem; line-height: 1.45;
+      pointer-events: none; opacity: 0; transition: opacity 0.18s ease;
+      z-index: 120; box-shadow: var(--shadow-deep);
+    }
+    .tooltip.visible { opacity: 1; }
+
+    [data-animate] {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    [data-animate].visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1120px) {
+      :root { --rail-width: 0px; }
+      .toc {
+        transform: translateX(-100%); width: min(320px, calc(100vw - 32px));
+        box-shadow: var(--shadow-deep); transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+      .toc.open { transform: translateX(0); }
+      .toc__toggle { display: inline-flex; align-items: center; justify-content: center; }
+      .toc-backdrop.visible { display: block; }
+      .content { margin-left: 0; }
+      .hero { min-height: auto; padding-top: 116px; }
+    }
+
+    @media (max-width: 900px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .quote-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      html { font-size: 16px; }
+      .theme-toggle { right: 18px; top: 70px; }
+      .hero { padding-top: 128px; }
+      .hero__title { max-width: 12ch; }
+      .metrics { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0s !important; transition-duration: 0s !important; }
+      [data-animate] { opacity: 1; transform: none; }
+    }
+  </style>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <button class="toc__toggle" id="toc-toggle" aria-label="Toggle table of contents">Menu</button>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">Theme</button>
+
+  <nav class="toc" id="toc">
+    <div class="toc__brand">
+      <div class="toc__kicker">Research</div>
+      <div class="toc__title">User Survey</div>
+      <p class="toc__subtitle">New Rewarded App &mdash; March 26, 2026</p>
+    </div>
+    <ul class="toc__list"></ul>
+  </nav>
+  <div class="toc-backdrop" id="toc-backdrop"></div>
+
+  <main class="content">
+    <header class="hero">
+      <div>
+        <p class="hero__meta">March 26 2026 &middot; 58 Respondents &middot; Maze Survey</p>
+        <h1 class="hero__title">User Survey Report</h1>
+        <p class="hero__subtitle">
+          What existing rewards app users actually want &mdash; and what will make them switch.
+        </p>
+      </div>
+    </header>
+
+    <!-- SECTIONS START -->
+
+    <!-- Key Numbers -->
+    <section class="section" id="key-numbers">
+      <div class="section__intro">
+        <p class="section__eyebrow">At a Glance</p>
+        <h2 class="section__title">Key Numbers</h2>
+        <p class="section__lede">
+          Seven data points that define the opportunity.
+        </p>
+      </div>
+      <div class="metrics">
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Demographics</span>
+          <span class="metric-card__value" data-count="91" data-suffix="%">0%</span>
+          <span class="metric-card__label">Respondents aged 45+</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Priority</span>
+          <span class="metric-card__value" data-count="0" data-suffix="%">0%</span>
+          <span class="metric-card__label">"Fun to use" as top priority</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Payout</span>
+          <span class="metric-card__value" data-count="73" data-suffix="%">0%</span>
+          <span class="metric-card__label">Expect payout within 24hrs</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Platform</span>
+          <span class="metric-card__value" data-count="80" data-suffix="%">0%</span>
+          <span class="metric-card__label">Use PayPal regularly</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Who They Are -->
+    <section class="section" id="demographics">
+      <div class="section__intro">
+        <p class="section__eyebrow">Demographics</p>
+        <h2 class="section__title">Who They Are</h2>
+        <p class="section__lede">
+          91% are 45+. A third are retired or semi-retired. They have flexible time but constrained income.
+        </p>
+      </div>
+      <div class="chart-shell" data-animate>
+        <p class="chart-label">Age Distribution &mdash; 43 responses</p>
+        <div id="chart-age"></div>
+      </div>
+      <div class="chart-shell" data-animate style="margin-top: 24px;">
+        <p class="chart-label">Current Situation &mdash; 58 responses</p>
+        <div id="chart-situation"></div>
+      </div>
+    </section>
+
+    <!-- What Matters Most -->
+    <section class="section" id="priorities">
+      <div class="section__intro">
+        <p class="section__eyebrow">Priorities</p>
+        <h2 class="section__title">What Matters Most</h2>
+        <p class="section__lede">
+          Reliability and value account for 65% of what users care about. Fun scored zero.
+        </p>
+      </div>
+      <div class="chart-shell" data-animate>
+        <p class="chart-label">What matters MOST in a rewards app &mdash; 54 responses</p>
+        <div id="chart-priorities"></div>
+      </div>
+      <div class="callout" data-animate>
+        <p><strong>"Fun to use" received zero votes.</strong> This audience is pragmatic. They want to be respected, not entertained. Playfulness should be a seasoning, not a main ingredient.</p>
+      </div>
+    </section>
+
+    <!-- Churn Drivers -->
+    <section class="section" id="churn">
+      <div class="section__intro">
+        <p class="section__eyebrow">Retention</p>
+        <h2 class="section__title">What Makes Them Leave</h2>
+        <p class="section__lede">
+          The top 4 churn drivers are tightly clustered between 43&ndash;53%. All relate to the trust/value equation.
+        </p>
+      </div>
+      <div class="chart-shell" data-animate>
+        <p class="chart-label">What would make you stop using a rewards app &mdash; 53 responses</p>
+        <div id="chart-churn"></div>
+      </div>
+    </section>
+
+    <!-- Earnings -->
+    <section class="section" id="earnings">
+      <div class="section__intro">
+        <p class="section__eyebrow">Earnings</p>
+        <h2 class="section__title">Show Me the Money</h2>
+        <p class="section__lede">
+          Real dollars, not points. $25&ndash;$50/month. Fast PayPal payouts. No exceptions.
+        </p>
+      </div>
+      <div class="metrics">
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Display</span>
+          <span class="metric-card__value" data-count="51" data-suffix="%">0%</span>
+          <span class="metric-card__label">Prefer real dollar amounts</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Sweet Spot</span>
+          <span class="metric-card__value" data-prefix="$" data-count="25">0</span>
+          <span class="metric-card__label">Minimum monthly to feel worthwhile</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Payout</span>
+          <span class="metric-card__value" data-count="69" data-suffix="%">0%</span>
+          <span class="metric-card__label">Want PayPal payouts</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Speed</span>
+          <span class="metric-card__value" data-count="42" data-suffix="%">0%</span>
+          <span class="metric-card__label">Expect instant payouts</span>
+        </article>
+      </div>
+      <div class="chart-shell" data-animate style="margin-top: 32px;">
+        <p class="chart-label">Monthly earnings threshold &mdash; 52 responses</p>
+        <div id="chart-earnings"></div>
+      </div>
+    </section>
+
+    <!-- Activities -->
+    <section class="section" id="activities">
+      <div class="section__intro">
+        <p class="section__eyebrow">Engagement</p>
+        <h2 class="section__title">How They Want to Earn</h2>
+        <p class="section__lede">
+          Videos, games, and daily check-ins form the core loop. Shopping is a distant last.
+        </p>
+      </div>
+      <div class="chart-shell" data-animate>
+        <p class="chart-label">Earning activities of interest &mdash; 52 responses</p>
+        <div id="chart-activities"></div>
+      </div>
+    </section>
+
+    <!-- How They Spend -->
+    <section class="section" id="spending">
+      <div class="section__intro">
+        <p class="section__eyebrow">Usage</p>
+        <h2 class="section__title">Where the Money Goes</h2>
+        <p class="section__lede">
+          55% spend on everyday expenses, 41% on treats. Both framings have a real audience.
+        </p>
+      </div>
+      <div class="chart-shell" data-animate>
+        <p class="chart-label">What do you use your reward app earnings for &mdash; 56 responses</p>
+        <div id="chart-spending"></div>
+      </div>
+    </section>
+
+    <!-- Acquisition -->
+    <section class="section" id="acquisition">
+      <div class="section__intro">
+        <p class="section__eyebrow">Growth</p>
+        <h2 class="section__title">How to Reach Them</h2>
+        <p class="section__lede">
+          Cross-promotion from existing apps is the #1 channel. Trust-based social proof is the #1 conversion trigger.
+        </p>
+      </div>
+      <div class="chart-shell" data-animate>
+        <p class="chart-label">How do you find new apps &mdash; 55 responses</p>
+        <div id="chart-discovery"></div>
+      </div>
+      <div class="chart-shell" data-animate style="margin-top: 24px;">
+        <p class="chart-label">What would make you try a new rewards app &mdash; 51 responses</p>
+        <div id="chart-trial"></div>
+      </div>
+    </section>
+
+    <!-- Open-ended -->
+    <section class="section" id="voices">
+      <div class="section__intro">
+        <p class="section__eyebrow">In Their Words</p>
+        <h2 class="section__title">User Voices</h2>
+        <p class="section__lede">
+          46 open-ended responses about what's missing from current rewards apps. The through-line: trust.
+        </p>
+      </div>
+      <div class="table-wrap" data-animate>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Theme</th>
+              <th>Mentions</th>
+              <th>Signal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Higher / better payouts</strong></td>
+              <td class="num">~18</td>
+              <td>Earnings feel disproportionate to time invested</td>
+            </tr>
+            <tr>
+              <td><strong>Faster / instant payouts</strong></td>
+              <td class="num">~10</td>
+              <td>Waiting days erodes trust</td>
+            </tr>
+            <tr>
+              <td><strong>Broken promises / trust</strong></td>
+              <td class="num">~8</td>
+              <td>Apps not paying what was advertised</td>
+            </tr>
+            <tr>
+              <td><strong>Satisfied / nothing to improve</strong></td>
+              <td class="num">~8</td>
+              <td>Baseline satisfaction exists to build on</td>
+            </tr>
+            <tr>
+              <td><strong>Lower cashout minimums</strong></td>
+              <td class="num">~6</td>
+              <td>High thresholds feel like a trap</td>
+            </tr>
+            <tr>
+              <td><strong>Too many / long ads</strong></td>
+              <td class="num">~4</td>
+              <td>Ad overload degrades the experience</td>
+            </tr>
+            <tr>
+              <td><strong>Survey disqualifications</strong></td>
+              <td class="num">~3</td>
+              <td>Wasted time on surveys they can't finish</td>
+            </tr>
+            <tr>
+              <td><strong>New-user-only restrictions</strong></td>
+              <td class="num">~3</td>
+              <td>Loyal users locked out of game rewards</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="quote-grid" data-animate style="margin-top: 32px;">
+        <div class="quote-card">
+          <strong>On payout speed</strong>
+          "I hate having to wait days to receive my payment."
+        </div>
+        <div class="quote-card">
+          <strong>On value</strong>
+          "Bigger payouts for all the time spent on the app. It should pay a lot better. At least minimum wage."
+        </div>
+        <div class="quote-card">
+          <strong>On trust</strong>
+          "Not getting points promised when app is downloaded."
+        </div>
+        <div class="quote-card">
+          <strong>On fairness</strong>
+          "5 minutes should not turn into 20 minutes."
+        </div>
+        <div class="quote-card">
+          <strong>On game restrictions</strong>
+          "The biggest problem I've found with game apps is that you need to be a first time user."
+        </div>
+        <div class="quote-card">
+          <strong>On clarity</strong>
+          "Confusing all play no payout."
+        </div>
+      </div>
+    </section>
+
+    <!-- Implications -->
+    <section class="section" id="implications">
+      <div class="section__intro">
+        <p class="section__eyebrow">So What</p>
+        <h2 class="section__title">Strategic Implications</h2>
+        <p class="section__lede">
+          What this means for product, brand, and go-to-market.
+        </p>
+      </div>
+      <div data-animate>
+        <h3>Product Must-Haves</h3>
+        <ol>
+          <li><strong>PayPal payouts at launch</strong> &mdash; 80% use it, 69% prefer it for cashout</li>
+          <li><strong>Fast processing</strong> &mdash; Target instant or same-day; 73% expect &lt;24 hours</li>
+          <li><strong>Low cashout minimums</strong> &mdash; High minimums are a top-3 churn driver (45%)</li>
+          <li><strong>Core loop: videos + games + daily check-ins</strong> &mdash; All score 77%+ interest</li>
+          <li><strong>Show earnings in real dollars</strong> &mdash; Not points, not coins, not tokens</li>
+        </ol>
+      </div>
+      <div class="callout" data-animate>
+        <p><strong>Brand calibration:</strong> "Fun to use" scored 0%. Playfulness should be a seasoning, not a main ingredient. Tone should feel reliable, straightforward, and respectful. This audience responds to proof and transparency, not personality and charm.</p>
+      </div>
+      <div data-animate>
+        <h3>Acquisition Strategy</h3>
+        <ol>
+          <li><strong>Cross-promotion from existing apps</strong> &mdash; #1 channel at 40%</li>
+          <li><strong>Social proof everywhere</strong> &mdash; Payout screenshots, testimonials, 4.3+ app store rating</li>
+          <li><strong>Facebook as primary paid social</strong> &mdash; 61% of users are on it daily</li>
+          <li><strong>Sign-up bonus</strong> &mdash; Works for 20% of potential users as a hook</li>
+        </ol>
+      </div>
+      <div data-animate>
+        <h3>Earnings Framing</h3>
+        <ul>
+          <li>Target <strong>$25&ndash;$50/month</strong> &mdash; the sweet spot for 40% of users</li>
+          <li>Goal-based framing may outperform expense anchoring per team feedback</li>
+          <li>Avoid anything that feels like "pennies" &mdash; it's the #1 churn trigger</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SECTIONS END -->
+  </main>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    var tooltip = document.getElementById('tooltip');
+    var reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function reduceMotionEnabled() { return reduceMotionQuery.matches; }
+    function token(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+    function motionDuration(ms) { return reduceMotionEnabled() ? 0 : ms; }
+
+    function showTooltip(event, html) {
+      tooltip.innerHTML = html;
+      tooltip.classList.add('visible');
+      var x = event.clientX + 14, y = event.clientY - 10;
+      if (x + 220 > window.innerWidth) x = event.clientX - 230;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+    }
+    function hideTooltip() { tooltip.classList.remove('visible'); }
+
+    /* Theme Toggle */
+    function currentTheme() {
+      var root = document.documentElement;
+      if (root.classList.contains('dark')) return 'dark';
+      if (root.classList.contains('light')) return 'light';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function applyThemeLabel() {
+      document.getElementById('theme-toggle').textContent = currentTheme() === 'dark' ? 'Light' : 'Dark';
+    }
+    function readStoredTheme() { try { return window.localStorage.getItem('presenter-theme'); } catch(e) { return null; } }
+    function persistTheme(t) { try { window.localStorage.setItem('presenter-theme', t); } catch(e) {} }
+
+    /* Horizontal Bar Chart Factory */
+    function renderHBar(containerId, data, opts) {
+      opts = opts || {};
+      var maxVal = d3.max(data, function(d) { return d.value; });
+      var width = 960, rowH = 48, margin = { top: 0, right: 80, bottom: 0, left: opts.labelWidth || 260 };
+      var height = data.length * rowH + margin.top + margin.bottom;
+      var innerW = width - margin.left - margin.right;
+
+      var svg = d3.select('#' + containerId).append('svg')
+        .attr('viewBox', '0 0 ' + width + ' ' + height);
+
+      var x = d3.scaleLinear().domain([0, maxVal]).range([0, innerW]);
+      var y = d3.scaleBand().domain(data.map(function(d) { return d.label; }))
+        .range([margin.top, height - margin.bottom]).padding(0.32);
+
+      var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',0)');
+
+      /* Labels */
+      svg.selectAll('.bar-label').data(data).enter()
+        .append('text')
+        .attr('x', margin.left - 14)
+        .attr('y', function(d) { return y(d.label) + y.bandwidth() / 2; })
+        .attr('dy', '0.35em')
+        .attr('text-anchor', 'end')
+        .attr('fill', token('--ink-light'))
+        .style('font-size', '13px')
+        .text(function(d) { return d.label; });
+
+      /* Bars */
+      g.selectAll('.bar').data(data).enter()
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', function(d) { return y(d.label); })
+        .attr('rx', y.bandwidth() / 2)
+        .attr('height', y.bandwidth())
+        .attr('fill', function(d, i) {
+          return i === 0 ? token('--series-1') : (i < 3 ? token('--series-2') : token('--series-3'));
+        })
+        .attr('width', 0)
+        .on('mouseover', function(event, d) { showTooltip(event, '<strong>' + d.label + '</strong><br>' + d.value + '% (' + d.count + ' responses)'); })
+        .on('mousemove', function(event) { showTooltip(event, tooltip.innerHTML); })
+        .on('mouseout', hideTooltip)
+        .transition().duration(motionDuration(560)).delay(function(d, i) { return i * 40; })
+        .attr('width', function(d) { return x(d.value); });
+
+      /* Value labels */
+      g.selectAll('.val').data(data).enter()
+        .append('text')
+        .attr('x', function(d) { return x(d.value) + 10; })
+        .attr('y', function(d) { return y(d.label) + y.bandwidth() / 2; })
+        .attr('dy', '0.35em')
+        .attr('fill', token('--ink'))
+        .style('font-size', '13px')
+        .style('font-weight', '600')
+        .style('opacity', 0)
+        .text(function(d) { return d.value + '%'; })
+        .transition().duration(motionDuration(300)).delay(function(d, i) { return 400 + i * 40; })
+        .style('opacity', 1);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var storedTheme = readStoredTheme();
+      if (storedTheme === 'dark' || storedTheme === 'light') document.documentElement.classList.add(storedTheme);
+      applyThemeLabel();
+
+      document.getElementById('theme-toggle').addEventListener('click', function() {
+        var html = document.documentElement;
+        var nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+        html.classList.remove('dark', 'light');
+        html.classList.add(nextTheme);
+        persistTheme(nextTheme);
+        applyThemeLabel();
+        /* Re-render charts for new tokens */
+        document.querySelectorAll('.chart-shell svg').forEach(function(s) { s.remove(); });
+        renderAllCharts();
+      });
+
+      /* TOC */
+      var toc = document.getElementById('toc');
+      var tocToggle = document.getElementById('toc-toggle');
+      var tocBackdrop = document.getElementById('toc-backdrop');
+      var tocList = toc.querySelector('.toc__list');
+      var contentEl = document.querySelector('.content');
+      var children = contentEl.children;
+      var introInserted = false;
+      for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if (child.classList.contains('act-divider')) {
+          var title = child.querySelector('.act-divider__title');
+          var label = child.querySelector('.act-divider__label');
+          var gi = document.createElement('li');
+          gi.className = 'toc__group';
+          gi.textContent = (label ? label.textContent + ': ' : '') + (title ? title.textContent : '');
+          tocList.appendChild(gi);
+          introInserted = true;
+          continue;
+        }
+        if (child.tagName === 'SECTION' && child.id) {
+          var heading = child.querySelector('.section__title');
+          if (!heading) continue;
+          if (!introInserted) {
+            var ig = document.createElement('li');
+            ig.className = 'toc__group';
+            ig.textContent = 'Overview';
+            tocList.appendChild(ig);
+            introInserted = true;
+          }
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = '#' + child.id;
+          a.textContent = heading.textContent;
+          li.appendChild(a);
+          tocList.appendChild(li);
+        }
+      }
+
+      function closeToc() { toc.classList.remove('open'); tocBackdrop.classList.remove('visible'); }
+      tocToggle.addEventListener('click', function() { toc.classList.toggle('open'); tocBackdrop.classList.toggle('visible'); });
+      tocBackdrop.addEventListener('click', closeToc);
+      tocList.querySelectorAll('a').forEach(function(l) { l.addEventListener('click', closeToc); });
+
+      /* Scroll tracking */
+      var allSections = document.querySelectorAll('section[id]');
+      var tocLinks = tocList.querySelectorAll('a');
+      function updateActiveToc() {
+        var scrollY = window.scrollY || window.pageYOffset;
+        var current = null;
+        for (var s = 0; s < allSections.length; s++) {
+          if (scrollY >= allSections[s].offsetTop - 120) current = allSections[s].id;
+        }
+        tocLinks.forEach(function(l) { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
+      }
+      window.addEventListener('scroll', updateActiveToc, { passive: true });
+      updateActiveToc();
+
+      /* Animations */
+      var animObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var parent = el.parentElement;
+          var siblings = parent ? parent.querySelectorAll(':scope > [data-animate]') : [];
+          if (siblings.length > 1 && !reduceMotionEnabled()) {
+            var idx = Array.prototype.indexOf.call(siblings, el);
+            el.style.transitionDelay = (idx * 80) + 'ms';
+          }
+          el.classList.add('visible');
+          animObs.unobserve(el);
+        });
+      }, { threshold: 0.14 });
+      document.querySelectorAll('[data-animate]').forEach(function(el) { animObs.observe(el); });
+
+      /* Metric counters */
+      function formatMetricValue(value, el) {
+        var decimals = parseInt(el.dataset.decimals || '0', 10);
+        var prefix = el.dataset.prefix || '';
+        var suffix = el.dataset.suffix || '';
+        var rendered;
+        if (el.dataset.format === 'comma') rendered = Math.round(value).toLocaleString();
+        else if (decimals > 0) rendered = value.toFixed(decimals);
+        else rendered = Math.round(value).toString();
+        return prefix + rendered + suffix;
+      }
+      function animateMetric(el) {
+        if (el.dataset.animated === 'true') return;
+        el.dataset.animated = 'true';
+        var target = parseFloat(el.dataset.count || '0');
+        if (reduceMotionEnabled()) { el.textContent = formatMetricValue(target, el); return; }
+        var duration = 680, start = performance.now();
+        function tick(now) {
+          var p = Math.min((now - start) / duration, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = formatMetricValue(target * eased, el);
+          if (p < 1) requestAnimationFrame(tick);
+          else el.textContent = formatMetricValue(target, el);
+        }
+        requestAnimationFrame(tick);
+      }
+      var metricObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting) { animateMetric(e.target); metricObs.unobserve(e.target); } });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('.metric-card__value[data-count]').forEach(function(el) { metricObs.observe(el); });
+
+      /* Charts */
+      renderAllCharts();
+    });
+
+    function renderAllCharts() {
+
+      /* Age */
+      renderHBar('chart-age', [
+        { label: '45\u201354', value: 49, count: 21 },
+        { label: '55\u201364', value: 30, count: 13 },
+        { label: '65+', value: 12, count: 5 },
+        { label: '35\u201344', value: 7, count: 3 },
+        { label: '25\u201334', value: 2, count: 1 },
+      ], { labelWidth: 100 });
+
+      /* Situation */
+      renderHBar('chart-situation', [
+        { label: 'Retired / semi-retired', value: 33, count: 19 },
+        { label: 'Other', value: 22, count: 13 },
+        { label: 'Working full-time', value: 16, count: 9 },
+        { label: 'Self-employed / freelance', value: 12, count: 7 },
+        { label: 'Stay-at-home parent / caregiver', value: 12, count: 7 },
+        { label: 'Working part-time', value: 5, count: 3 },
+      ]);
+
+      /* Priorities */
+      renderHBar('chart-priorities', [
+        { label: 'Pays out reliably and on time', value: 37, count: 20 },
+        { label: 'Time feels worth it', value: 28, count: 15 },
+        { label: 'Wide variety of ways to earn', value: 20, count: 11 },
+        { label: 'Simple and easy to understand', value: 9, count: 5 },
+        { label: 'Doesn\u2019t spam notifications', value: 4, count: 2 },
+        { label: 'Trust with my information', value: 2, count: 1 },
+        { label: 'Fun to use', value: 0, count: 0 },
+      ]);
+
+      /* Churn */
+      renderHBar('chart-churn', [
+        { label: 'Earnings feel too small', value: 53, count: 28 },
+        { label: 'Payouts slow or unreliable', value: 45, count: 24 },
+        { label: 'Minimum to cash out too high', value: 45, count: 24 },
+        { label: 'Feels scammy or untrustworthy', value: 43, count: 23 },
+        { label: 'Confusing or hard to navigate', value: 26, count: 14 },
+        { label: 'Too many notifications', value: 21, count: 11 },
+        { label: 'Found a better alternative', value: 13, count: 7 },
+      ]);
+
+      /* Earnings threshold */
+      renderHBar('chart-earnings', [
+        { label: '$25\u2013$50', value: 40, count: 21 },
+        { label: '$10\u2013$25', value: 21, count: 11 },
+        { label: 'More than $50', value: 21, count: 11 },
+        { label: '$5\u2013$10', value: 12, count: 6 },
+        { label: '$1\u2013$5', value: 6, count: 3 },
+      ], { labelWidth: 140 });
+
+      /* Activities */
+      renderHBar('chart-activities', [
+        { label: 'Watch short videos', value: 87, count: 45 },
+        { label: 'Play games within the app', value: 79, count: 41 },
+        { label: 'Daily check-ins', value: 77, count: 40 },
+        { label: 'Complete surveys', value: 63, count: 33 },
+        { label: 'Scan receipts', value: 60, count: 31 },
+        { label: 'Try new apps or games', value: 58, count: 30 },
+        { label: 'Shop through the app', value: 19, count: 10 },
+      ], { labelWidth: 220 });
+
+      /* Spending */
+      renderHBar('chart-spending', [
+        { label: 'Everyday expenses', value: 55, count: 31 },
+        { label: 'Treats for myself or family', value: 41, count: 23 },
+        { label: 'Saving toward something', value: 14, count: 8 },
+        { label: 'Subscriptions', value: 5, count: 3 },
+        { label: 'Gifts', value: 4, count: 2 },
+        { label: 'Just adds up in account', value: 4, count: 2 },
+      ], { labelWidth: 220 });
+
+      /* Discovery */
+      renderHBar('chart-discovery', [
+        { label: 'Recommended in another app', value: 40, count: 22 },
+        { label: 'Saw an ad', value: 22, count: 12 },
+        { label: 'Facebook or social media', value: 22, count: 12 },
+        { label: 'Friend or family', value: 9, count: 5 },
+        { label: 'Searched online / reviews', value: 7, count: 4 },
+      ], { labelWidth: 240 });
+
+      /* Trial triggers */
+      renderHBar('chart-trial', [
+        { label: 'Proof that it actually pays out', value: 35, count: 18 },
+        { label: 'Activities I already enjoy', value: 22, count: 11 },
+        { label: 'Sign-up bonus or incentive', value: 20, count: 10 },
+        { label: 'Looked simple and easy', value: 20, count: 10 },
+        { label: 'A friend recommended it', value: 2, count: 1 },
+      ], { labelWidth: 240 });
+    }
+  </script>
+</body>
+</html>

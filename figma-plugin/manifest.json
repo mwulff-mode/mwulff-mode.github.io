@@ -1,0 +1,10 @@
+{
+  "name": "[APP_NAME] Design System Generator",
+  "id": "earnapp-design-system-generator",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "src/ui.html",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": ["figma"]
+}
