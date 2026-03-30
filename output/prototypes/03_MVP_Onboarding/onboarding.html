@@ -931,6 +931,30 @@
   .home-greeting {
     font-size: 20px; font-weight: 600; color: var(--ink);
   }
+  /* ─── ONBOARDING STEPPER ─── */
+  .stepper {
+    position: absolute;
+    top: 76px;
+    right: 24px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    z-index: 6;
+  }
+  .stepper-dot {
+    width: 7px; height: 7px;
+    border-radius: 4px;
+    background: var(--cream-deep);
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .stepper-dot.active {
+    width: 24px;
+    background: var(--primary);
+  }
+  .stepper-dot.done {
+    background: var(--primary);
+  }
+
   /* Multi-select preference choices */
   .multi-choice { transition: all 0.2s ease; }
   .multi-choice.selected {
@@ -1638,7 +1662,7 @@
   <div class="screen" id="screen2">
 
     <!-- Step indicator -->
-    <div class="carousel-pill" id="carouselPill" style="margin-top:48px;">
+    <div class="carousel-pill" id="carouselPill" style="margin-top:56px;">
       <svg class="carousel-pill-ring" viewBox="0 0 64 64">
         <circle cx="32" cy="32" r="29" fill="none" stroke="var(--cream-deep)" stroke-width="2.5"/>
         <circle class="carousel-pill-arc" id="carouselArc" cx="32" cy="32" r="29" fill="none" stroke="var(--primary)" stroke-width="2.5"
@@ -1682,10 +1706,16 @@
     <button class="back-btn" onclick="goTo(2)">
       <i class="ph-bold ph-arrow-left" style="font-size:20px;"></i>
     </button>
+    <div class="stepper" id="onboardStepper">
+      <div class="stepper-dot active" data-step="1"></div>
+      <div class="stepper-dot" data-step="2"></div>
+      <div class="stepper-dot" data-step="3"></div>
+      <div class="stepper-dot" data-step="4"></div>
+    </div>
 
     <!-- Step 1: Earning preferences (multi-select) -->
     <div class="conv-step active" id="convStep1">
-      <div class="conv-question s" data-tw="Which of these sound like your kind of thing?" style="margin-top:72px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
+      <div class="conv-question s" data-tw="Which of these sound like your kind of thing?" style="margin-top:56px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
       <div class="conv-hint s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;font-size:14px;color:var(--ink-tertiary);margin-top:8px;">Pick your top 3 — we'll start you there</div>
       <div style="flex:1;"></div>
       <div class="conv-choices s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;">
@@ -1720,7 +1750,7 @@
 
     <!-- Step 2: Time -->
     <div class="conv-step" id="convStep2">
-      <div class="conv-question s" data-tw="When do you usually have a few minutes to yourself?" style="margin-top:72px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
+      <div class="conv-question s" data-tw="When do you usually have a few minutes to yourself?" style="margin-top:56px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
       <div style="flex:1;"></div>
       <div class="conv-choices s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;">
           <div class="conv-choice" onclick="convNext(3)">
@@ -1757,7 +1787,7 @@
 
     <!-- Step 3: Earnings goal -->
     <div class="conv-step" id="convStep3">
-      <div class="conv-question s" data-tw="What would make it feel worth your time?" style="margin-top:72px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
+      <div class="conv-question s" data-tw="What would make it feel worth your time?" style="margin-top:56px;"><span class="tw-text"></span><span class="tw-cursor"></span></div>
       <div style="flex:1;"></div>
       <div class="conv-choices s" style="opacity:0;transform:translateY(12px);transition:opacity 0.4s ease, transform 0.4s ease;">
           <div class="conv-choice" onclick="setGoal(25);convNext(4)">
@@ -2340,7 +2370,18 @@ function showChoicesAfterType(stepEl) {
   }
 }
 
+function updateStepper(step) {
+  document.querySelectorAll('.stepper-dot').forEach(dot => {
+    const s = parseInt(dot.dataset.step);
+    dot.classList.toggle('done', s < step);
+    dot.classList.toggle('active', s === step);
+  });
+}
+
 function convNext(step) {
+  // Update stepper
+  if (step <= 4) updateStepper(step);
+
   // Hide keyboard when leaving step 3
   hideKeyboard();
 
@@ -2704,6 +2745,7 @@ function jumpTo(screen, convStep) {
     step.classList.add('active');
     step.querySelectorAll('.s').forEach(el => el.classList.add('v'));
     if (convStep === '4') setTimeout(() => showKeyboard(), 300);
+    updateStepper(parseInt(convStep));
   }
 
   // Home screen: skip gift, show content immediately
