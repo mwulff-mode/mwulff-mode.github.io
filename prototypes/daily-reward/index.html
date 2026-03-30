@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Daily Reward</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      height: 100dvh;
+      background: #1a0a2e;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    .header {
+      width: 100%;
+      max-width: 420px;
+      padding: 52px 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      left: 20px;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0.7;
+      padding: 4px;
+    }
+
+    .header h1 { font-size: 22px; font-weight: 700; }
+
+    /* ── Subtitle ────────────────────────────────────────────────── */
+    #subtitle {
+      color: #aaaacc;
+      font-size: 15px;
+      text-align: center;
+      padding: 14px 32px 0;
+      max-width: 420px;
+      flex-shrink: 0;
+      line-height: 1.45;
+      min-height: 3em;
+    }
+
+    /* ── Drum section ────────────────────────────────────────────── */
+    .drum-section {
+      flex: 1;
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* The drum viewport */
+    .drum-scene {
+      flex: 1;
+      width: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 160px;
+    }
+
+
+    /* Subtle ring at the centre slot */
+    .center-ring {
+      position: absolute;
+      width: 165px;
+      height: 165px;
+      border-radius: 28px;
+      border: 1.5px solid rgba(255, 0, 128, 0.22);
+      pointer-events: none;
+      z-index: 1;
+      transition: border-color 0.15s ease;
+    }
+
+    /* Track holds all items stacked at the same origin */
+    .drum-track {
+      position: relative;
+      width: 155px;
+      height: 155px;
+    }
+
+    /* Each item is absolute, centred on the track origin */
+    .drum-item {
+      position: absolute;
+      width: 155px;
+      height: 155px;
+      top: 0; left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform, opacity;
+    }
+
+    .drum-item img {
+      width: 128px;
+      height: 128px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* ── CTA area ────────────────────────────────────────────────── */
+    .cta-area {
+      width: 100%;
+      max-width: 420px;
+      padding: 8px 24px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    #cta-btn {
+      width: 100%;
+      height: 56px;
+      border: none;
+      border-radius: 14px;
+      background: #ff0080;
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    #cta-btn:active { opacity: 0.85; }
+    #cta-btn:disabled {
+      background: #444466;
+      color: #aaaacc;
+      cursor: default;
+    }
+
+    /* ── Reward reveal (beneath icon) ───────────────────────────── */
+    #reward-reveal {
+      position: absolute;
+      top: calc(50% - 30px);
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+      padding: 0 24px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+    }
+
+    #reward-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    #reveal-label {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    #reveal-desc {
+      font-size: 15px;
+      color: #aaaacc;
+      line-height: 1.45;
+      padding: 0 8px;
+    }
+
+    /* ── Ring win animation ───────────────────────────────────────── */
+    @property --ring-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+    @keyframes ring-sweep { to { --ring-angle: 360deg; } }
+
+    /* Short single-pass gradient sweep on win */
+    .ring-win {
+      border: 4px solid transparent !important;
+      background: conic-gradient(from var(--ring-angle), #FD007C, #00D0FF, #FD007C) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation: ring-sweep 0.35s linear 1 forwards;
+      transition: none !important;
+    }
+
+    /* ── Winner float ─────────────────────────────────────────────── */
+    @keyframes winner-float {
+      0%, 100% { transform: translateY(-80px) scale(1.9); }
+      50%       { transform: translateY(-90px) scale(1.9); }
+    }
+    .winner-float {
+      animation: winner-float 2.2s ease-in-out infinite;
+    }
+
+    /* ── Label bounce ─────────────────────────────────────────────── */
+    @keyframes label-bounce {
+      0%   { opacity: 0; transform: scale(0.7); }
+      65%  { transform: scale(1.08); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .bounce { animation: label-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    /* ── Used screen (come back tomorrow) ────────────────────────── */
+    #used-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      padding: 160px 24px 0;
+    }
+    #used-screen.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .claimed-banner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .claimed-icon {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 0;
+      animation: claimed-float 2.2s ease-in-out infinite;
+    }
+    @keyframes claimed-float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    .claimed-check {
+      color: #20F35D;
+      font-size: 26px;
+      margin-right: 4px;
+    }
+    .claimed-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .claimed-reward {
+      font-size: 15px;
+      color: #aaaacc;
+    }
+
+    .teaser-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .teaser-text {
+      font-size: 14px;
+      color: #aaaacc;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .reward-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px 20px;
+      padding: 4px 8px 8px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .reward-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: card-in 0.35s ease forwards;
+    }
+    .reward-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+    .reward-card-bg {
+      width: 84px;
+      height: 84px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reward-card-label {
+      font-size: 11px;
+      color: #aaaacc;
+      text-align: center;
+      line-height: 1.2;
+      max-width: 90px;
+    }
+
+    @keyframes card-in {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Dev reset ───────────────────────────────────────────────── */
+    #dev-reset {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+      font-size: 11px;
+      color: #aaaacc;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="close-btn" aria-label="Close">✕</button>
+    <h1>Daily Reward</h1>
+  </div>
+
+  <p id="subtitle"></p>
+
+  <div class="drum-section">
+    <div class="drum-scene">
+      <div class="center-ring"></div>
+      <div class="drum-track" id="drum-track"></div>
+      <div id="reward-reveal">
+        <div id="reveal-label"></div>
+        <div id="reveal-desc"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="used-screen">
+    <div class="claimed-banner">
+      <img class="claimed-icon" id="claimed-icon" src="" alt="">
+      <div class="claimed-title"><span class="claimed-check">✓</span> Reward Claimed!</div>
+      <div class="claimed-reward"></div>
+    </div>
+    <div class="teaser-section">
+      <p class="teaser-text">Spin again tomorrow to win:</p>
+      <div class="reward-grid" id="reward-grid"></div>
+    </div>
+  </div>
+
+  <div class="cta-area">
+    <button id="cta-btn">TAP TO SPIN</button>
+  </div>
+
+  <canvas id="confetti-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;"></canvas>
+  <button id="dev-reset">Reset (dev)</button>
+
+  <script>
+    // ── REWARDS ──────────────────────────────────────────────────
+    const REWARDS = [
+      { id: '2x_news',    label: '2× News Boost',   desc: 'Your next 3 news articles earn double points',          asset: 'Assets/graphic/news.png' },
+      { id: '2x_video',   label: '2× Video Boost', desc: 'Your next 3 rewarded videos earn double points',        asset: 'Assets/graphic/video.png' },
+      { id: '2x_music',   label: '2× Music Boost', desc: 'Your next 3 songs earn double points',                  asset: 'Assets/graphic/music.png' },
+      { id: '100_points', label: '+100 points',                desc: '100 bonus points added to your balance',               asset: 'Assets/graphic/points.png' },
+      { id: '2x_vip',     label: '2× points – next action',   desc: 'Your next eligible earning action earns double points', asset: 'Assets/graphic/pointsvip.png' },
+    ];
+
+    const N = REWARDS.length; // 5
+
+    const LS_KEY = 'mea_daily_reward';
+    function today() { return new Date().toLocaleDateString('en-CA'); }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        if (obj.date !== today()) { localStorage.removeItem(LS_KEY); return null; }
+        return obj;
+      } catch { localStorage.removeItem(LS_KEY); return null; }
+    }
+
+    function saveState(rewardId, status) {
+      localStorage.setItem(LS_KEY, JSON.stringify({ date: today(), rewardId, status }));
+    }
+
+    function getReward(id) { return REWARDS.find(r => r.id === id) || null; }
+
+    // ── BUILD DRUM ITEMS ─────────────────────────────────────────
+
+    const track = document.getElementById('drum-track');
+    const drumItems = [];
+
+    REWARDS.forEach((reward, i) => {
+      const el  = document.createElement('div');
+      el.className = 'drum-item';
+      const img = document.createElement('img');
+      img.src = reward.asset;
+      img.alt = reward.label;
+      el.appendChild(img);
+      track.appendChild(el);
+      drumItems.push(el);
+    });
+
+    // ── DRUM POSITION ────────────────────────────────────────────
+    // drumPos: continuous float. Integer = exact item at front.
+    // Increasing drumPos scrolls items upward (new items enter from below).
+    let drumPos    = 0;
+    let isSpinning = false;
+    let previewIdx = 0;
+
+    // Cylinder perspective simulation:
+    //   R_CYL  — virtual cylinder radius (px)
+    //   D_CAM  — virtual camera distance (must be > R_CYL)
+    //
+    // For slot distance d from front:
+    //   angle  = d * 2π/N
+    //   y      = R·sin(angle) · D/(D − R·cos(angle))   [perspective-projected arc]
+    //   scale  = (D−R)/(D−R·cos(angle))                [normalised so d=0 → 1.0]
+    //   opacity = (1 + cos(angle)) / 2                  [1 front-facing, 0 back-facing]
+    //
+    // Result: items ±1 slot follow a natural arc (~200px out),
+    //         items ±2 slots wrap toward centre (~85px) semi-transparently —
+    //         exactly the visual you get looking at a drum from the front.
+    const R_CYL = 130;
+    const D_CAM = 480;
+
+    function renderDrum(pos, useTransition) {
+      drumItems.forEach((el, i) => {
+        let d = ((i - pos) % N + N) % N;
+        if (d > N / 2) d -= N;
+
+        const angle   = d * 2 * Math.PI / N;
+        const sinA    = Math.sin(angle);
+        const cosA    = Math.cos(angle);
+        const denom   = D_CAM - R_CYL * cosA;
+
+        const y       = R_CYL * sinA * D_CAM / denom;
+        const scale   = Math.max(0.05, (D_CAM - R_CYL) / denom);
+        const opacity = cosA > 0 ? (1 + cosA) / 2 : 0;
+        const zIndex  = Math.round((cosA + 1) * 10);
+
+        el.style.transition = useTransition
+          ? 'transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.28s ease'
+          : 'none';
+        el.style.transform  = `translateY(${y}px) scale(${scale})`;
+        el.style.opacity    = opacity;
+        el.style.zIndex     = zIndex;
+      });
+    }
+
+    // Snap to index (used by arrows + init). Direction: +1 = scroll up, -1 = scroll down.
+    function snapToIdx(idx, direction) {
+      const currentNorm = ((drumPos % N) + N) % N;
+      if (direction === 1) {
+        // Scroll upward: increase drumPos by how many steps to reach idx going forward
+        let steps = ((idx - currentNorm) % N + N) % N;
+        if (steps === 0) steps = N;
+        drumPos += steps;
+      } else {
+        // Scroll downward: decrease drumPos
+        let steps = ((currentNorm - idx) % N + N) % N;
+        if (steps === 0) steps = N;
+        drumPos -= steps;
+      }
+      renderDrum(drumPos, true);
+    }
+
+    // Animated spin to target index (items scroll upward, 5 full revolutions + offset)
+    function spinToIdx(targetIdx, onDone) {
+      const currentNorm = ((drumPos % N) + N) % N;
+      let steps = ((targetIdx - currentNorm) % N + N) % N;
+      if (steps < 0.5) steps += N;
+
+      const totalDelta = 5 * N + steps;
+      const startPos   = drumPos;
+      const endPos     = drumPos + totalDelta;
+      const duration   = 3000;
+      const startTime  = performance.now();
+
+      // Kill CSS transition for RAF control
+      drumItems.forEach(el => { el.style.transition = 'none'; });
+
+      let lastTickFloor = Math.floor(startPos);
+      let spinDone = false;
+
+      function frame(now) {
+        const t    = Math.min((now - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        const currentPos = startPos + (endPos - startPos) * ease;
+        renderDrum(currentPos, false);
+
+        // Tick flash: fire when a new item crosses the front
+        const currentFloor = Math.floor(currentPos);
+        if (currentFloor !== lastTickFloor) {
+          lastTickFloor = currentFloor;
+          centerRingEl.style.borderColor = 'rgba(255, 0, 128, 0.9)';
+          setTimeout(() => { if (!spinDone) centerRingEl.style.borderColor = ''; }, 150);
+        }
+
+        if (t < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          spinDone = true;
+          drumPos = endPos;
+          renderDrum(endPos, false);
+          // Snap ring to full pink when winner lands
+          centerRingEl.style.transition = 'none';
+          centerRingEl.style.borderColor = '#FD007C';
+          onDone();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    // ── STATE / RENDER ───────────────────────────────────────────
+    const STATE = { READY: 'READY', SPINNING: 'SPINNING', CLAIMED: 'CLAIMED', USED: 'USED' };
+
+    const subtitleEl   = document.getElementById('subtitle');
+    const ctaBtn       = document.getElementById('cta-btn');
+    const rewardReveal = document.getElementById('reward-reveal');
+    const revealLabel  = document.getElementById('reveal-label');
+    const revealDesc   = document.getElementById('reveal-desc');
+    const centerRingEl = document.querySelector('.center-ring');
+    const drumSectionEl = document.querySelector('.drum-section');
+
+    let appState = STATE.READY;
+    const devReset     = document.getElementById('dev-reset');
+
+    function render(state, reward) {
+      appState = state;
+
+      subtitleEl.innerHTML = '';
+
+      if (state === STATE.USED) {
+        ctaBtn.disabled = true;
+        // Hide spinning elements, show used screen
+        drumItems.forEach(el => {
+          el.classList.remove('winner-float');
+          el.style.transition = 'opacity 0.3s ease';
+          el.style.opacity = '0';
+        });
+        drumSectionEl.style.transition = 'opacity 0.3s ease';
+        drumSectionEl.style.opacity = '0';
+        drumSectionEl.style.pointerEvents = 'none';
+        showUsedScreen(reward);
+      } else {
+        ctaBtn.textContent =
+          state === STATE.CLAIMED ? 'CLAIM REWARD' : 'TAP TO SPIN';
+        ctaBtn.disabled = state === STATE.SPINNING;
+        // Ensure used screen is hidden and drum visible
+        document.getElementById('used-screen').classList.remove('visible');
+        drumSectionEl.style.opacity = '';
+        drumSectionEl.style.pointerEvents = '';
+      }
+
+      devReset.style.display = state === STATE.SPINNING ? 'none' : '';
+    }
+
+    // ── REWARD REVEAL ────────────────────────────────────────────
+    function showReward(reward) {
+      revealLabel.textContent = reward.label;
+      revealDesc.textContent  = reward.desc;
+      revealLabel.classList.remove('bounce');
+      void revealLabel.offsetWidth; // force reflow to restart animation
+      revealLabel.classList.add('bounce');
+      rewardReveal.classList.add('visible');
+    }
+
+    function hideReward() {
+      rewardReveal.classList.remove('visible');
+    }
+
+    // ── CONFETTI ─────────────────────────────────────────────────
+    let confettiActive = false;
+
+    function launchConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx    = canvas.getContext('2d');
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const COLORS = ['#FD007C', '#00D0FF', '#ffcc00', '#ffffff', '#ff66aa', '#7B61FF', '#00ffaa'];
+      let particles = [];
+      confettiActive = true;
+
+      function spawn() {
+        const shape = ['rect', 'ribbon', 'circle'][Math.floor(Math.random() * 3)];
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * -40 - 10,
+          vx: (Math.random() - 0.5) * 2.5,
+          vy: Math.random() * 2.5 + 1.5,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          w: shape === 'circle' ? Math.random() * 7 + 4 : Math.random() * 10 + 5,
+          h: shape === 'ribbon' ? Math.random() * 16 + 8 : Math.random() * 7 + 4,
+          shape,
+          rot: Math.random() * Math.PI * 2,
+          rotV: (Math.random() - 0.5) * 0.18,
+          wave: Math.random() * Math.PI * 2,
+          waveSpeed: Math.random() * 0.06 + 0.02,
+          opacity: 1,
+        };
+      }
+
+      // Pre-seed particles across upper half, simulating rain already in progress
+      for (let i = 0; i < 80; i++) {
+        const p = spawn();
+        p.y = Math.random() * canvas.height * 0.5;
+        particles.push(p);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (confettiActive && particles.length < 180) {
+          for (let i = 0; i < 4; i++) particles.push(spawn());
+        }
+
+        particles = particles.filter(p => p.y < canvas.height + 30 && p.opacity > 0.02);
+
+        particles.forEach(p => {
+          p.wave += p.waveSpeed;
+          p.x   += p.vx + Math.sin(p.wave) * 0.6;
+          p.y   += p.vy;
+          p.rot += p.rotV;
+          if (!confettiActive) p.opacity -= 0.008;
+
+          ctx.save();
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle   = p.color;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          if (p.shape === 'circle') {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          }
+          ctx.restore();
+        });
+
+        ctx.globalAlpha = 1;
+        if (confettiActive || particles.length > 0) requestAnimationFrame(draw);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      requestAnimationFrame(draw);
+    }
+
+    function stopConfetti() { confettiActive = false; }
+
+    // ── USED SCREEN ───────────────────────────────────────────────
+    const usedScreenEl  = document.getElementById('used-screen');
+    const rewardGridEl  = document.getElementById('reward-grid');
+    let countdownTimer  = null;
+
+    function showUsedScreen(reward) {
+      // Set the winning icon
+      const claimedIcon = document.getElementById('claimed-icon');
+      if (reward) {
+        claimedIcon.src = reward.asset;
+        claimedIcon.alt = reward.label;
+      }
+
+      // Populate claimed reward label
+      const claimedRewardEl = usedScreenEl.querySelector('.claimed-reward');
+      claimedRewardEl.textContent = reward ? reward.label : '';
+
+      // Build reward grid (2 rows)
+      rewardGridEl.innerHTML = '';
+      REWARDS.forEach((r, i) => {
+        const card = document.createElement('div');
+        card.className = 'reward-card';
+        card.style.animationDelay = `${i * 0.08}s`;
+
+        const bg = document.createElement('div');
+        bg.className = 'reward-card-bg';
+        const img = document.createElement('img');
+        img.src = r.asset;
+        img.alt = r.label;
+        bg.appendChild(img);
+
+        const label = document.createElement('div');
+        label.className = 'reward-card-label';
+        label.textContent = r.label;
+
+        card.appendChild(bg);
+        card.appendChild(label);
+        rewardGridEl.appendChild(card);
+      });
+
+      // Start countdown
+      updateCountdown();
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(updateCountdown, 60000);
+
+      // Show with slight delay so transition fires
+      requestAnimationFrame(() => usedScreenEl.classList.add('visible'));
+    }
+
+    function hideUsedScreen() {
+      usedScreenEl.classList.remove('visible');
+      if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setHours(24, 0, 0, 0);
+      const diff = tomorrow - now;
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      ctaBtn.textContent = `Next spin in ${h}h ${m}m`;
+    }
+
+    // ── HANDLERS ─────────────────────────────────────────────────
+    ctaBtn.addEventListener('click', () => {
+      if (appState === STATE.CLAIMED) { doClaim(); return; }
+      if (isSpinning) return;
+      isSpinning = true;
+
+      const targetIdx = Math.floor(Math.random() * N);
+      const reward    = REWARDS[targetIdx];
+      saveState(reward.id, 'spun');
+      render(STATE.SPINNING, null);
+
+      spinToIdx(targetIdx, () => {
+        isSpinning = false;
+        previewIdx = targetIdx;
+
+        // Step 1 — 800ms after stop: fade non-winners + ring, then animate winner in next frame
+        setTimeout(() => {
+          // Instantly hide non-winners
+          drumItems.forEach((el, i) => {
+            if (i !== targetIdx) {
+              el.style.transition = 'opacity 0.3s ease';
+              el.style.opacity    = '0';
+            }
+          });
+
+          // Ring: full pink → quick gradient flash → fade out (all before icon scales)
+          centerRingEl.style.transition = 'none';
+          centerRingEl.style.border     = '4px solid #FD007C';
+          centerRingEl.style.opacity    = '1';
+
+          setTimeout(() => {
+            centerRingEl.style.border = '';
+            centerRingEl.classList.add('ring-win');
+          }, 80);
+
+          setTimeout(() => {
+            centerRingEl.classList.remove('ring-win');
+            centerRingEl.style.transition = 'opacity 0.3s ease';
+            centerRingEl.style.opacity    = '0';
+            setTimeout(() => { centerRingEl.style.border = ''; }, 300);
+          }, 450);
+
+          // After ring is done (~500ms), scale up the winner icon
+          setTimeout(() => {
+            const winner = drumItems[targetIdx];
+            winner.style.transition = 'transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)';
+            winner.style.transform  = 'translateY(-80px) scale(1.9)';
+            winner.style.zIndex     = '20';
+            setTimeout(() => winner.classList.add('winner-float'), 900);
+          }, 500);
+
+          // Launch confetti after icon has scaled up (~500ms delay + 750ms transition)
+          setTimeout(() => launchConfetti(), 1250);
+
+          // Step 2 — 350ms later: reveal reward info inline
+          setTimeout(() => {
+            render(STATE.CLAIMED, reward);
+            showReward(reward);
+          }, 350);
+        }, 800);
+      });
+    });
+
+    function doClaim() {
+      const stored = loadState();
+      if (stored) saveState(stored.rewardId, 'used');
+      const reward = stored ? getReward(stored.rewardId) : null;
+      stopConfetti();
+      centerRingEl.classList.remove('ring-active');
+      centerRingEl.classList.remove('ring-win');
+      hideReward();
+      render(STATE.USED, reward);
+    }
+
+    devReset.addEventListener('click', () => {
+      localStorage.removeItem(LS_KEY);
+      location.reload();
+    });
+
+    // ── INIT ─────────────────────────────────────────────────────
+    function init() {
+      const stored = loadState();
+
+      if (!stored) {
+        renderDrum(0, false);
+        render(STATE.READY, null);
+        return;
+      }
+
+      const reward = stored.rewardId ? getReward(stored.rewardId) : null;
+      // Returning user — hide drum, show used screen immediately
+      drumSectionEl.style.opacity = '0';
+      drumSectionEl.style.pointerEvents = 'none';
+      render(STATE.USED, reward);
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

@@ -1,7 +1,8 @@
-node_modules/
 .DS_Store
+node_modules/
 tmp/
 .claude/
 .superpowers/
 .playwright-cli/
 *.mjs
+*.bak
