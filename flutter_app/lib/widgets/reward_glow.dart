@@ -25,13 +25,14 @@ class RewardGlowController extends ChangeNotifier {
 ///
 /// 1. 0–300ms: child scales 1.0 → 1.06 (`AppCurves.pop`)
 /// 2. 100–700ms: radial glow behind child fades 0 → 0.5 → 0 alpha,
-///    expanding from 0.8× to 1.4× of child bounds
+///    expanding from 160px to 280px (a 200px base, scaled 0.8× → 1.4×)
 /// 3. 300–900ms: child scales 1.06 → 1.0 (`AppCurves.warmOut`)
 ///
 /// Total duration: `AppDurations.hero` (900ms).
 ///
-/// The glow is rendered behind the child via `Stack`, so it does not affect
-/// layout.
+/// The glow is rendered behind the child via `Stack` with `clipBehavior:
+/// Clip.none`, so it does not affect layout and may visually overflow the
+/// parent. Intentional for the radiance effect.
 class RewardGlow extends StatefulWidget {
   final Widget child;
   final RewardGlowController controller;
