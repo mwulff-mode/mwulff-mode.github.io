@@ -223,6 +223,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             children: [
               // Google button
               PressScale(
+                // Navigation handled by inner ElevatedButton.onPressed.
+                // PressScale's onTap is a no-op so it only contributes the
+                // press-scale animation; the inner InkWell still handles
+                // the tap and routes to _navigate exactly once.
                 onTap: () {},
                 haptic: null,
                 child: SizedBox(
@@ -243,6 +247,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
               // Apple button
               PressScale(
+                // Navigation handled by inner OutlinedButton.onPressed.
+                // See Google button comment above.
                 onTap: () {},
                 haptic: null,
                 child: SizedBox(
