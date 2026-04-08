@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../theme/motion.dart';
+import 'press_scale.dart';
 
 /// The repeating "choice card" surface used for list items and selectable
 /// rows: white background, 18px radius, cream-deep 1.5 border, subtle shadow.
 ///
 /// Supports a `selected` state (primary-pale fill, primary border) for use
 /// in multi-select lists like the onboarding preference picker.
+///
+/// When [onTap] is non-null, the card automatically gets press-scale feedback
+/// and the [haptic] (default `tick`) fires on press-in.
 ///
 /// This only covers the *choice card* pattern. Full-width feature cards
 /// (task tiles, streak cards, conversational header) intentionally stay
@@ -16,6 +21,7 @@ class AppCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool selected;
   final BoxConstraints? constraints;
+  final HapticIntensity? haptic;
 
   const AppCard({
     super.key,
@@ -24,12 +30,13 @@ class AppCard extends StatelessWidget {
     this.onTap,
     this.selected = false,
     this.constraints,
+    this.haptic = HapticIntensity.tick,
   });
 
   @override
   Widget build(BuildContext context) {
     final decorated = AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: AppDurations.short,
       constraints: constraints,
       padding: padding,
       decoration: BoxDecoration(
@@ -51,6 +58,10 @@ class AppCard extends StatelessWidget {
     );
 
     if (onTap == null) return decorated;
-    return GestureDetector(onTap: onTap, child: decorated);
+    return PressScale(
+      onTap: onTap,
+      haptic: haptic,
+      child: decorated,
+    );
   }
 }
