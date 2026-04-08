@@ -6,7 +6,9 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/app_buttons.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/motion.dart';
 import '../widgets/fade_route.dart';
+import '../widgets/press_scale.dart';
 import '../widgets/screen_scaffold.dart';
 import 'onboarding_screen.dart';
 
@@ -91,11 +93,12 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
 
           // Carousel area
           Expanded(
-            child: GestureDetector(
+            child: PressScale(
               onTap: _advanceSlide,
+              haptic: HapticIntensity.tick,
               child: Center(
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 450),
+                  duration: AppDurations.long,
                   transitionBuilder: (child, animation) {
                     return FadeTransition(
                       opacity: animation,
@@ -105,7 +108,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
                           end: Offset.zero,
                         ).animate(CurvedAnimation(
                           parent: animation,
-                          curve: Curves.easeOutCubic,
+                          curve: AppCurves.warmOut,
                         )),
                         child: child,
                       ),
@@ -122,12 +125,20 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
           const SizedBox(height: AppSpacing.md),
 
           // CTA
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _navigate,
-              style: AppButtonStyles.primary,
-              child: Text("Let's get started", style: AppText.ctaLabel),
+          PressScale(
+            // Navigation handled by inner ElevatedButton.onPressed.
+            // PressScale's onTap is a no-op so it only contributes the
+            // press-scale animation; the inner InkWell still handles
+            // the tap and routes to _navigate exactly once.
+            onTap: () {},
+            haptic: null,
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _navigate,
+                style: AppButtonStyles.primary,
+                child: Text("Let's get started", style: AppText.ctaLabel),
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
