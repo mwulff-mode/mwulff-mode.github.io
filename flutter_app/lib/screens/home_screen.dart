@@ -406,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const SizedBox(height: AppSpacing.md),
               ScaleTransition(
                 scale: CurvedAnimation(
-                    parent: _giftAmountController, curve: Curves.easeOutCubic),
+                    parent: _giftAmountController, curve: AppCurves.warmOut),
                 child: Text(
                   '125',
                   style: GoogleFonts.outfit(
@@ -419,7 +419,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               ScaleTransition(
                 scale: CurvedAnimation(
-                    parent: _giftAmountController, curve: Curves.easeOutCubic),
+                    parent: _giftAmountController, curve: AppCurves.warmOut),
                 child: Text(
                   'Stars',
                   style: GoogleFonts.outfit(
