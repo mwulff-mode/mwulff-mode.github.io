@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/motion.dart';
 
 /// Shows a transient toast at the top of the screen using an [OverlayEntry].
 ///
@@ -56,7 +57,7 @@ class _AppToast extends StatefulWidget {
 }
 
 class _AppToastState extends State<_AppToast> {
-  static const _fadeDuration = Duration(milliseconds: 400);
+  static const _fadeDuration = AppDurations.long;
   double _opacity = 0;
 
   @override
