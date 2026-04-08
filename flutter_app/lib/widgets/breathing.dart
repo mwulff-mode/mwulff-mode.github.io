@@ -2,7 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 /// A very quiet idle scale oscillation for elements that should feel alive
-/// when nothing is happening. Sine-driven, no opacity, no position.
+/// when nothing is happening. Cosine-driven (single peak per period),
+/// no opacity, no position.
 ///
 /// Auto-starts on mount, auto-disposes. Disables on
 /// `MediaQuery.disableAnimations`.
@@ -28,7 +29,6 @@ class Breathing extends StatefulWidget {
 class _BreathingState extends State<Breathing>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  bool _disabled = false;
 
   @override
   void initState() {
@@ -43,12 +43,12 @@ class _BreathingState extends State<Breathing>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final disable = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    if (disable && !_disabled) {
-      _disabled = true;
-      _controller.stop();
-      _controller.value = 0;
-    } else if (!disable && !_controller.isAnimating) {
-      _disabled = false;
+    if (disable) {
+      if (_controller.isAnimating) {
+        _controller.stop();
+        _controller.value = 0;
+      }
+    } else if (!_controller.isAnimating) {
       _controller.repeat();
     }
   }
@@ -64,10 +64,11 @@ class _BreathingState extends State<Breathing>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        // Sine wave: 0 → 1 → 0 over the period. abs() folds the negative
-        // half so the scale only oscillates outward (1.0 → 1+amp → 1.0).
-        final t = sin(_controller.value * 2 * pi);
-        final scale = 1.0 + (t.abs() * widget.amplitude);
+        // (1 - cos(t·2π)) / 2 produces a smooth single peak (0 → 1 → 0)
+        // over the full period — one full breath in/out per [period].
+        // Equivalent to sin²(t·π); more natural feel than abs(sin).
+        final t = (1 - cos(_controller.value * 2 * pi)) / 2;
+        final scale = 1.0 + (t * widget.amplitude);
         return Transform.scale(scale: scale, child: child);
       },
       child: widget.child,
