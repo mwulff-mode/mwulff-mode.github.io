@@ -9,8 +9,10 @@ import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/app_card.dart';
 import '../widgets/app_toast.dart';
+import '../services/haptics.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
+import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/screen_scaffold.dart';
 import 'journey_screen.dart';
@@ -30,15 +32,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _navIndex = 0;
   String? _selectedGame;
 
-  late AnimationController _giftIconController;
   late AnimationController _giftAmountController;
   late AnimationController _giftLabelController;
+  final RewardGlowController _giftGlow = RewardGlowController();
 
   @override
   void initState() {
     super.initState();
-    _giftIconController = AnimationController(
-        vsync: this, duration: AppDurations.hero);
     _giftAmountController = AnimationController(
         vsync: this, duration: AppDurations.hero);
     _giftLabelController = AnimationController(
@@ -58,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     state.screen5Played = true;
 
     await Future.delayed(const Duration(milliseconds: 200));
-    _giftIconController.forward();
+    _giftGlow.play();
+    Haptics.celebrate(CelebrateMoments.welcomeGift);
     await Future.delayed(const Duration(milliseconds: 300));
     _giftAmountController.forward();
     await Future.delayed(const Duration(milliseconds: 400));
@@ -293,9 +294,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _giftIconController.dispose();
     _giftAmountController.dispose();
     _giftLabelController.dispose();
+    _giftGlow.dispose();
     super.dispose();
   }
 
@@ -380,9 +381,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ScaleTransition(
-                scale: CurvedAnimation(
-                    parent: _giftIconController, curve: Curves.elasticOut),
+              RewardGlow(
+                controller: _giftGlow,
+                glowColor: AppColors.primary,
                 child: Container(
                   width: 96,
                   height: 96,
