@@ -9,6 +9,7 @@ import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/app_card.dart';
 import '../widgets/app_toast.dart';
+import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/screen_scaffold.dart';
@@ -319,8 +320,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               right: 16,
               child: Consumer<AppState>(
                 builder: (context, state, _) {
-                  return GestureDetector(
+                  return PressScale(
                     onTap: () => state.toggleCurrency(),
+                    haptic: HapticIntensity.tick,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
@@ -489,10 +491,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildConvCard(AppState state) {
-    return GestureDetector(
+    return PressScale(
       onTap: () {
         Navigator.of(context).push(fadeRoute(const JourneyScreen()));
       },
+      haptic: HapticIntensity.tick,
       child: Container(
         constraints: const BoxConstraints(minHeight: 64),
         padding: const EdgeInsets.all(16),
@@ -801,8 +804,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       String taskKey, AppState state,
       {VoidCallback? onTap}) {
     final completed = state.completedTasks.contains(taskKey);
-    return GestureDetector(
+    return PressScale(
       onTap: completed ? null : (onTap ?? () => _completeTask(taskKey)),
+      haptic: HapticIntensity.tick,
+      enabled: !completed,
       child: AnimatedOpacity(
         opacity: completed ? 0.55 : 1,
         duration: AppDurations.medium,
@@ -1001,8 +1006,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _navItem(int index, IconData icon, String? label) {
     final isActive = _navIndex == index;
-    return GestureDetector(
+    return PressScale(
       onTap: () => setState(() => _navIndex = index),
+      haptic: HapticIntensity.tick,
       child: AnimatedContainer(
         duration: AppDurations.medium,
         curve: AppCurves.warmOut,
