@@ -35,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _giftAmountController;
   late AnimationController _giftLabelController;
   final RewardGlowController _giftGlow = RewardGlowController();
+  final RewardGlowController _ringGlow = RewardGlowController();
+  double _lastGoalProgress = 0;
 
   @override
   void initState() {
@@ -95,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final state = context.read<AppState>();
     if (state.completedTasks.contains(task)) return;
 
+    Haptics.reward();
     final goalCompleted = state.completeTask(task);
 
     final taskNames = {
@@ -151,10 +154,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     // Goal completed — hold the solid fill, then advance
     if (goalCompleted) {
+      Haptics.milestone();
       Future.delayed(const Duration(milliseconds: 2500), () {
         if (!mounted) return;
         final s = context.read<AppState>();
         s.advanceGoal();
+        if (s.isLegend) {
+          Haptics.celebrate(CelebrateMoments.legendReached);
+        }
         s.addJourneyEntry(
           'Goal ${s.goalIndex} complete!',
           s.isLegend
@@ -168,6 +175,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
 
     if (state.allTasksCompleted) {
+      Haptics.milestone();
       Future.delayed(const Duration(seconds: 2), () {
         if (!mounted) return;
         state.addJourneyEntry(
@@ -297,6 +305,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _giftAmountController.dispose();
     _giftLabelController.dispose();
     _giftGlow.dispose();
+    _ringGlow.dispose();
     super.dispose();
   }
 
@@ -546,6 +555,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ? Colors.white.withValues(alpha: 0.85)
         : AppColors.inkTertiary;
 
+    // Rising-edge detector: trigger ring glow when goalProgress crosses 100.
+    final currentProgress = state.goalProgress;
+    if (_lastGoalProgress < 100 && currentProgress >= 100) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _ringGlow.play();
+      });
+    }
+    _lastGoalProgress = currentProgress;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -610,84 +628,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
 
         // Goal ring
-        AnimatedContainer(
-          duration: AppDurations.long,
-          curve: AppCurves.warmOut,
-          width: 170,
-          height: 170,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: isSolidFill
-                ? [
-                    BoxShadow(
-                        color: ringColor.withValues(
-                            alpha: state.isLegend ? 0.4 : 0.3),
-                        blurRadius: state.isLegend ? 40 : 30,
-                        spreadRadius: state.isLegend ? 8 : 4)
-                  ]
-                : [],
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: state.goalProgress),
-                duration: AppDurations.hero,
-                curve: AppCurves.warmOut,
-                builder: (context, value, _) {
-                  return CustomPaint(
-                    size: const Size(170, 170),
-                    painter: _GoalRingPainter(
-                      percentage: value,
-                      trackColor: state.trackColor,
-                      fillColor: ringColor,
-                      solidFill: isSolidFill,
-                    ),
-                  );
-                },
-              ),
-              // Center content
-              if (state.isLegend)
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(PhosphorIcons.crown(PhosphorIconsStyle.fill),
-                        size: 28, color: Colors.white),
-                    const SizedBox(height: 6),
-                    Text("You've earned",
-                        style: AppText.caption.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white.withValues(alpha: 0.85))),
-                    Text('it all.',
-                        style: GoogleFonts.outfit(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white)),
-                  ],
-                )
-              else
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${state.goalProgress.round()}%',
-                      style: GoogleFonts.outfit(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          color: centerTextColor,
-                          letterSpacing: -1),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      state.formatRingProgress(),
-                      style: GoogleFonts.outfit(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: centerSubColor),
-                    ),
-                  ],
+        RewardGlow(
+          controller: _ringGlow,
+          glowColor: ringColor,
+          child: AnimatedContainer(
+            duration: AppDurations.long,
+            curve: AppCurves.warmOut,
+            width: 170,
+            height: 170,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: isSolidFill
+                  ? [
+                      BoxShadow(
+                          color: ringColor.withValues(
+                              alpha: state.isLegend ? 0.4 : 0.3),
+                          blurRadius: state.isLegend ? 40 : 30,
+                          spreadRadius: state.isLegend ? 8 : 4)
+                    ]
+                  : [],
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: state.goalProgress),
+                  duration: AppDurations.hero,
+                  curve: AppCurves.warmOut,
+                  builder: (context, value, _) {
+                    return CustomPaint(
+                      size: const Size(170, 170),
+                      painter: _GoalRingPainter(
+                        percentage: value,
+                        trackColor: state.trackColor,
+                        fillColor: ringColor,
+                        solidFill: isSolidFill,
+                      ),
+                    );
+                  },
                 ),
-            ],
+                // Center content
+                if (state.isLegend)
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(PhosphorIcons.crown(PhosphorIconsStyle.fill),
+                          size: 28, color: Colors.white),
+                      const SizedBox(height: 6),
+                      Text("You've earned",
+                          style: AppText.caption.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white.withValues(alpha: 0.85))),
+                      Text('it all.',
+                          style: GoogleFonts.outfit(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white)),
+                    ],
+                  )
+                else
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${state.goalProgress.round()}%',
+                        style: GoogleFonts.outfit(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                            color: centerTextColor,
+                            letterSpacing: -1),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        state.formatRingProgress(),
+                        style: GoogleFonts.outfit(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: centerSubColor),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ],
