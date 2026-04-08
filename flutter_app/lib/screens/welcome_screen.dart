@@ -3,7 +3,10 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/app_buttons.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/motion.dart';
+import '../widgets/breathing.dart';
 import '../widgets/fade_route.dart';
+import '../widgets/press_scale.dart';
 import '../widgets/screen_scaffold.dart';
 import 'trust_carousel_screen.dart';
 
@@ -32,25 +35,25 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     super.initState();
 
     _nameController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: AppDurations.long);
     _taglineController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: AppDurations.long);
     _proofController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: AppDurations.long);
     _ratingController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: AppDurations.long);
 
     _nameSlide = Tween(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-        CurvedAnimation(parent: _nameController, curve: Curves.easeOutCubic));
+        CurvedAnimation(parent: _nameController, curve: AppCurves.warmOut));
     _nameFade = Tween(begin: 0.0, end: 1.0).animate(_nameController);
 
     _taglineSlide = Tween(begin: const Offset(0, 0.3), end: Offset.zero)
         .animate(CurvedAnimation(
-            parent: _taglineController, curve: Curves.easeOutCubic));
+            parent: _taglineController, curve: AppCurves.warmOut));
     _taglineFade = Tween(begin: 0.0, end: 1.0).animate(_taglineController);
 
     _proofSlide = Tween(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-        CurvedAnimation(parent: _proofController, curve: Curves.easeOutCubic));
+        CurvedAnimation(parent: _proofController, curve: AppCurves.warmOut));
     _proofFade = Tween(begin: 0.0, end: 1.0).animate(_proofController);
 
     _startAnimations();
@@ -92,35 +95,37 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo placeholder (circle with icon)
-                Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primary.withValues(alpha: 0.8),
+                Breathing(
+                  child: Container(
+                    width: 160,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.primary,
+                          AppColors.primary.withValues(alpha: 0.8),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 40,
+                          offset: const Offset(0, 12),
+                        ),
                       ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
-                        blurRadius: 40,
-                        offset: const Offset(0, 12),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'E',
-                      style: TextStyle(
-                        fontSize: 72,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -2,
+                    child: const Center(
+                      child: Text(
+                        'E',
+                        style: TextStyle(
+                          fontSize: 72,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -2,
+                        ),
                       ),
                     ),
                   ),
@@ -217,33 +222,41 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           Column(
             children: [
               // Google button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _navigate,
-                  icon: const Icon(Icons.g_mobiledata,
-                      size: 24, color: Colors.white),
-                  label: Text(
-                    'Continue with Google',
-                    style: AppText.listItem.copyWith(color: Colors.white),
+              PressScale(
+                onTap: () {},
+                haptic: null,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _navigate,
+                    icon: const Icon(Icons.g_mobiledata,
+                        size: 24, color: Colors.white),
+                    label: Text(
+                      'Continue with Google',
+                      style: AppText.listItem.copyWith(color: Colors.white),
+                    ),
+                    style: AppButtonStyles.primary,
                   ),
-                  style: AppButtonStyles.primary,
                 ),
               ),
               const SizedBox(height: 12),
 
               // Apple button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _navigate,
-                  icon: Icon(PhosphorIcons.appleLogo(),
-                      size: 20, color: AppColors.primary),
-                  label: Text(
-                    'Continue with Apple',
-                    style: AppText.listItem.copyWith(color: AppColors.primary),
+              PressScale(
+                onTap: () {},
+                haptic: null,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _navigate,
+                    icon: Icon(PhosphorIcons.appleLogo(),
+                        size: 20, color: AppColors.primary),
+                    label: Text(
+                      'Continue with Apple',
+                      style: AppText.listItem.copyWith(color: AppColors.primary),
+                    ),
+                    style: AppButtonStyles.primaryOutline,
                   ),
-                  style: AppButtonStyles.primaryOutline,
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
@@ -268,8 +281,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               const SizedBox(height: AppSpacing.md),
 
               // Email input
-              GestureDetector(
+              PressScale(
                 onTap: _navigate,
+                haptic: null,
                 child: Container(
                   width: double.infinity,
                   padding:
