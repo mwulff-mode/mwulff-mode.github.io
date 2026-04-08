@@ -5,6 +5,7 @@ import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../widgets/screen_scaffold.dart';
+import '../widgets/press_scale.dart';
 
 class JourneyScreen extends StatelessWidget {
   const JourneyScreen({super.key});
@@ -28,8 +29,9 @@ class JourneyScreen extends StatelessWidget {
                         style: AppText.sectionTitle,
                       ),
                     ),
-                    GestureDetector(
+                    PressScale(
                       onTap: () => Navigator.of(context).pop(),
+                      haptic: null,
                       child: Container(
                         width: 36,
                         height: 36,
