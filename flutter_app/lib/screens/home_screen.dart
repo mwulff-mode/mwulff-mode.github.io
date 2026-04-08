@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/motion.dart';
 import '../widgets/app_card.dart';
 import '../widgets/app_toast.dart';
 import '../widgets/bottom_sheet_shell.dart';
@@ -36,11 +37,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _giftIconController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600));
+        vsync: this, duration: AppDurations.hero);
     _giftAmountController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+        vsync: this, duration: AppDurations.hero);
     _giftLabelController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
+        vsync: this, duration: AppDurations.long);
     _playGiftAnimation();
   }
 
@@ -64,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     await Future.delayed(const Duration(milliseconds: 1700));
     setState(() => _giftFading = true);
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(AppDurations.long);
     setState(() {
       _showGift = false;
       _homeRevealed = true;
@@ -370,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final state = context.read<AppState>();
     return AnimatedOpacity(
       opacity: _giftFading ? 0 : 1,
-      duration: const Duration(milliseconds: 600),
+      duration: AppDurations.long,
       child: Container(
         color: AppColors.cream,
         child: Center(
@@ -606,8 +607,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
         // Goal ring
         AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeOutCubic,
+          duration: AppDurations.long,
+          curve: AppCurves.warmOut,
           width: 170,
           height: 170,
           decoration: BoxDecoration(
@@ -627,8 +628,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             children: [
               TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0, end: state.goalProgress),
-                duration: const Duration(milliseconds: 1200),
-                curve: Curves.easeOutCubic,
+                duration: AppDurations.hero,
+                curve: AppCurves.warmOut,
                 builder: (context, value, _) {
                   return CustomPaint(
                     size: const Size(170, 170),
@@ -804,7 +805,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       onTap: completed ? null : (onTap ?? () => _completeTask(taskKey)),
       child: AnimatedOpacity(
         opacity: completed ? 0.55 : 1,
-        duration: const Duration(milliseconds: 300),
+        duration: AppDurations.medium,
         child: Container(
           constraints: const BoxConstraints(minHeight: 72),
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
@@ -898,7 +899,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: 12),
         AnimatedOpacity(
           opacity: unlocked ? 1 : 0.4,
-          duration: const Duration(milliseconds: 500),
+          duration: AppDurations.long,
           child: Row(
             children: [
               _earnTile(
@@ -1003,8 +1004,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () => setState(() => _navIndex = index),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
+        duration: AppDurations.medium,
+        curve: AppCurves.warmOut,
         padding: EdgeInsets.symmetric(
           horizontal: isActive ? 24 : 24,
           vertical: 16,
