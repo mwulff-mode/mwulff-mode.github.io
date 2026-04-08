@@ -5,7 +5,9 @@ import '../state/app_state.dart';
 import '../theme/app_buttons.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/motion.dart';
 import '../widgets/app_card.dart';
+import '../widgets/press_scale.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/screen_scaffold.dart';
 import '../widgets/typewriter_text.dart';
@@ -63,7 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Positioned(
             top: 12,
             left: 24,
-            child: GestureDetector(
+            child: PressScale(
               onTap: () {
                 if (_currentStep > 1) {
                   _goToStep(_currentStep - 1);
@@ -71,6 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Navigator.of(context).pop();
                 }
               },
+              haptic: null,
               child: Container(
                 width: 48,
                 height: 48,
@@ -94,8 +97,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 final isActive = step == _currentStep;
                 final isDone = step < _currentStep;
                 return AnimatedContainer(
-                  duration: const Duration(milliseconds: 350),
-                  curve: Curves.easeOutCubic,
+                  duration: AppDurations.medium,
+                  curve: AppCurves.warmOut,
                   width: isActive ? 24 : 7,
                   height: 7,
                   margin: const EdgeInsets.only(left: 6),
@@ -114,7 +117,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
             child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 350),
+              duration: AppDurations.medium,
               child: _buildStep(),
             ),
           ),
@@ -151,7 +154,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: AppSpacing.sm),
             AnimatedOpacity(
               opacity: _choicesVisible ? 1 : 0,
-              duration: const Duration(milliseconds: 400),
+              duration: AppDurations.long,
               child: Text(
                 'Pick as many as you like',
                 style: AppText.body.copyWith(
@@ -163,10 +166,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const Spacer(),
             AnimatedOpacity(
               opacity: _choicesVisible ? 1 : 0,
-              duration: const Duration(milliseconds: 400),
+              duration: AppDurations.long,
               child: AnimatedSlide(
                 offset: _choicesVisible ? Offset.zero : const Offset(0, 0.05),
-                duration: const Duration(milliseconds: 400),
+                duration: AppDurations.long,
                 child: Column(
                   children: [
                     _prefChoice(
@@ -205,14 +208,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: prefs.isNotEmpty
-                    ? () => _goToStep(2)
-                    : null, // goes to name step
-                style: AppButtonStyles.primary,
-                child: Text('Continue', style: AppText.ctaLabel),
+            PressScale(
+              // Navigation handled by inner ElevatedButton.onPressed.
+              // PressScale's onTap is a no-op so it only contributes the
+              // press-scale animation; the inner InkWell still handles
+              // the tap. enabled mirrors the button's disabled state so
+              // the press feedback also disables when the button is.
+              onTap: () {},
+              haptic: null,
+              enabled: prefs.isNotEmpty,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: prefs.isNotEmpty
+                      ? () => _goToStep(2)
+                      : null, // goes to name step
+                  style: AppButtonStyles.primary,
+                  child: Text('Continue', style: AppText.ctaLabel),
+                ),
               ),
             ),
           ],
@@ -292,12 +305,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               : const SizedBox.shrink(),
         ),
         const Spacer(),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _finishOnboarding,
-            style: AppButtonStyles.primary,
-            child: Text("That's me", style: AppText.ctaLabel),
+        PressScale(
+          // Navigation handled by inner ElevatedButton.onPressed.
+          // See Continue button comment above.
+          onTap: () {},
+          haptic: null,
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _finishOnboarding,
+              style: AppButtonStyles.primary,
+              child: Text("That's me", style: AppText.ctaLabel),
+            ),
           ),
         ),
       ],
