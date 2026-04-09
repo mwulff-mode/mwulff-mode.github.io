@@ -4,5 +4,6 @@ tmp/
 .claude/
 .superpowers/
 .playwright-cli/
+.worktrees/
 *.mjs
 *.bak
