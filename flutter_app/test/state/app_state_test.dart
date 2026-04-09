@@ -48,26 +48,26 @@ void main() {
 
       state.reset();
 
-      expect(state.userName, 'Lisa');
-      expect(state.stars, 125);
-      expect(state.earnedToday, 0);
-      expect(state.goalIndex, 0);
-      expect(state.tasksCompleted, 0);
-      expect(state.screen5Played, isFalse);
-      expect(state.streakCount, 0);
-      expect(state.isLegend, isFalse);
-      expect(state.completedTasks, isEmpty);
-      expect(state.lastCompletedTask, isNull);
-      expect(state.selectedPreferences, isEmpty);
-      expect(state.journeyLog, isEmpty);
-      expect(state.convCardMsg, '');
-      expect(state.convCardIcon, Icons.waving_hand);
-      expect(state.convCardIconColor, AppColors.primary);
-      expect(state.convCardIconBg, AppColors.primaryPale);
-      expect(state.email, 'lisa@earnwise.demo');
-      expect(state.authProvider, 'Google');
-      expect(state.ageRange, '26-35');
-      expect(state.gender, 'Female');
+      expect(state.userName, 'Lisa', reason: 'userName should reset to Lisa');
+      expect(state.stars, 125, reason: 'stars should reset to welcome-gift starting balance');
+      expect(state.earnedToday, 0, reason: 'earnedToday');
+      expect(state.goalIndex, 0, reason: 'goalIndex');
+      expect(state.tasksCompleted, 0, reason: 'tasksCompleted');
+      expect(state.screen5Played, isFalse, reason: 'screen5Played');
+      expect(state.streakCount, 0, reason: 'streakCount');
+      expect(state.isLegend, isFalse, reason: 'isLegend');
+      expect(state.completedTasks, isEmpty, reason: 'completedTasks should be a new empty set');
+      expect(state.lastCompletedTask, isNull, reason: 'lastCompletedTask');
+      expect(state.selectedPreferences, isEmpty, reason: 'selectedPreferences should be a new empty list');
+      expect(state.journeyLog, isEmpty, reason: 'journeyLog should be a new empty list');
+      expect(state.convCardMsg, '', reason: 'convCardMsg');
+      expect(state.convCardIcon, Icons.waving_hand, reason: 'convCardIcon');
+      expect(state.convCardIconColor, AppColors.primary, reason: 'convCardIconColor');
+      expect(state.convCardIconBg, AppColors.primaryPale, reason: 'convCardIconBg');
+      expect(state.email, 'lisa@earnwise.demo', reason: 'email');
+      expect(state.authProvider, 'Google', reason: 'authProvider');
+      expect(state.ageRange, '26-35', reason: 'ageRange');
+      expect(state.gender, 'Female', reason: 'gender');
     });
 
     test('notifies listeners when called', () {

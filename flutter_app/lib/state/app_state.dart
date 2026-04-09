@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:earnwise_mvp/theme/app_theme.dart';
+import '../theme/app_theme.dart';
 
 class JourneyEntry {
   final String msg;
@@ -88,8 +88,8 @@ class AppState extends ChangeNotifier {
   // Conversational card state
   String convCardMsg = '';
   IconData convCardIcon = Icons.waving_hand;
-  Color convCardIconColor = const Color(0xFF0D9488);
-  Color convCardIconBg = const Color(0xFFF0FDFA);
+  Color convCardIconColor = AppColors.primary;
+  Color convCardIconBg = AppColors.primaryPale;
 
   // Profile fields (fictional demo values, surfaced on ProfileScreen)
   String email = 'lisa@earnwise.demo';
