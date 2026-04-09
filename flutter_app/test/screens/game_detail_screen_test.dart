@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:earnwise_mvp/data/games.dart';
 import 'package:earnwise_mvp/screens/game_detail_screen.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
 
 void main() {
   /// Helper that pushes [GameDetailScreen] onto a real Navigator so the
@@ -52,5 +53,31 @@ void main() {
       expect(find.text('Candy Crush'), findsNothing);
       expect(find.text('open'), findsOneWidget);
     });
+
+    testWidgets(
+      'falls back to a colored letter square when the icon asset is missing',
+      (tester) async {
+        const fakeGame = Game(
+          key: 'fake',
+          name: 'Fake Game',
+          category: 'Puzzle',
+          rating: 4.0,
+          iconPath: 'assets/images/games/does_not_exist.png',
+          heroGradient: [AppColors.primary, AppColors.creamDeep],
+          regularSteps: [
+            GameStep(label: 'Install the app', reward: 0.10),
+            GameStep(label: 'Reach Level 1', reward: 0.90),
+          ],
+          howItWorks: 'How it works copy.',
+          about: 'About copy.',
+          disclaimer: 'Disclaimer copy.',
+        );
+        await pumpDetail(tester, game: fakeGame);
+        // Wait long enough for Image.asset to fail and call the errorBuilder.
+        await tester.pump(const Duration(milliseconds: 200));
+        // Fallback shows the first letter of the game name.
+        expect(find.text('F'), findsOneWidget);
+      },
+    );
   });
 }

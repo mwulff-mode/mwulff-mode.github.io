@@ -29,8 +29,8 @@ class GameDetailScreen extends StatelessWidget {
       backgroundColor: AppColors.cream,
       body: Stack(
         children: [
-          // Hero band, partial in this task: gradient + close button only.
-          // Title, icon, and the rest of the page are added in later tasks.
+          // Hero band: gradient background with centered game icon.
+          // The close button and title row are added in separate tasks.
           Positioned(
             top: 0,
             left: 0,
@@ -42,6 +42,12 @@ class GameDetailScreen extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: game.heroGradient,
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: topPadding),
+                child: Center(
+                  child: _GameIcon(game: game),
                 ),
               ),
             ),
@@ -77,6 +83,45 @@ class GameDetailScreen extends StatelessWidget {
             child: Text(game.name, style: AppText.sectionTitle),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Displays the square game icon at 120 pt, with a colored letter-square
+/// fallback when the asset cannot be loaded. Used inside the hero band so
+/// the screen never crashes when art is missing.
+class _GameIcon extends StatelessWidget {
+  final Game game;
+
+  const _GameIcon({required this.game});
+
+  static const double _size = 120;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(_size * 0.22),
+      child: Image.asset(
+        game.iconPath,
+        width: _size,
+        height: _size,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.medium,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: _size,
+            height: _size,
+            color: game.heroGradient.isNotEmpty
+                ? game.heroGradient.first
+                : AppColors.creamDeep,
+            alignment: Alignment.center,
+            child: Text(
+              game.name.isEmpty ? '?' : game.name[0].toUpperCase(),
+              style: AppText.display.copyWith(color: Colors.white),
+            ),
+          );
+        },
       ),
     );
   }
