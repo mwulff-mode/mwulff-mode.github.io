@@ -281,6 +281,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       final game = gamesByName[picked];
       if (game == null) return;
       _selectedGame = picked;
+      // Task completes when the user taps Install on the detail screen,
+      // not here. The picker just opens the detail page.
       Navigator.of(context).push(
         fadeRoute(GameDetailScreen(
           game: game,
