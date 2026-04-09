@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:ui' show Color;
+import 'package:flutter/foundation.dart' show immutable;
 import '../theme/app_theme.dart';
 
 /// One step in a game's reward ladder.
+@immutable
 class GameStep {
   final String label;
   final double reward;
@@ -9,8 +11,8 @@ class GameStep {
   const GameStep({required this.label, required this.reward});
 }
 
-/// All the data needed to render a game detail page. Hardcoded in
-/// [gamesByName] for v1. Three games total.
+/// All the data needed to render a game detail page.
+@immutable
 class Game {
   /// Stable internal id, lowercase snake_case. Matches the filename of the
   /// icon asset.
@@ -33,7 +35,7 @@ class Game {
   /// Two color stops used by the hero band gradient.
   final List<Color> heroGradient;
 
-  /// Ordered list of regular steps. v1 always has exactly 2.
+  /// Ordered reward steps shown on the detail screen ladder.
   final List<GameStep> regularSteps;
 
   /// Short paragraph for the HOW IT WORKS section.
