@@ -73,8 +73,9 @@ void main() {
           disclaimer: 'Disclaimer copy.',
         );
         await pumpDetail(tester, game: fakeGame);
-        // Wait long enough for Image.asset to fail and call the errorBuilder.
-        await tester.pump(const Duration(milliseconds: 200));
+        // Settle any residual frames from the failed image decode so the
+        // errorBuilder fallback widget is committed to the tree.
+        await tester.pumpAndSettle();
         // Fallback shows the first letter of the game name.
         expect(find.text('F'), findsOneWidget);
       },

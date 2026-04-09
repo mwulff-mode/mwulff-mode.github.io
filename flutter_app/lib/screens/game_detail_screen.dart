@@ -37,6 +37,7 @@ class GameDetailScreen extends StatelessWidget {
             right: 0,
             height: _kHeroBandHeight + topPadding,
             child: Container(
+              padding: EdgeInsets.only(top: topPadding),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -44,11 +45,8 @@ class GameDetailScreen extends StatelessWidget {
                   colors: game.heroGradient,
                 ),
               ),
-              child: Padding(
-                padding: EdgeInsets.only(top: topPadding),
-                child: Center(
-                  child: _GameIcon(game: game),
-                ),
+              child: Center(
+                child: _GameIcon(game: game),
               ),
             ),
           ),
