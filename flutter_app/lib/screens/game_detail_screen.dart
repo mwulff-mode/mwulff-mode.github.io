@@ -5,6 +5,8 @@ import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../widgets/press_scale.dart';
 
+const double _kHeroBandHeight = 220.0;
+
 /// Full-page detail view for a single game. Opens after the user picks a
 /// game from the home screen game picker. The X button in the hero band
 /// pops the screen without committing. The sticky Install CTA at the
@@ -21,6 +23,8 @@ class GameDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       backgroundColor: AppColors.cream,
       body: Stack(
@@ -31,7 +35,7 @@ class GameDetailScreen extends StatelessWidget {
             top: 0,
             left: 0,
             right: 0,
-            height: 220 + MediaQuery.of(context).padding.top,
+            height: _kHeroBandHeight + topPadding,
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -44,13 +48,12 @@ class GameDetailScreen extends StatelessWidget {
           ),
           // X close button, top right, inside safe area.
           Positioned(
-            top: MediaQuery.of(context).padding.top + 12,
+            top: topPadding + 12,
             right: 20,
             child: PressScale(
+              key: const Key('game_detail_close'),
               onTap: () => Navigator.of(context).pop(),
-              haptic: null,
               child: Container(
-                key: const Key('game_detail_close'),
                 width: 40,
                 height: 40,
                 decoration: const BoxDecoration(
@@ -69,7 +72,7 @@ class GameDetailScreen extends StatelessWidget {
           // first widget test can find it. The real title row is added in
           // a later task and replaces this stub.
           Positioned(
-            top: 220 + MediaQuery.of(context).padding.top + 24,
+            top: _kHeroBandHeight + topPadding + 24,
             left: 24,
             child: Text(game.name, style: AppText.sectionTitle),
           ),
