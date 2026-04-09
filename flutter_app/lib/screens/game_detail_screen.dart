@@ -3,6 +3,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../data/games.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../widgets/physical_press.dart';
 import '../widgets/press_scale.dart';
 
 const double _kHeroBandHeight = 220.0;
@@ -104,6 +105,33 @@ class GameDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppLayout.gutter,
+            AppSpacing.md,
+            AppLayout.gutter,
+            AppSpacing.md,
+          ),
+          child: PhysicalPress(
+            onTap: () {
+              onInstall();
+              Navigator.of(context).pop();
+            },
+            backgroundColor: AppColors.primary,
+            shadowColor: AppColors.primaryDark,
+            depth: 6,
+            height: 68,
+            haptic: HapticIntensity.confirm,
+            child: Container(
+              key: const Key('game_detail_install'),
+              alignment: Alignment.center,
+              child: Text('Install Game', style: AppText.ctaLabel),
+            ),
+          ),
+        ),
       ),
     );
   }

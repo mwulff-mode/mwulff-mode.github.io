@@ -118,6 +118,24 @@ void main() {
       expect(find.text('NOT STARTED'), findsOneWidget);
     });
 
+    testWidgets('Install Game button calls onInstall and pops the screen',
+        (tester) async {
+      int installCount = 0;
+      await pumpDetail(
+        tester,
+        game: gamesByName['Candy Crush']!,
+        onInstall: () => installCount++,
+      );
+      expect(find.text('Candy Crush'), findsWidgets);
+
+      await tester.tap(find.byKey(const Key('game_detail_install')));
+      await tester.pumpAndSettle();
+
+      expect(installCount, 1);
+      expect(find.text('Candy Crush'), findsNothing);
+      expect(find.text('open'), findsOneWidget);
+    });
+
     testWidgets(
       'falls back to a colored letter square when the icon asset is missing',
       (tester) async {
