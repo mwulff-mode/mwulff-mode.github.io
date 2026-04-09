@@ -65,7 +65,7 @@ class GameDetailScreen extends StatelessWidget {
                 children: [
                   _TitleRow(game: game),
                   const SizedBox(height: AppSpacing.lg),
-                  const _TopProgressBar(),
+                  _TopProgressBar(total: game.maxEarning),
                 ],
               ),
             ),
@@ -117,11 +117,11 @@ class _TitleRow extends StatelessWidget {
             Expanded(
               child: Text(
                 game.name,
-                style: AppText.brandMark.copyWith(fontSize: 28),
+                style: AppText.gameTitle,
               ),
             ),
             const SizedBox(width: AppSpacing.md),
-            const _EarningBadge(amount: 1.00),
+            _EarningBadge(amount: game.maxEarning),
           ],
         ),
         const SizedBox(height: AppSpacing.xs),
@@ -132,7 +132,7 @@ class _TitleRow extends StatelessWidget {
               size: 16,
               color: AppColors.gold,
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: AppSpacing.xs),
             Text(
               game.rating.toStringAsFixed(1),
               style: AppText.caption.copyWith(color: AppColors.inkSecondary),
@@ -181,9 +181,13 @@ class _EarningBadge extends StatelessWidget {
 }
 
 /// Top progress bar. Cream-deep track, primary fill, label row above.
-/// Progress is always 0 in v1 because no steps complete in-session.
+/// `earned` is hardcoded to $0.00 in v1 because no steps complete in-session.
+/// `total` is the maximum dollars earnable across all regular steps for
+/// the current game.
 class _TopProgressBar extends StatelessWidget {
-  const _TopProgressBar();
+  final double total;
+
+  const _TopProgressBar({required this.total});
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +195,7 @@ class _TopProgressBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '\$0.00 earned of \$1.00',
+          '\$0.00 earned of \$${total.toStringAsFixed(2)}',
           style: AppText.caption.copyWith(color: AppColors.inkSecondary),
         ),
         const SizedBox(height: AppSpacing.xs),

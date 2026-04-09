@@ -27,6 +27,14 @@ class AppText {
         color: AppColors.ink,
       );
 
+  /// 28 / 800 · game detail page title (game name on the detail screen)
+  static TextStyle get gameTitle => GoogleFonts.outfit(
+        fontSize: 28,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0,
+        color: AppColors.ink,
+      );
+
   /// 24 / 700 · onboarding prompt questions
   static TextStyle get prompt => GoogleFonts.outfit(
         fontSize: 24,

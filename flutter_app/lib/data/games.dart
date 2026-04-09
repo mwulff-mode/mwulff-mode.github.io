@@ -59,6 +59,12 @@ class Game {
     required this.about,
     required this.disclaimer,
   });
+
+  /// Total dollar amount earnable across all regular steps. Computed from
+  /// [regularSteps] so it stays in sync with the data instead of being a
+  /// duplicate literal that can drift.
+  double get maxEarning =>
+      regularSteps.fold<double>(0.0, (sum, step) => sum + step.reward);
 }
 
 /// All games shown in the picker, keyed by display name. The picker sheet
