@@ -66,6 +66,12 @@ class GameDetailScreen extends StatelessWidget {
                   _TitleRow(game: game),
                   const SizedBox(height: AppSpacing.lg),
                   _TopProgressBar(total: game.maxEarning),
+                  const SizedBox(height: AppSpacing.xl),
+                  _HowItWorksSection(game: game),
+                  const SizedBox(height: AppSpacing.xl),
+                  _AboutSection(game: game),
+                  const SizedBox(height: AppSpacing.xl),
+                  _DisclaimerSection(game: game),
                 ],
               ),
             ),
@@ -248,6 +254,105 @@ class _GameIcon extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+/// The eyebrow heading style used by every section. Optional trailing
+/// widget slot for a counter or icon.
+class _SectionHeading extends StatelessWidget {
+  final String label;
+  final Widget? trailing;
+
+  // ignore: unused_element_parameter
+  const _SectionHeading({required this.label, this.trailing});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: AppText.caption.copyWith(
+                color: AppColors.inkTertiary,
+                letterSpacing: 1.6,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          if (trailing != null) trailing!,
+        ],
+      ),
+    );
+  }
+}
+
+/// HOW IT WORKS section: heading plus a short paragraph.
+class _HowItWorksSection extends StatelessWidget {
+  final Game game;
+
+  const _HowItWorksSection({required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeading(label: 'HOW IT WORKS'),
+        Text(
+          game.howItWorks,
+          style: AppText.body.copyWith(height: 1.5),
+        ),
+      ],
+    );
+  }
+}
+
+/// ABOUT [GAME NAME] section: heading plus a short blurb.
+class _AboutSection extends StatelessWidget {
+  final Game game;
+
+  const _AboutSection({required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeading(label: 'ABOUT ${game.name.toUpperCase()}'),
+        Text(
+          game.about,
+          style: AppText.body.copyWith(height: 1.5),
+        ),
+      ],
+    );
+  }
+}
+
+/// DISCLAIMER section: heading plus fine print.
+class _DisclaimerSection extends StatelessWidget {
+  final Game game;
+
+  const _DisclaimerSection({required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeading(label: 'DISCLAIMER'),
+        Text(
+          game.disclaimer,
+          style: AppText.caption.copyWith(
+            color: AppColors.inkTertiary,
+            fontWeight: FontWeight.w400,
+            height: 1.5,
+          ),
+        ),
+      ],
     );
   }
 }

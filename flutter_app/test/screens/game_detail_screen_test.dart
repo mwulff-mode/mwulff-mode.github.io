@@ -71,6 +71,31 @@ void main() {
       expect(find.text('\$0.00 earned of \$1.00'), findsOneWidget);
     });
 
+    testWidgets('renders the HOW IT WORKS section', (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('HOW IT WORKS'), findsOneWidget);
+      expect(
+        find.text(gamesByName['Candy Crush']!.howItWorks),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('renders the ABOUT section with the game name in the heading',
+        (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('ABOUT CANDY CRUSH'), findsOneWidget);
+      expect(find.text(gamesByName['Candy Crush']!.about), findsOneWidget);
+    });
+
+    testWidgets('renders the DISCLAIMER section', (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('DISCLAIMER'), findsOneWidget);
+      expect(
+        find.text(gamesByName['Candy Crush']!.disclaimer),
+        findsOneWidget,
+      );
+    });
+
     testWidgets(
       'falls back to a colored letter square when the icon asset is missing',
       (tester) async {
