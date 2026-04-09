@@ -12,7 +12,7 @@ import '../widgets/fade_route.dart';
 import '../widgets/physical_press.dart';
 import '../widgets/screen_scaffold.dart';
 import '../widgets/typewriter_text.dart';
-import 'home_screen.dart';
+import 'home_shell.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -51,7 +51,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (name.isNotEmpty) state.setUserName(name);
 
     Navigator.of(context).pushAndRemoveUntil(
-      fadeRoute(const HomeScreen()),
+      fadeRoute(const HomeShell()),
       (route) => false,
     );
   }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -15,9 +14,9 @@ import '../services/haptics.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
 import '../widgets/animated_counter.dart';
+import '../widgets/animated_gradient_bg.dart';
 import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
-import '../widgets/screen_scaffold.dart';
 import 'journey_screen.dart';
 import 'conv_card_content.dart';
 import 'game_detail_screen.dart';
@@ -34,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool _showGift = true;
   bool _giftFading = false;
   bool _homeRevealed = false;
-  int _navIndex = 0;
   String? _selectedGame;
 
   late AnimationController _giftAmountController;
@@ -341,10 +339,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      safeArea: false,
-      padding: EdgeInsets.zero,
-      animatedGradient: true,
+    return AnimatedGradientBg(
       child: Stack(
         children: [
           // Home content
@@ -352,36 +347,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
           // Gift overlay
           if (_showGift) _buildGiftOverlay(),
-
-          // Floating glass nav bar with a cream-to-transparent gradient fade
-          // above it so scrolling content eases into the nav instead of
-          // abruptly cutting behind the glass pill.
-          if (_homeRevealed && !_showGift)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: IgnorePointer(
-                ignoring: false,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).padding.bottom + 16,
-                    top: 40,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        AppColors.cream.withValues(alpha: 0),
-                        AppColors.cream.withValues(alpha: 0.92),
-                      ],
-                    ),
-                  ),
-                  child: Center(child: _buildBottomNav()),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -1012,81 +977,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildBottomNav() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(40),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.55),
-            borderRadius: BorderRadius.circular(40),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.7),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _navItem(0, PhosphorIcons.house(PhosphorIconsStyle.fill), 'Home'),
-              _navItem(
-                  1, PhosphorIcons.wallet(PhosphorIconsStyle.fill), 'Wallet'),
-              _navItem(
-                  2, PhosphorIcons.user(PhosphorIconsStyle.fill), 'Profile'),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _navItem(int index, IconData icon, String label) {
-    final isActive = _navIndex == index;
-    return PressScale(
-      onTap: () => setState(() => _navIndex = index),
-      haptic: null,
-      child: AnimatedContainer(
-        duration: AppDurations.medium,
-        curve: AppCurves.warmOut,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        decoration: BoxDecoration(
-          color: isActive ? AppColors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 26,
-              color: isActive ? Colors.white : AppColors.inkSecondary,
-            ),
-            AnimatedSize(
-              duration: AppDurations.medium,
-              curve: AppCurves.warmOut,
-              child: isActive
-                  ? Row(
-                      children: [
-                        const SizedBox(width: 8),
-                        Text(
-                          label,
-                          style: AppText.bodyStrong.copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _GoalRingPainter extends CustomPainter {

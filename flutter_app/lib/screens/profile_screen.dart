@@ -14,6 +14,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: const Key('profile_screen_root'),
       color: AppColors.cream,
       // Content is added in subsequent tasks.
     );
