@@ -96,6 +96,28 @@ void main() {
       );
     });
 
+    testWidgets('renders the REGULAR STEPS heading with a 0/2 counter',
+        (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('REGULAR STEPS'), findsOneWidget);
+      expect(find.text('0 / 2'), findsOneWidget);
+    });
+
+    testWidgets('renders both step labels and rewards', (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('Install the app'), findsOneWidget);
+      expect(find.text('Reach Level 15'), findsOneWidget);
+      expect(find.text('\$0.10'), findsOneWidget);
+      expect(find.text('\$0.90'), findsOneWidget);
+    });
+
+    testWidgets('first step shows UP NEXT, second step shows NOT STARTED',
+        (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('UP NEXT'), findsOneWidget);
+      expect(find.text('NOT STARTED'), findsOneWidget);
+    });
+
     testWidgets(
       'falls back to a colored letter square when the icon asset is missing',
       (tester) async {

@@ -70,6 +70,8 @@ class GameDetailScreen extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xl),
                   _HowItWorksSection(game: game),
                   const SizedBox(height: AppSpacing.xl),
+                  _RegularStepsSection(game: game),
+                  const SizedBox(height: AppSpacing.xl),
                   _AboutSection(game: game),
                   const SizedBox(height: AppSpacing.xl),
                   _DisclaimerSection(game: game),
@@ -265,7 +267,6 @@ class _SectionHeading extends StatelessWidget {
   final String label;
   final Widget? trailing;
 
-  // ignore: unused_element_parameter
   const _SectionHeading({required this.label, this.trailing});
 
   @override
@@ -356,6 +357,147 @@ class _DisclaimerSection extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Visual state of a regular step. v1 only ever uses [notStarted] and
+/// [upNext]; [completed] is included so the same widget can render the
+/// future "in progress" state without a follow-up refactor.
+enum _StepState { notStarted, upNext, completed }
+
+/// REGULAR STEPS section: heading with a counter trailing widget plus
+/// a horizontal scroll list of [_StepCard]s.
+class _RegularStepsSection extends StatelessWidget {
+  final Game game;
+
+  const _RegularStepsSection({required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeading(
+          label: 'REGULAR STEPS',
+          trailing: Text(
+            '0 / ${game.regularSteps.length}',
+            style: AppText.caption.copyWith(color: AppColors.inkTertiary),
+          ),
+        ),
+        SizedBox(
+          height: 160,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.zero,
+            itemCount: game.regularSteps.length,
+            separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
+            itemBuilder: (context, index) {
+              final step = game.regularSteps[index];
+              final state =
+                  index == 0 ? _StepState.upNext : _StepState.notStarted;
+              return _StepCard(step: step, state: state);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// One step card. Replicates the AppCard visual recipe inline because
+/// AppCard does not support a fixed width. White background, 18 radius,
+/// cream-deep border, soft shadow. State pill at the top, label in the
+/// middle, reward at the bottom.
+class _StepCard extends StatelessWidget {
+  final GameStep step;
+  final _StepState state;
+
+  const _StepCard({required this.step, required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 180,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.creamDeep, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _StatePill(state: state),
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: Text(
+              step.label,
+              style: AppText.listItem,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            '\$${step.reward.toStringAsFixed(2)}',
+            style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The state pill shown at the top of each step card. Three states map
+/// to three color treatments. The pill text is taken from the enum.
+class _StatePill extends StatelessWidget {
+  final _StepState state;
+
+  const _StatePill({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    final (label, bg, fg) = switch (state) {
+      _StepState.notStarted => (
+          'NOT STARTED',
+          AppColors.creamDeep,
+          AppColors.inkTertiary
+        ),
+      _StepState.upNext => (
+          'UP NEXT',
+          AppColors.primaryPale,
+          AppColors.primary
+        ),
+      _StepState.completed => (
+          'COMPLETED',
+          AppColors.primaryLight,
+          AppColors.primaryDark
+        ),
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm, vertical: 4),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Text(
+        label,
+        style: AppText.caption.copyWith(
+          color: fg,
+          fontSize: 11,
+          letterSpacing: 1.2,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 }
