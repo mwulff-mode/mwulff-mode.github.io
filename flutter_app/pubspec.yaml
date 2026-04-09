@@ -23,5 +23,6 @@ flutter:
   assets:
     - assets/images/
     - assets/images/personas/
+    - assets/images/games/
     - assets/icons/
     - assets/animations/

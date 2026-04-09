@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import '../theme/app_buttons.dart';
+
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/breathing.dart';
 import '../widgets/fade_route.dart';
+import '../widgets/physical_press.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/screen_scaffold.dart';
 import 'trust_carousel_screen.dart';
@@ -60,13 +61,20 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   void _startAnimations() async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    // Wait for the Hero transition from SplashScreen to settle before
+    // cascading the text reveals. The page transition is ~480ms; we start
+    // just after it finishes so the "E" lands first, then text appears.
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
     _nameController.forward();
     await Future.delayed(const Duration(milliseconds: 200));
+    if (!mounted) return;
     _taglineController.forward();
     await Future.delayed(const Duration(milliseconds: 200));
+    if (!mounted) return;
     _proofController.forward();
     await Future.delayed(const Duration(milliseconds: 200));
+    if (!mounted) return;
     _ratingController.forward();
   }
 
@@ -94,37 +102,41 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo placeholder (circle with icon)
-                Breathing(
-                  child: Container(
-                    width: 160,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppColors.primary,
-                          AppColors.primary.withValues(alpha: 0.8),
+                // Logo — Hero-linked to the splash screen "E"
+                Hero(
+                  tag: 'earnwise-logo',
+                  child: Breathing(
+                    child: Container(
+                      width: 160,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.primary,
+                            AppColors.primary.withValues(alpha: 0.8),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.3),
+                            blurRadius: 40,
+                            offset: const Offset(0, 12),
+                          ),
                         ],
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 40,
-                          offset: const Offset(0, 12),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'E',
-                        style: TextStyle(
-                          fontSize: 72,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: -2,
+                      child: const Center(
+                        child: Text(
+                          'E',
+                          style: TextStyle(
+                            fontSize: 72,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: -2,
+                            decoration: TextDecoration.none,
+                          ),
                         ),
                       ),
                     ),
@@ -203,10 +215,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             ),
                           ),
                           const SizedBox(width: AppSpacing.sm),
-                          Text(
-                            'People like you earn ~\$47/month',
-                            style: AppText.caption.copyWith(
-                              color: AppColors.inkSecondary,
+                          Flexible(
+                            child: Text(
+                              'People like you earn ~\$47/month',
+                              style: AppText.caption.copyWith(
+                                color: AppColors.inkSecondary,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -221,94 +236,53 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           // Bottom auth area
           Column(
             children: [
-              // Google button
-              PressScale(
-                // Navigation handled by inner ElevatedButton.onPressed.
-                // PressScale's onTap is a no-op so it only contributes the
-                // press-scale animation; the inner InkWell still handles
-                // the tap and routes to _navigate exactly once.
-                onTap: () {},
-                haptic: null,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: _navigate,
-                    icon: const Icon(Icons.g_mobiledata,
+              // Google button — prototype: PhysicalPress idiom (tactile
+              // sink-into-shadow). The other 5 primary CTAs still use
+              // PressScale so you can A/B the feel directly.
+              PhysicalPress(
+                onTap: _navigate,
+                backgroundColor: AppColors.primary,
+                shadowColor: AppColors.primaryDark,
+                depth: 6,
+                haptic: HapticIntensity.confirm,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.g_mobiledata,
                         size: 24, color: Colors.white),
-                    label: Text(
+                    const SizedBox(width: 4),
+                    Text(
                       'Continue with Google',
-                      style: AppText.listItem.copyWith(color: Colors.white),
+                      style: AppText.ctaLabel,
                     ),
-                    style: AppButtonStyles.primary,
-                  ),
+                  ],
                 ),
               ),
               const SizedBox(height: 12),
 
               // Apple button
-              PressScale(
-                // Navigation handled by inner OutlinedButton.onPressed.
-                // See Google button comment above.
-                onTap: () {},
-                haptic: null,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: _navigate,
-                    icon: Icon(PhosphorIcons.appleLogo(),
-                        size: 20, color: AppColors.primary),
-                    label: Text(
-                      'Continue with Apple',
-                      style: AppText.listItem.copyWith(color: AppColors.primary),
-                    ),
-                    style: AppButtonStyles.primaryOutline,
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-
-              // Or divider
-              Row(
-                children: [
-                  const Expanded(child: Divider(color: AppColors.creamDeep)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'OR',
-                      style: AppText.caption.copyWith(
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
-                  const Expanded(child: Divider(color: AppColors.creamDeep)),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-
-              // Email input
-              PressScale(
+              PhysicalPress(
                 onTap: _navigate,
-                haptic: null,
-                child: Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(color: AppColors.creamDeep, width: 1.5),
-                  ),
-                  child: Text(
-                    'Email address',
-                    style: AppText.bodyStrong.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.inkTertiary,
+                backgroundColor: AppColors.white,
+                shadowColor: AppColors.creamDeep,
+                depth: 5,
+                haptic: HapticIntensity.confirm,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(PhosphorIcons.appleLogo(),
+                        size: 22, color: AppColors.primary),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Continue with Apple',
+                      style: AppText.ctaLabel.copyWith(color: AppColors.primary),
                     ),
-                  ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
 
               // Legal
               Text(
@@ -333,12 +307,16 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       child: Container(
         width: 32,
         height: 32,
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.all(2),
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.white, width: 2),
-          image: DecorationImage(
-            image: AssetImage(assetPath),
+          color: AppColors.white,
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            assetPath,
             fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
           ),
         ),
       ),

@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EarnWise Design System</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+    @import url('https://unpkg.com/@phosphor-icons/web@2.0.3/src/regular/style.css');
+    @import url('https://unpkg.com/@phosphor-icons/web@2.0.3/src/fill/style.css');
+    @import url('https://unpkg.com/@phosphor-icons/web@2.0.3/src/bold/style.css');
+    @import url('https://unpkg.com/@phosphor-icons/web@2.0.3/src/duotone/style.css');
+
+    /* ---- Design Tokens (presenter shell) ---- */
+    :root {
+      --ink: #171412;
+      --ink-light: #5c544d;
+      --ink-faint: #8d8379;
+      --surface: #f5efe8;
+      --surface-alt: #fbf7f2;
+      --surface-strong: #e8dfd3;
+      --surface-contrast: #fffdf9;
+      --border: rgba(23, 20, 18, 0.14);
+      --border-strong: rgba(23, 20, 18, 0.3);
+      --shadow-soft: 0 20px 46px rgba(23, 20, 18, 0.07);
+      --shadow-deep: 0 30px 72px rgba(23, 20, 18, 0.1);
+      --panel-bg: rgba(255, 253, 249, 0.74);
+      --panel-bg-strong: rgba(255, 253, 249, 0.84);
+      --glow: rgba(255, 255, 255, 0.72);
+      --glow-soft: rgba(255, 255, 255, 0.45);
+      --page-speckle: rgba(255, 255, 255, 0.14);
+      --page-texture: rgba(23, 20, 18, 0.012);
+      --active-fill: rgba(23, 20, 18, 0.04);
+      --selection-fill: rgba(23, 20, 18, 0.12);
+      --backdrop: rgba(16, 14, 12, 0.36);
+      --content-width: 760px;
+      --wide-width: 1180px;
+      --rail-width: 280px;
+      --section-gap: clamp(88px, 11vw, 140px);
+      --gutter: clamp(20px, 4vw, 40px);
+      --radius-sm: 16px;
+      --radius-md: 26px;
+      --radius-lg: 40px;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", ui-serif, serif;
+      --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SF Mono", "SFMono-Regular", ui-monospace, monospace;
+      --brand: "Outfit", var(--sans);
+
+      /* EarnWise brand (used in swatches & component showcases) */
+      --ew-cream: #FAF8F5;
+      --ew-cream-deep: #F2EDE6;
+      --ew-cream-warm: #F8F3EC;
+      --ew-primary: #0D9488;
+      --ew-primary-dark: #0F766E;
+      --ew-primary-pale: #F0FDFA;
+      --ew-accent: #F59E0B;
+      --ew-ink: #3B3230;
+      --ew-ink-secondary: #6B5E58;
+      --ew-ink-tertiary: #8A7D76;
+      --ew-task-video: #EC4899;
+      --ew-task-survey: #6366F1;
+      --ew-task-game: #F97316;
+      --ew-task-checkin: #8B5CF6;
+      --ew-task-offers: #F59E0B;
+      --ew-task-receipts: #10B981;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html:not(.light) {
+        --ink: #f1ebe3;
+        --ink-light: #c4b9ad;
+        --ink-faint: #92867a;
+        --surface: #12100f;
+        --surface-alt: #181513;
+        --surface-strong: #221d1a;
+        --surface-contrast: #201b18;
+        --border: rgba(241, 235, 227, 0.12);
+        --border-strong: rgba(241, 235, 227, 0.24);
+        --shadow-soft: 0 20px 46px rgba(0, 0, 0, 0.32);
+        --shadow-deep: 0 30px 72px rgba(0, 0, 0, 0.42);
+        --panel-bg: rgba(32, 27, 24, 0.76);
+        --panel-bg-strong: rgba(32, 27, 24, 0.88);
+        --glow: rgba(255, 255, 255, 0.08);
+        --glow-soft: rgba(255, 255, 255, 0.03);
+        --page-speckle: rgba(255, 255, 255, 0.02);
+        --page-texture: rgba(241, 235, 227, 0.018);
+        --active-fill: rgba(241, 235, 227, 0.05);
+        --selection-fill: rgba(241, 235, 227, 0.18);
+        --backdrop: rgba(0, 0, 0, 0.52);
+        color-scheme: dark;
+      }
+    }
+
+    html.dark {
+      --ink: #f1ebe3;
+      --ink-light: #c4b9ad;
+      --ink-faint: #92867a;
+      --surface: #12100f;
+      --surface-alt: #181513;
+      --surface-strong: #221d1a;
+      --surface-contrast: #201b18;
+      --border: rgba(241, 235, 227, 0.12);
+      --border-strong: rgba(241, 235, 227, 0.24);
+      --shadow-soft: 0 20px 46px rgba(0, 0, 0, 0.32);
+      --shadow-deep: 0 30px 72px rgba(0, 0, 0, 0.42);
+      --panel-bg: rgba(32, 27, 24, 0.76);
+      --panel-bg-strong: rgba(32, 27, 24, 0.88);
+      --glow: rgba(255, 255, 255, 0.08);
+      --glow-soft: rgba(255, 255, 255, 0.03);
+      --page-speckle: rgba(255, 255, 255, 0.02);
+      --page-texture: rgba(241, 235, 227, 0.018);
+      --active-fill: rgba(241, 235, 227, 0.05);
+      --selection-fill: rgba(241, 235, 227, 0.18);
+      --backdrop: rgba(0, 0, 0, 0.52);
+      color-scheme: dark;
+    }
+
+    html.light { color-scheme: light; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 17px; scroll-behavior: smooth; background: var(--surface); }
+
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      background:
+        radial-gradient(circle at top right, var(--glow), transparent 30%),
+        linear-gradient(180deg, var(--glow-soft), transparent 16%),
+        linear-gradient(180deg, var(--surface) 0%, var(--surface-strong) 44%, var(--surface-alt) 100%);
+      text-rendering: optimizeLegibility;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 18%, var(--page-speckle), transparent 18%),
+        repeating-linear-gradient(90deg, var(--page-texture) 0, var(--page-texture) 1px, transparent 1px, transparent 18px);
+      opacity: 0.85;
+      z-index: -1;
+    }
+
+    ::selection { background: var(--selection-fill); color: var(--ink); }
+
+    img { display: block; max-width: 100%; }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    strong { font-weight: 650; }
+
+    h1, h2, h3, h4 {
+      font-family: var(--serif);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    h1 { font-size: clamp(4.2rem, 9vw, 7.4rem); }
+    h2 { font-size: clamp(2.4rem, 4.8vw, 4.3rem); margin-bottom: 20px; }
+    h3 { font-size: clamp(1.45rem, 2.4vw, 1.95rem); margin-bottom: 18px; }
+    h4 { font-size: 1.1rem; margin-bottom: 14px; }
+    p  { max-width: 70ch; margin-bottom: 1rem; }
+    ul, ol { max-width: 70ch; padding-left: 1.2rem; margin-bottom: 1rem; }
+    li + li { margin-top: 0.45rem; }
+
+    .mono { font-family: var(--mono); font-size: 0.84em; color: var(--ink-light); }
+
+    /* ---- Theme toggle + TOC ---- */
+    .theme-toggle, .toc__toggle {
+      border: 1px solid var(--border);
+      background: var(--panel-bg-strong);
+      color: var(--ink);
+      border-radius: 999px;
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s ease, border-color 0.3s ease;
+    }
+    .theme-toggle:hover, .toc__toggle:hover { transform: translateY(-2px); }
+    .theme-toggle:focus-visible, .toc__toggle:focus-visible, .toc__list a:focus-visible {
+      outline: 2px solid var(--ink); outline-offset: 3px;
+    }
+    .theme-toggle {
+      position: fixed; top: 18px; right: 22px; z-index: 80;
+      padding: 11px 18px; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+
+    .toc {
+      position: fixed; inset: 0 auto 0 0; width: var(--rail-width);
+      padding: 28px 22px 28px 24px;
+      border-right: 1px solid var(--border);
+      background: var(--panel-bg); backdrop-filter: blur(18px);
+      overflow-y: auto; z-index: 60;
+    }
+    .toc__brand { padding: 10px 12px 18px; border-bottom: 1px solid var(--border); }
+    .toc__kicker { font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+    .toc__title { font-family: var(--serif); font-size: 1.55rem; letter-spacing: -0.03em; }
+    .toc__subtitle { font-size: 0.88rem; color: var(--ink-light); margin-top: 6px; line-height: 1.5; }
+    .toc__toggle { display: none; position: fixed; top: 18px; left: 18px; z-index: 81; padding: 11px 16px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+    .toc__list { list-style: none; padding: 20px 0 0; margin: 0; }
+    .toc__list li + li { margin-top: 4px; }
+    .toc__list a {
+      display: block; padding: 10px 10px 10px 14px;
+      border-left: 1px solid transparent;
+      color: var(--ink-light); text-decoration: none;
+      font-size: 0.84rem; line-height: 1.45;
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .toc__list a:hover { color: var(--ink); transform: translateX(4px); }
+    .toc__list a.active { color: var(--ink); border-left-color: var(--ink); background: var(--active-fill); }
+    .toc__group {
+      font-size: 0.66rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ink-faint);
+      padding: 18px 14px 6px; margin-top: 4px;
+      border-top: 1px solid var(--border); list-style: none;
+    }
+    .toc__group:first-child { border-top: none; padding-top: 10px; }
+    .toc-backdrop { display: none; position: fixed; inset: 0; background: var(--backdrop); z-index: 55; }
+
+    /* ---- Content layout ---- */
+    .content { counter-reset: section; margin-left: var(--rail-width); position: relative; }
+
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding: 24px var(--gutter) clamp(82px, 9vw, 120px);
+      max-width: calc(var(--wide-width) + (var(--gutter) * 2));
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute;
+      left: var(--gutter); right: var(--gutter); bottom: 28px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong) 12%, var(--border-strong) 88%, transparent);
+    }
+    .hero__meta { font-size: 0.72rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 24px; }
+    .hero__title { max-width: 10ch; margin-bottom: 26px; }
+    .hero__subtitle { font-size: clamp(1.12rem, 2vw, 1.42rem); line-height: 1.56; color: var(--ink-light); max-width: 42ch; margin: 0; }
+
+    .section {
+      counter-increment: section;
+      max-width: var(--wide-width);
+      padding: var(--section-gap) var(--gutter);
+      margin: 0 auto;
+      position: relative;
+    }
+    .section__intro { max-width: var(--content-width); margin-bottom: 40px; }
+    .section__eyebrow {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ink-faint);
+      display: inline-flex; align-items: baseline; gap: 0.7rem;
+      white-space: nowrap; margin-bottom: 14px;
+    }
+    .section__eyebrow::before {
+      content: counter(section, decimal-leading-zero);
+      font-family: var(--sans); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .section__title { margin-bottom: 20px; }
+    .section__lede { font-size: 1.16rem; line-height: 1.72; color: var(--ink-light); margin-bottom: 0; }
+    .section--narrow .section__intro,
+    .section--narrow p,
+    .section--narrow ul,
+    .section--narrow ol { max-width: var(--content-width); }
+
+    /* ---- Scroll animations ---- */
+    [data-animate] {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1), transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    [data-animate].visible { opacity: 1; transform: none; }
+
+    /* ================================================================
+       DESIGN SYSTEM SPECIFIC COMPONENTS
+       ================================================================ */
+
+    /* ---- Showcase plate ---- */
+    .plate {
+      background: var(--surface-contrast);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      padding: 44px clamp(24px, 4vw, 56px);
+    }
+    .plate + .plate { margin-top: 28px; }
+    .plate__label {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 22px;
+    }
+
+    /* ---- Color swatches ---- */
+    .swatch-row + .swatch-row { margin-top: 32px; }
+    .swatch-row__label {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 14px;
+    }
+    .swatch {
+      display: flex; flex-direction: column;
+    }
+    .swatch__chip {
+      height: 80px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .swatch__name {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-top: 10px;
+    }
+    .swatch__hex {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-faint);
+      margin-top: 2px;
+    }
+
+    /* ---- Spacing scale ---- */
+    .spacing-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 72px 56px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .spacing-row__name {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .spacing-row__value {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-faint);
+    }
+    .spacing-row__bar {
+      height: 14px;
+      background: var(--ink);
+      border-radius: 3px;
+    }
+
+    /* ---- Typography specimen ---- */
+    .type-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .type-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+      align-items: baseline;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--border);
+    }
+    .type-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .type-row__meta {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--ink-faint);
+      line-height: 1.55;
+    }
+    .type-row__meta strong { color: var(--ink); font-weight: 600; display: block; }
+    .type-row__sample {
+      font-family: var(--brand);
+      color: var(--ew-ink);
+      line-height: 1.15;
+    }
+
+    /* ---- Icon grid ---- */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 14px;
+    }
+    .icon-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 10px 14px;
+      background: var(--ew-cream);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--ew-ink);
+    }
+    .icon-tile i { font-size: 30px; margin-bottom: 10px; }
+    .icon-tile__name {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--ew-ink-tertiary);
+    }
+
+    /* ---- Widget list ---- */
+    .widget-list {
+      display: grid;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .widget-row {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 32px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+    }
+    .widget-row__name {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .widget-row__path {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      display: block;
+      margin-top: 4px;
+    }
+    .widget-row__desc {
+      font-size: 0.95rem;
+      line-height: 1.62;
+      color: var(--ink-light);
+      max-width: 60ch;
+    }
+
+    /* ---- Showcase frame (phone-ish cream canvas) ---- */
+    .canvas {
+      background: var(--ew-cream);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      padding: 40px 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 260px;
+      position: relative;
+      overflow: hidden;
+    }
+    .canvas--tall { min-height: 460px; align-items: flex-end; padding: 0; }
+    .canvas__caption {
+      position: absolute;
+      top: 12px; left: 18px;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--ew-ink-tertiary);
+      letter-spacing: 0.08em;
+    }
+
+    /* ---- Showcase: White card / list item ---- */
+    .ew-card {
+      background: #fff;
+      border: 1.5px solid var(--ew-cream-deep);
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--brand);
+      max-width: 420px;
+      width: 100%;
+    }
+    .ew-card__icon {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: rgba(99, 102, 241, 0.12);
+      display: grid; place-items: center;
+      color: var(--ew-task-survey);
+      font-size: 22px;
+      flex: 0 0 auto;
+    }
+    .ew-card__body { flex: 1; }
+    .ew-card__title { font-size: 17px; font-weight: 600; color: var(--ew-ink); }
+    .ew-card__sub { font-size: 15px; color: var(--ew-ink-tertiary); margin-top: 2px; }
+    .ew-card__chevron { color: var(--ew-ink-tertiary); font-size: 22px; }
+
+    /* ---- Showcase: Pill / badge ---- */
+    .ew-pill {
+      background: #fff;
+      border-radius: 100px;
+      padding: 10px 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--brand);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ew-ink-secondary);
+    }
+    .ew-pill__dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--ew-primary);
+      display: grid; place-items: center;
+      color: #fff; font-size: 12px;
+    }
+
+    /* ---- Showcase: Bottom sheet shell ---- */
+    .ew-sheet {
+      background: var(--ew-cream);
+      border-radius: 24px 24px 0 0;
+      padding: 24px 24px 40px;
+      width: 100%;
+      max-width: 420px;
+      font-family: var(--brand);
+      box-shadow: 0 -24px 60px rgba(0,0,0,0.08);
+    }
+    .ew-sheet__handle {
+      width: 40px; height: 4px;
+      border-radius: 2px;
+      background: var(--ew-cream-deep);
+      margin: 8px auto 20px;
+    }
+    .ew-sheet__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ew-ink);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .ew-sheet__sub {
+      font-size: 15px;
+      color: var(--ew-ink-secondary);
+      line-height: 1.5;
+      text-align: center;
+      max-width: 34ch;
+      margin: 0 auto 16px;
+    }
+    .ew-sheet__chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF7ED;
+      color: var(--ew-task-game);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ---- Showcase: Toast ---- */
+    .ew-toast {
+      background: #fff;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      font-family: var(--brand);
+      max-width: 420px;
+      width: 100%;
+    }
+    .ew-toast__icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      background: #FFF0E8;
+      display: grid; place-items: center;
+      color: #FF6B35;
+      font-size: 22px;
+      flex: 0 0 auto;
+    }
+    .ew-toast__title { font-size: 16px; font-weight: 600; color: var(--ew-ink); }
+    .ew-toast__sub { font-size: 15px; color: var(--ew-ink-secondary); margin-top: 2px; }
+
+    /* ---- Showcase: Circular back button ---- */
+    .ew-back-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--ew-cream-deep);
+      display: grid; place-items: center;
+      color: var(--ew-ink);
+      font-size: 20px;
+    }
+
+    /* ---- Showcase: Stepper dots ---- */
+    .ew-stepper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ew-stepper__dot {
+      width: 7px; height: 7px;
+      border-radius: 4px;
+      background: var(--ew-cream-deep);
+    }
+    .ew-stepper__dot--active {
+      width: 24px;
+      background: var(--ew-primary);
+    }
+
+    /* ---- Two-col layouts ---- */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .two-col--wide { grid-template-columns: 1.1fr 1fr; }
+    @media (max-width: 900px) { .two-col, .two-col--wide { grid-template-columns: 1fr; } }
+
+    .showcase-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+    }
+    .showcase-stack--left { align-items: flex-start; }
+
+    /* ---- Gap / callout ---- */
+    .callout {
+      background: var(--surface-contrast);
+      border-left: 3px solid var(--ink);
+      border-radius: 0 14px 14px 0;
+      padding: 22px 28px;
+      margin: 24px 0;
+    }
+    .callout__label {
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .gaps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .gap-card {
+      background: var(--surface-contrast);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 24px 22px;
+    }
+    .gap-card__num {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+    .gap-card__title {
+      font-family: var(--sans);
+      font-size: 1rem;
+      font-weight: 650;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .gap-card__body {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      line-height: 1.58;
+    }
+    .gap-card .mono { display: block; margin-top: 6px; }
+
+    /* ---- Motion: duration scale ---- */
+    .duration-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .duration-row {
+      display: grid;
+      grid-template-columns: 78px 78px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    .duration-row__name {
+      font-family: var(--mono);
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .duration-row__ms {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--ink-faint);
+    }
+    .duration-row__bar {
+      height: 10px;
+      background: var(--ink);
+      border-radius: 999px;
+    }
+    .duration-row__use {
+      grid-column: 1 / -1;
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      padding-left: 96px;
+      margin-top: -8px;
+    }
+
+    /* ---- Motion: curve previews ---- */
+    .curves {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .curve-card {
+      background: var(--ew-cream);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 18px 14px;
+    }
+    .curve-card svg {
+      width: 100%;
+      height: 80px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .curve-card svg path {
+      fill: none;
+      stroke: var(--ew-ink);
+      stroke-width: 2.2;
+      stroke-linecap: round;
+    }
+    .curve-card svg .axis {
+      stroke: var(--ew-ink-tertiary);
+      stroke-width: 1;
+      opacity: 0.4;
+    }
+    .curve-card__name {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ew-ink);
+    }
+    .curve-card__use {
+      font-size: 0.74rem;
+      color: var(--ew-ink-tertiary);
+      margin-top: 2px;
+    }
+
+    /* ---- Motion: press-scale live demo ---- */
+    .press-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+    .press-demo__card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      min-width: 280px;
+      background: #fff;
+      border: 1.5px solid var(--ew-cream-deep);
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      font-family: var(--brand);
+      transition: transform 220ms cubic-bezier(0.45, 0, 0.15, 1);
+      will-change: transform;
+    }
+    .press-demo__card:active {
+      transform: scale(0.97);
+    }
+    .press-demo__card__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(99, 102, 241, 0.12);
+      display: grid;
+      place-items: center;
+      color: var(--ew-task-survey);
+      font-size: 22px;
+      flex: 0 0 auto;
+    }
+    .press-demo__card__title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ew-ink);
+    }
+    .press-demo__card__sub {
+      font-size: 15px;
+      color: var(--ew-ink-tertiary);
+      margin-top: 2px;
+    }
+    .press-demo__hint {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ew-ink-tertiary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- PhysicalPress live demo ---- */
+    .physical-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+    .physical-press {
+      position: relative;
+      width: 280px;
+      height: 74px; /* face + depth */
+      cursor: pointer;
+      user-select: none;
+    }
+    .physical-press__shadow {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 68px;
+      background: var(--ew-primary-dark);
+      border-radius: 34px;
+    }
+    .physical-press__face {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 68px;
+      background: var(--ew-primary);
+      border-radius: 34px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-family: var(--brand);
+      font-size: 20px;
+      font-weight: 600;
+      transition: transform 220ms cubic-bezier(0.45, 0, 0.15, 1);
+      will-change: transform;
+    }
+    .physical-press:active .physical-press__face {
+      transform: translateY(6px);
+    }
+
+    .physical-press--apple .physical-press__shadow {
+      background: var(--ew-cream-deep);
+    }
+    .physical-press--apple .physical-press__face {
+      background: #fff;
+      color: var(--ew-primary);
+    }
+    .physical-press--apple {
+      height: 73px;
+    }
+    .physical-press--apple .physical-press__shadow,
+    .physical-press--apple .physical-press__face {
+      height: 68px;
+    }
+
+    /* ---- RewardGlow demo ---- */
+    .reward-glow-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+    }
+    .reward-glow-stage {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: grid;
+      place-items: center;
+    }
+    .reward-glow-badge {
+      width: 96px;
+      height: 96px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--ew-primary), #2BA08E);
+      box-shadow: 0 24px 60px rgba(13, 148, 136, 0.3);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 48px;
+      position: relative;
+      z-index: 2;
+      animation: rewardScale 3.6s ease-in-out infinite;
+    }
+    .reward-glow-halo {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0) 58%);
+      animation: rewardHalo 3.6s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes rewardScale {
+      0%, 100% { transform: scale(1); }
+      8% { transform: scale(1.06); }
+      33% { transform: scale(1); }
+    }
+    @keyframes rewardHalo {
+      0%, 100% { opacity: 0; transform: scale(0.8); }
+      12% { opacity: 0; transform: scale(0.85); }
+      25% { opacity: 0.5; transform: scale(1.1); }
+      44% { opacity: 0; transform: scale(1.4); }
+      99% { opacity: 0; transform: scale(0.8); }
+    }
+    .reward-glow-demo__caption {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ew-ink-tertiary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- AnimatedCounter demo ---- */
+    .counter-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    .counter-demo__num {
+      font-family: var(--brand);
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--ew-ink);
+      letter-spacing: -2.5px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .counter-demo__caption {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ew-ink-tertiary);
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- Haptics policy table ---- */
+    .haptic-policy {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 720px) {
+      .haptic-policy { grid-template-columns: 1fr; }
+    }
+    .haptic-col {
+      background: var(--surface-contrast);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 22px 20px;
+    }
+    .haptic-col__head {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .haptic-col__head .mark {
+      display: inline-grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--surface);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .haptic-col--no .mark {
+      background: transparent;
+      border: 1px solid var(--ink-faint);
+      color: var(--ink-faint);
+    }
+    .haptic-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .haptic-col li {
+      font-size: 0.84rem;
+      line-height: 1.5;
+      color: var(--ink-light);
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .haptic-col li:last-child { border-bottom: none; }
+    .haptic-col li strong { color: var(--ink); font-weight: 650; }
+
+    .gap-card--resolved {
+      background: transparent;
+      border-style: dashed;
+    }
+    .gap-card--resolved .gap-card__title {
+      color: var(--ink-faint);
+      text-decoration: line-through;
+      text-decoration-color: var(--ink-faint);
+      text-decoration-thickness: 1px;
+    }
+    .gap-card--resolved .gap-card__num { color: var(--ink-faint); }
+    .gap-card__pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--surface);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 1120px) {
+      :root { --rail-width: 0px; }
+      .toc { transform: translateX(-100%); width: min(320px, calc(100vw - 32px)); box-shadow: var(--shadow-deep); transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1); }
+      .toc.open { transform: translateX(0); }
+      .toc__toggle { display: inline-flex; align-items: center; justify-content: center; }
+      .toc-backdrop.visible { display: block; }
+      .content { margin-left: 0; }
+      .hero { min-height: auto; padding-top: 116px; }
+    }
+
+    @media (max-width: 720px) {
+      html { font-size: 16px; }
+      .theme-toggle { right: 18px; top: 70px; }
+      .hero { padding-top: 128px; }
+      .hero__title { max-width: 12ch; }
+      .plate { padding: 28px 20px; }
+      .widget-row { grid-template-columns: 1fr; gap: 8px; }
+      .type-row { grid-template-columns: 1fr; gap: 10px; }
+      .spacing-row { grid-template-columns: 72px 50px 1fr; gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0s !important; transition-duration: 0s !important; }
+      [data-animate] { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <button class="toc__toggle" id="toc-toggle" aria-label="Toggle table of contents">Menu</button>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">Theme</button>
+
+  <nav class="toc" id="toc">
+    <div class="toc__brand">
+      <div class="toc__kicker">EarnWise</div>
+      <div class="toc__title">Design System</div>
+      <p class="toc__subtitle">Brand, tokens &amp; shared primitives for the Flutter MVP.</p>
+    </div>
+    <ul class="toc__list"></ul>
+  </nav>
+  <div class="toc-backdrop" id="toc-backdrop"></div>
+
+  <main class="content">
+    <header class="hero">
+      <div>
+        <p class="hero__meta">April 2026 &middot; EarnWise MVP</p>
+        <h1 class="hero__title">The EarnWise Design System</h1>
+        <p class="hero__subtitle">
+          One page to show every token, component, and interaction pattern
+          currently wired into the Flutter app, and to be honest about what
+          isn't yet.
+        </p>
+      </div>
+    </header>
+
+    <!-- ===================== SCOPE ===================== -->
+    <section class="section section--narrow" id="scope">
+      <div class="section__intro">
+        <p class="section__eyebrow">Overview</p>
+        <h2 class="section__title">What's in, what's not</h2>
+        <p class="section__lede">
+          EarnWise has a full <strong>token layer</strong> (color, spacing,
+          layout, typography, motion), a <strong>press &amp; haptic system</strong>
+          (<span class="mono">PressScale</span>, <span class="mono">PhysicalPress</span>,
+          <span class="mono">Haptics</span>), <strong>celebration primitives</strong>
+          (<span class="mono">RewardGlow</span>, <span class="mono">AnimatedCounter</span>,
+          <span class="mono">Breathing</span>), and <strong>shared widgets</strong>
+          for screen shells, routes, sheets, and toasts. The system is consolidated
+          and wired into every screen. What's left is mostly disciplined adoption
+          plus a few deferred pieces.
+        </p>
+      </div>
+      <div data-animate>
+        <div class="callout">
+          <p class="callout__label">Source of truth</p>
+          <p style="margin: 0;">
+            Everything documented here lives under
+            <span class="mono">flutter_app/lib/theme/</span> and
+            <span class="mono">flutter_app/lib/widgets/</span>. If a value
+            isn't in those two folders, it isn't part of the system yet.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== COLOR ===================== -->
+    <section class="section" id="color">
+      <div class="section__intro">
+        <p class="section__eyebrow">Foundations</p>
+        <h2 class="section__title">Color</h2>
+        <p class="section__lede">
+          A warm cream surface, a single teal brand anchor, and six functional
+          task-category hues. Defined in <span class="mono">AppColors</span>
+          at <span class="mono">lib/theme/app_theme.dart</span>.
+        </p>
+      </div>
+      <div class="plate" data-animate>
+        <div class="swatch-row">
+          <div class="swatch-row__label">Surfaces &amp; Ink</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FAF8F5"></div>
+              <div class="swatch__name">cream</div>
+              <div class="swatch__hex">#FAF8F5</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F2EDE6"></div>
+              <div class="swatch__name">creamDeep</div>
+              <div class="swatch__hex">#F2EDE6</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F8F3EC"></div>
+              <div class="swatch__name">creamWarm</div>
+              <div class="swatch__hex">#F8F3EC</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FFFFFF"></div>
+              <div class="swatch__name">white</div>
+              <div class="swatch__hex">#FFFFFF</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#3B3230"></div>
+              <div class="swatch__name">ink</div>
+              <div class="swatch__hex">#3B3230</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#6B5E58"></div>
+              <div class="swatch__name">inkSecondary</div>
+              <div class="swatch__hex">#6B5E58</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#8A7D76"></div>
+              <div class="swatch__name">inkTertiary</div>
+              <div class="swatch__hex">#8A7D76</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch-row">
+          <div class="swatch-row__label">Brand &amp; Accent</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#0D9488"></div>
+              <div class="swatch__name">primary</div>
+              <div class="swatch__hex">#0D9488</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#0F766E"></div>
+              <div class="swatch__name">primaryDark</div>
+              <div class="swatch__hex">#0F766E</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#CCFBF1"></div>
+              <div class="swatch__name">primaryLight</div>
+              <div class="swatch__hex">#CCFBF1</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F0FDFA"></div>
+              <div class="swatch__name">primaryPale</div>
+              <div class="swatch__hex">#F0FDFA</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F59E0B"></div>
+              <div class="swatch__name">accent</div>
+              <div class="swatch__hex">#F59E0B</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#D4A843"></div>
+              <div class="swatch__name">gold</div>
+              <div class="swatch__hex">#D4A843</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch-row">
+          <div class="swatch-row__label">Task Categories</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#EC4899"></div>
+              <div class="swatch__name">taskVideo</div>
+              <div class="swatch__hex">#EC4899</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#6366F1"></div>
+              <div class="swatch__name">taskSurvey</div>
+              <div class="swatch__hex">#6366F1</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F97316"></div>
+              <div class="swatch__name">taskGame</div>
+              <div class="swatch__hex">#F97316</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#8B5CF6"></div>
+              <div class="swatch__name">taskCheckin</div>
+              <div class="swatch__hex">#8B5CF6</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F59E0B"></div>
+              <div class="swatch__name">taskOffers</div>
+              <div class="swatch__hex">#F59E0B</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#10B981"></div>
+              <div class="swatch__name">taskReceipts</div>
+              <div class="swatch__hex">#10B981</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SPACING ===================== -->
+    <section class="section" id="spacing">
+      <div class="section__intro">
+        <p class="section__eyebrow">Foundations</p>
+        <h2 class="section__title">Spacing &amp; layout</h2>
+        <p class="section__lede">
+          A 5-step scale and two layout constants. Use these instead of raw
+          pixel values so rhythm stays consistent.
+          <span class="mono">AppSpacing</span> and
+          <span class="mono">AppLayout</span> in
+          <span class="mono">lib/theme/app_theme.dart</span>.
+        </p>
+      </div>
+      <div class="plate" data-animate>
+        <div class="two-col--wide two-col">
+          <div>
+            <p class="plate__label">AppSpacing</p>
+            <div class="spacing-scale">
+              <div class="spacing-row">
+                <div class="spacing-row__name">xs</div>
+                <div class="spacing-row__value">4 px</div>
+                <div class="spacing-row__bar" style="width: 4px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">sm</div>
+                <div class="spacing-row__value">8 px</div>
+                <div class="spacing-row__bar" style="width: 8px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">md</div>
+                <div class="spacing-row__value">16 px</div>
+                <div class="spacing-row__bar" style="width: 16px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">lg</div>
+                <div class="spacing-row__value">24 px</div>
+                <div class="spacing-row__bar" style="width: 24px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">xl</div>
+                <div class="spacing-row__value">32 px</div>
+                <div class="spacing-row__bar" style="width: 32px;"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p class="plate__label">AppLayout</p>
+            <div class="spacing-scale">
+              <div class="spacing-row">
+                <div class="spacing-row__name">gutter</div>
+                <div class="spacing-row__value">24 px</div>
+                <div class="spacing-row__bar" style="width: 24px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">maxContent</div>
+                <div class="spacing-row__value">640 px</div>
+                <div class="spacing-row__bar" style="width: 160px;"></div>
+              </div>
+            </div>
+            <p style="margin-top: 26px; font-size: .92rem; color: var(--ink-light); max-width: 42ch;">
+              <strong>gutter</strong> is the default horizontal screen padding
+              via <span class="mono">ScreenScaffold</span>.
+              <strong>maxContentWidth</strong> caps reading width on wide
+              viewports and is available but not yet enforced across all
+              screens.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== TYPOGRAPHY ===================== -->
+    <section class="section" id="typography">
+      <div class="section__intro">
+        <p class="section__eyebrow">Foundations</p>
+        <h2 class="section__title">Typography</h2>
+        <p class="section__lede">
+          The brand typeface is <strong>Outfit</strong>, wired through
+          <span class="mono">AppTheme.theme.textTheme</span> via
+          <span class="mono">google_fonts</span>. The pairings below are
+          published as named styles in
+          <span class="mono">AppText</span>
+          (<span class="mono">lib/theme/app_text.dart</span>). Use
+          <span class="mono">AppText.sectionTitle</span>,
+          <span class="mono">AppText.body</span>, etc. instead of inlining
+          <span class="mono">GoogleFonts.outfit(...)</span>.
+        </p>
+      </div>
+      <div class="plate" data-animate>
+        <div class="type-grid">
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Display</strong>
+              Outfit 800 · 48 / 52
+              <br>-1.5 letter spacing
+            </div>
+            <div class="type-row__sample" style="font-size: 48px; font-weight: 800; letter-spacing: -1.5px;">Lisa</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Brand mark</strong>
+              Outfit 800 · 38 / 42
+              <br>-1.5 letter spacing
+            </div>
+            <div class="type-row__sample" style="font-size: 38px; font-weight: 800; letter-spacing: -1.5px;">EarnWise</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Prompt title</strong>
+              Outfit 700 · 24 / 32
+              <br>-0.6 letter spacing
+            </div>
+            <div class="type-row__sample" style="font-size: 24px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.3;">What should we call you?</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Section title</strong>
+              Outfit 700 · 22
+            </div>
+            <div class="type-row__sample" style="font-size: 22px; font-weight: 700;">My Journey</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Sheet title</strong>
+              Outfit 700 · 20
+            </div>
+            <div class="type-row__sample" style="font-size: 20px; font-weight: 700;">Choose your game</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>CTA label</strong>
+              Outfit 600 · 20
+              <br>ships on a PhysicalPress face
+            </div>
+            <div class="type-row__sample" style="font-size: 20px; font-weight: 600;">Continue with Google</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Body / list item</strong>
+              Outfit 600 · 17
+            </div>
+            <div class="type-row__sample" style="font-size: 17px; font-weight: 600;">Puzzle games</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Toast title</strong>
+              Outfit 600 · 16
+            </div>
+            <div class="type-row__sample" style="font-size: 16px; font-weight: 600;">1-day streak, nice start</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Subcopy</strong>
+              Outfit 500 · 15 / 22.5
+              <br>ink-secondary
+            </div>
+            <div class="type-row__sample" style="font-size: 15px; font-weight: 500; color: var(--ew-ink-secondary); line-height: 1.5;">Candy Crush, Tetris, Bejeweled</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">
+              <strong>Caption</strong>
+              Outfit 600 · 14
+              <br>0.5 letter spacing
+            </div>
+            <div class="type-row__sample" style="font-size: 14px; font-weight: 600; letter-spacing: 0.5px; color: var(--ew-ink-tertiary);">TODAY</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ICONS ===================== -->
+    <section class="section" id="icons">
+      <div class="section__intro">
+        <p class="section__eyebrow">Foundations</p>
+        <h2 class="section__title">Iconography</h2>
+        <p class="section__lede">
+          A single library, <strong>Phosphor Icons</strong>, via
+          <span class="mono">phosphor_flutter</span>. Four weights available
+          (regular, bold, fill, duotone); we mix them by context.
+        </p>
+      </div>
+      <div class="plate" data-animate>
+        <div class="icon-grid">
+          <div class="icon-tile"><i class="ph-bold ph-arrow-left"></i><div class="icon-tile__name">arrow-left</div></div>
+          <div class="icon-tile"><i class="ph-bold ph-x"></i><div class="icon-tile__name">x</div></div>
+          <div class="icon-tile"><i class="ph-fill ph-check-circle" style="color:var(--ew-primary)"></i><div class="icon-tile__name">check-circle</div></div>
+          <div class="icon-tile"><i class="ph ph-circle"></i><div class="icon-tile__name">circle</div></div>
+          <div class="icon-tile"><i class="ph ph-puzzle-piece" style="color:var(--ew-task-video)"></i><div class="icon-tile__name">puzzle-piece</div></div>
+          <div class="icon-tile"><i class="ph ph-text-aa" style="color:var(--ew-primary)"></i><div class="icon-tile__name">text-aa</div></div>
+          <div class="icon-tile"><i class="ph ph-cards" style="color:var(--ew-task-game)"></i><div class="icon-tile__name">cards</div></div>
+          <div class="icon-tile"><i class="ph ph-lightbulb" style="color:var(--ew-task-offers)"></i><div class="icon-tile__name">lightbulb</div></div>
+          <div class="icon-tile"><i class="ph-fill ph-flame" style="color:#FF6B35"></i><div class="icon-tile__name">flame</div></div>
+          <div class="icon-tile"><i class="ph-fill ph-star" style="color:var(--ew-accent)"></i><div class="icon-tile__name">star</div></div>
+          <div class="icon-tile"><i class="ph-duotone ph-play-circle" style="color:var(--ew-task-video)"></i><div class="icon-tile__name">play-circle</div></div>
+          <div class="icon-tile"><i class="ph-duotone ph-path" style="color:var(--ew-ink-tertiary)"></i><div class="icon-tile__name">path</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MOTION ===================== -->
+    <section class="section" id="motion">
+      <div class="section__intro">
+        <p class="section__eyebrow">Foundations</p>
+        <h2 class="section__title">Motion &amp; haptics</h2>
+        <p class="section__lede">
+          A 5-tier duration scale, 4 named curves, one spring preset, and a
+          strict haptic policy. Defined in
+          <span class="mono">lib/theme/motion.dart</span> and
+          <span class="mono">lib/services/haptics.dart</span>. The
+          <span class="mono">PressScale</span> widget is the single entry
+          point for spring-driven press feedback.
+        </p>
+      </div>
+
+      <!-- Durations + curves -->
+      <div class="plate" data-animate>
+        <p class="plate__label">AppDurations &middot; AppCurves &middot; AppSprings</p>
+        <div class="two-col--wide two-col">
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 18px;">Duration scale</h3>
+            <div class="duration-scale">
+              <div class="duration-row">
+                <div class="duration-row__name">instant</div>
+                <div class="duration-row__ms">120 ms</div>
+                <div class="duration-row__bar" style="width: 30px;"></div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__use">Press snap-back, micro feedback.</div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__name">short</div>
+                <div class="duration-row__ms">220 ms</div>
+                <div class="duration-row__bar" style="width: 55px;"></div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__use">Toggles, tiny state flips (currency pill, nav tab).</div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__name">medium</div>
+                <div class="duration-row__ms">320 ms</div>
+                <div class="duration-row__bar" style="width: 80px;"></div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__use">Default state changes (task → completed, unlock).</div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__name">long</div>
+                <div class="duration-row__ms">480 ms</div>
+                <div class="duration-row__bar" style="width: 120px;"></div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__use">Page transitions, entrance reveals.</div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__name">hero</div>
+                <div class="duration-row__ms">900 ms</div>
+                <div class="duration-row__bar" style="width: 225px;"></div>
+              </div>
+              <div class="duration-row">
+                <div class="duration-row__use">Multi-beat moments (ring fill, gift reveal, RewardGlow).</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 18px;">Curves</h3>
+            <div class="curves">
+              <div class="curve-card">
+                <svg viewBox="-4 -28 88 96" preserveAspectRatio="xMidYMid meet">
+                  <line class="axis" x1="0" y1="60" x2="80" y2="60" />
+                  <line class="axis" x1="0" y1="0" x2="80" y2="0" />
+                  <path d="M 0 60 C 16 6, 8 0, 80 0" />
+                </svg>
+                <div class="curve-card__name">warmOut</div>
+                <div class="curve-card__use">Default deceleration. Entrances, reveals.</div>
+              </div>
+              <div class="curve-card">
+                <svg viewBox="-4 -28 88 96" preserveAspectRatio="xMidYMid meet">
+                  <line class="axis" x1="0" y1="60" x2="80" y2="60" />
+                  <line class="axis" x1="0" y1="0" x2="80" y2="0" />
+                  <path d="M 0 60 C 36 60, 12 0, 80 0" />
+                </svg>
+                <div class="curve-card__name">warmInOut</div>
+                <div class="curve-card__use">Symmetric. Reversible toggles.</div>
+              </div>
+              <div class="curve-card">
+                <svg viewBox="-4 -28 88 96" preserveAspectRatio="xMidYMid meet">
+                  <line class="axis" x1="0" y1="60" x2="80" y2="60" />
+                  <line class="axis" x1="0" y1="0" x2="80" y2="0" />
+                  <path d="M 0 60 C 24 -24, 48 0, 80 0" />
+                </svg>
+                <div class="curve-card__name">pop</div>
+                <div class="curve-card__use">Slight overshoot. Reward flourishes.</div>
+              </div>
+              <div class="curve-card">
+                <svg viewBox="-4 -28 88 96" preserveAspectRatio="xMidYMid meet">
+                  <line class="axis" x1="0" y1="60" x2="80" y2="60" />
+                  <line class="axis" x1="0" y1="0" x2="80" y2="0" />
+                  <path d="M 0 60 C 33.6 60, 46.4 0, 80 0" />
+                </svg>
+                <div class="curve-card__name">gentle</div>
+                <div class="curve-card__use">Idle / breathing motion only.</div>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--ink-light); margin-top: 22px; max-width: 44ch;">
+              <strong>AppSprings.pressSettle</strong>: mass 1, stiffness 300,
+              damping ratio 0.85. Underdamped for a confident settle. Drives
+              <span class="mono">PressScale</span> and
+              <span class="mono">PhysicalPress</span>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PressScale live demo -->
+      <div class="plate" data-animate>
+        <p class="plate__label">PressScale &middot; lib/widgets/press_scale.dart &middot; tap the card</p>
+        <div class="two-col">
+          <div class="canvas">
+            <div class="press-demo">
+              <div class="press-demo__card" role="button" tabindex="0">
+                <div class="press-demo__card__icon"><i class="ph ph-text-aa"></i></div>
+                <div>
+                  <div class="press-demo__card__title">Word games</div>
+                  <div class="press-demo__card__sub">Wordle, Scrabble GO</div>
+                </div>
+              </div>
+              <div class="press-demo__hint">scale 0.97 &middot; no haptic &middot; spring settle</div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">What it does</h3>
+            <ul class="mono" style="font-size: .78rem; line-height: 1.95; color: var(--ink-light); list-style: none; padding: 0;">
+              <li><strong style="color: var(--ink)">Spring scale</strong>: child snaps to <span class="mono">pressedScale</span> on press-in via <span class="mono">pressSettle</span>, returns on release</li>
+              <li><strong style="color: var(--ink)">brightOnPress</strong>: translucent white overlay (15% by default) clipped to <span class="mono">pressedBorderRadius</span></li>
+              <li><strong style="color: var(--ink)">haptic</strong>: fires once on press-in via <span class="mono">HapticIntensity</span> enum</li>
+              <li><strong style="color: var(--ink)">enabled</strong>: mirrors button disabled state, kills both animation and haptic</li>
+              <li><strong style="color: var(--ink)">a11y</strong>: respects <span class="mono">MediaQuery.disableAnimations</span> (motion off, haptic and onTap still fire)</li>
+            </ul>
+            <p style="font-size: .88rem; color: var(--ink-light); margin-top: 16px; max-width: 42ch;">
+              Used on choice cards (<span class="mono">AppCard</span> wraps
+              itself when <span class="mono">onTap</span> is set), the
+              welcome email pill, the conversational home card, and small
+              chrome targets. Primary CTAs moved to
+              <span class="mono">PhysicalPress</span>, see the next plate.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PhysicalPress live demo -->
+      <div class="plate" data-animate>
+        <p class="plate__label">PhysicalPress &middot; lib/widgets/physical_press.dart &middot; tap to feel it sink</p>
+        <div class="two-col">
+          <div class="canvas" style="padding: 56px 28px;">
+            <div class="physical-demo">
+              <div class="physical-press" role="button" tabindex="0">
+                <div class="physical-press__shadow"></div>
+                <div class="physical-press__face">Continue with Google</div>
+              </div>
+              <div class="physical-press physical-press--apple" role="button" tabindex="0">
+                <div class="physical-press__shadow"></div>
+                <div class="physical-press__face">Continue with Apple</div>
+              </div>
+              <div class="press-demo__hint">68 px face &middot; 6 px depth &middot; stadium radius</div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Why a custom button</h3>
+            <p style="font-size: .92rem; color: var(--ink-light); max-width: 44ch;">
+              The primary CTA needed to feel physical. A scale-based press on
+              a flat rectangle still felt like a web button. This idiom layers
+              the face over a solid offset shadow and on press-in translates
+              the face down by <span class="mono">depth</span> px so it
+              visibly sinks into the shadow. Mirrors the "pushable card"
+              pattern from Cash App, Pinterest, Duolingo.
+            </p>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin: 22px 0 12px;">Recipe</h3>
+            <ul class="mono" style="font-size: .78rem; line-height: 1.95; color: var(--ink-light); list-style: none; padding: 0;">
+              <li><strong style="color: var(--ink)">backgroundColor</strong> face fill, for teal CTAs: <span class="mono">AppColors.primary</span></li>
+              <li><strong style="color: var(--ink)">shadowColor</strong> darker shade, for teal CTAs: <span class="mono">AppColors.primaryDark</span></li>
+              <li><strong style="color: var(--ink)">depth</strong> 6 px default (5 for the Apple button)</li>
+              <li><strong style="color: var(--ink)">height</strong> 68 px, pill radius <span class="mono">height / 2</span></li>
+              <li><strong style="color: var(--ink)">haptic</strong> <span class="mono">HapticIntensity.confirm</span> on press-in</li>
+              <li><strong style="color: var(--ink)">enabled</strong> fades opacity to 0.45 and kills input when false</li>
+              <li><strong style="color: var(--ink)">spring</strong> <span class="mono">AppSprings.pressSettle</span>, same as PressScale</li>
+            </ul>
+            <p style="font-size: .82rem; color: var(--ink-faint); margin-top: 14px; max-width: 44ch;">
+              All 5 primary CTAs in the app (welcome Google / Apple, trust
+              carousel, onboarding Continue, onboarding That's me) use
+              PhysicalPress. <span class="mono">AppButtonStyles</span> is
+              still defined but currently has no call sites. See the drift
+              register.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- RewardGlow -->
+      <div class="plate" data-animate>
+        <p class="plate__label">RewardGlow &middot; lib/widgets/reward_glow.dart &middot; celebration flourish</p>
+        <div class="two-col">
+          <div class="canvas" style="padding: 20px;">
+            <div class="reward-glow-demo">
+              <div class="reward-glow-stage">
+                <div class="reward-glow-halo"></div>
+                <div class="reward-glow-badge">★</div>
+              </div>
+              <div class="reward-glow-demo__caption">pop (0-300) &middot; halo (100-700) &middot; warmOut (300-900)</div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Three-beat choreography</h3>
+            <p style="font-size: .92rem; color: var(--ink-light); max-width: 44ch;">
+              Wraps any child. When its controller fires
+              <span class="mono">play()</span>, a 900 ms flourish runs over
+              three overlapping beats. The child scales up on
+              <span class="mono">pop</span>, a radial halo fades in behind it
+              expanding from 80 percent to 140 percent, then the child
+              settles back on <span class="mono">warmOut</span>.
+            </p>
+            <ul class="mono" style="font-size: .78rem; line-height: 1.95; color: var(--ink-light); list-style: none; padding: 0; margin-top: 14px;">
+              <li><strong style="color: var(--ink)">Beat 1</strong> 0 to 300 ms, child 1.0 to 1.06, <span class="mono">pop</span> curve</li>
+              <li><strong style="color: var(--ink)">Beat 2</strong> 100 to 700 ms, halo alpha 0 to 0.5 to 0, scale 0.8 to 1.4</li>
+              <li><strong style="color: var(--ink)">Beat 3</strong> 300 to 900 ms, child 1.06 to 1.0, <span class="mono">warmOut</span></li>
+            </ul>
+            <p style="font-size: .82rem; color: var(--ink-faint); margin-top: 14px; max-width: 44ch;">
+              Drive it via a <span class="mono">RewardGlowController</span>
+              (a <span class="mono">ChangeNotifier</span>). Home has two
+              instances: <span class="mono">_giftGlow</span> on the welcome
+              gift badge and <span class="mono">_ringGlow</span> that fires
+              on the rising edge when goal progress crosses 100. The halo
+              uses <span class="mono">AppColors.accent</span> by default and
+              may overflow the parent bounds on purpose.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AnimatedCounter -->
+      <div class="plate" data-animate>
+        <p class="plate__label">AnimatedCounter &middot; lib/widgets/animated_counter.dart</p>
+        <div class="two-col">
+          <div class="canvas">
+            <div class="counter-demo">
+              <div class="counter-demo__num" id="counterDemoValue">$47.25</div>
+              <div class="counter-demo__caption">interpolates to the new value on every <span style="color: var(--ew-ink);">value</span> change</div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Value transitions</h3>
+            <p style="font-size: .92rem; color: var(--ink-light); max-width: 44ch;">
+              A self-contained counter. Every time its <span class="mono">value</span>
+              prop changes, it interpolates from the previous display to the
+              new one over <span class="mono">AppDurations.hero</span>, curved
+              with <span class="mono">warmOut</span>. Integer output formatted
+              by a caller-supplied <span class="mono">format</span> function
+              so the same widget works for Stars and dollar balances.
+            </p>
+            <p style="font-size: .88rem; color: var(--ink-light); max-width: 44ch; margin-top: 14px;">
+              First build snaps to the current value with no count-up.
+              Mid-animation updates capture the current interpolated value
+              as the new start, so successive rewards chain smoothly without
+              visual jumps.
+            </p>
+            <p style="font-size: .82rem; color: var(--ink-faint); margin-top: 14px;">
+              Currently used on the home balance row.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Haptics policy -->
+      <div class="plate" data-animate>
+        <p class="plate__label">Haptics policy &middot; lib/services/haptics.dart</p>
+        <p style="font-size: .92rem; color: var(--ink-light); max-width: 64ch; margin-bottom: 22px;">
+          Every haptic in the app routes through the
+          <span class="mono">Haptics</span> service. No raw
+          <span class="mono">HapticFeedback.*</span> calls anywhere else in
+          <span class="mono">lib/</span>. The policy was revised after the
+          first user test. Chrome interactions used to fire a soft tick,
+          and they no longer fire anything.
+        </p>
+        <div class="haptic-policy">
+          <div class="haptic-col">
+            <div class="haptic-col__head"><span class="mark">✓</span> Fires haptic</div>
+            <ul>
+              <li><strong>confirm</strong>: light impact. Primary CTAs (Continue with Google / Apple, "Let's get started", "That's me", future Cashout)</li>
+              <li><strong>reward</strong>: light impact. Single task completion</li>
+              <li><strong>milestone</strong>: medium impact. Goal completed, all-tasks unlocked</li>
+              <li><strong>celebrate</strong>: medium impact. Welcome gift reveal, legend reached. Per-session guard via <span class="mono">CelebrateMoments.*</span> ids</li>
+              <li><strong>warning</strong>: heavy impact. Form errors, blocked actions (no call sites yet, reserved for future error states)</li>
+            </ul>
+          </div>
+          <div class="haptic-col haptic-col--no">
+            <div class="haptic-col__head"><span class="mark">×</span> No haptic</div>
+            <ul>
+              <li><strong>Nav switches</strong>: bottom tab change</li>
+              <li><strong>Currency toggle</strong>: $/★ pill</li>
+              <li><strong>Conv card open</strong>: home to journey</li>
+              <li><strong>AppCard rows</strong>: onboarding choices, game picker</li>
+              <li><strong>Task card press-in</strong>: the visual transition is the confirmation</li>
+              <li><strong>Back / close buttons</strong>: chrome interactions stay silent</li>
+            </ul>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--ink-faint); margin-top: 18px; max-width: 64ch;">
+          <span class="mono">Haptics.tick()</span> is deprecated and is now a
+          no-op. It is kept only so any forgotten chrome call site doesn't
+          fire <span class="mono">selectionClick</span>. Remove on sight.
+        </p>
+      </div>
+
+      <!-- Breathing -->
+      <div class="plate" data-animate>
+        <p class="plate__label">Breathing &middot; lib/widgets/breathing.dart</p>
+        <div class="two-col">
+          <div class="canvas">
+            <div style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--ew-primary), #2BA08E); box-shadow: 0 24px 60px rgba(13, 148, 136, 0.3); display: grid; place-items: center; color: white; font-family: var(--brand); font-size: 56px; font-weight: 800; letter-spacing: -2px; animation: breathe 5s ease-in-out infinite;">E</div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Idle life</h3>
+            <p style="font-size: 0.92rem; color: var(--ink-light); max-width: 44ch;">
+              A very quiet cosine-driven scale oscillation for elements that
+              should feel alive when nothing is happening. Default 5s period,
+              0.015 amplitude (1.5%, barely perceptible). One peak per period,
+              no opacity, no position. Used on the welcome screen logo.
+            </p>
+            <p style="font-size: 0.82rem; color: var(--ink-faint); margin-top: 12px;">
+              Disables on <span class="mono">MediaQuery.disableAnimations</span>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <style>
+      @keyframes breathe {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.015); }
+      }
+    </style>
+
+    <!-- ===================== COMPONENTS ===================== -->
+    <section class="section" id="components">
+      <div class="section__intro">
+        <p class="section__eyebrow">Surface</p>
+        <h2 class="section__title">Components &amp; widgets</h2>
+        <p class="section__lede">
+          Shared primitives live in <span class="mono">lib/widgets/</span>.
+          Below, the ones with strong visual identity, rendered with real
+          brand values, not placeholders.
+        </p>
+      </div>
+
+      <!-- Primary CTA + Card -->
+      <div class="plate" data-animate>
+        <p class="plate__label">Primary CTA &middot; PhysicalPress &middot; lib/widgets/physical_press.dart</p>
+        <div class="two-col">
+          <div class="canvas" style="padding: 48px 28px;">
+            <div class="physical-demo">
+              <div class="physical-press" role="button" tabindex="0">
+                <div class="physical-press__shadow"></div>
+                <div class="physical-press__face">Continue with Google</div>
+              </div>
+              <div class="physical-press physical-press--apple" role="button" tabindex="0">
+                <div class="physical-press__shadow"></div>
+                <div class="physical-press__face">Continue with Apple</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Recipe</h3>
+            <ul class="mono" style="font-size: .78rem; line-height: 1.9; color: var(--ink-light); list-style: none; padding: 0;">
+              <li>face &middot; <strong style="color:var(--ink)">primary</strong> (#0D9488)</li>
+              <li>shadow &middot; <strong style="color:var(--ink)">primaryDark</strong> (#0F766E)</li>
+              <li>depth &middot; 6 px (Apple button uses 5)</li>
+              <li>height &middot; 68 px, pill radius 34</li>
+              <li>label &middot; <span class="mono">AppText.ctaLabel</span> (Outfit 600 / 20)</li>
+              <li>haptic &middot; <span class="mono">HapticIntensity.confirm</span></li>
+            </ul>
+            <p style="font-size: .88rem; color: var(--ink-light); margin-top: 18px; max-width: 42ch;">
+              Used on welcome (Google and Apple), trust carousel, onboarding
+              Continue, and onboarding That's me. All 5 CTAs.
+              <span class="mono">AppButtonStyles.primary</span> was the first
+              iteration (flat teal rectangle, 60 tall, 16 radius) and is
+              still defined in <span class="mono">lib/theme/app_buttons.dart</span>,
+              but no call sites use it. See the drift register.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card surface -->
+      <div class="plate" data-animate>
+        <p class="plate__label">AppCard &middot; lib/widgets/app_card.dart &middot; choice rows &amp; list items</p>
+        <div class="two-col">
+          <div class="canvas">
+            <div class="showcase-stack" style="gap: 14px; width: 100%;">
+              <div class="ew-card">
+                <div class="ew-card__icon"><i class="ph ph-text-aa"></i></div>
+                <div class="ew-card__body">
+                  <div class="ew-card__title">Word games</div>
+                  <div class="ew-card__sub">Wordle, Scrabble GO, Words With Friends</div>
+                </div>
+                <i class="ph ph-circle ew-card__chevron"></i>
+              </div>
+              <div class="ew-card" style="background: var(--ew-primary-pale); border-color: var(--ew-primary);">
+                <div class="ew-card__icon" style="background: rgba(236, 72, 153, 0.12); color: var(--ew-task-video);"><i class="ph ph-puzzle-piece"></i></div>
+                <div class="ew-card__body">
+                  <div class="ew-card__title">Puzzle games</div>
+                  <div class="ew-card__sub">Candy Crush, Tetris, Bejeweled</div>
+                </div>
+                <i class="ph-fill ph-check-circle" style="color:var(--ew-primary); font-size:24px;"></i>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Recipe</h3>
+            <ul class="mono" style="font-size: .78rem; line-height: 1.9; color: var(--ink-light); list-style: none; padding: 0;">
+              <li>background · <strong style="color:var(--ink)">white</strong></li>
+              <li>border · 1.5 creamDeep</li>
+              <li>radius · 18</li>
+              <li>shadow · 0 2 8 rgba(0,0,0,.04)</li>
+              <li>padding · lg</li>
+              <li>selected · bg primaryPale, border primary</li>
+            </ul>
+            <p style="font-size: .88rem; color: var(--ink-light); margin-top: 18px; max-width: 40ch;">
+              Used by the onboarding preference picker
+              (<span class="mono">selected: true</span> for the active row)
+              and the home game-picker sheet. Feature cards (task tiles, conv
+              card, streak cards) intentionally stay inline. Their decoration
+              varies too much to fit one widget.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom sheet shell -->
+      <div class="plate" data-animate>
+        <p class="plate__label">BottomSheetShell &middot; lib/widgets/bottom_sheet_shell.dart</p>
+        <div class="two-col">
+          <div class="canvas canvas--tall">
+            <div class="ew-sheet">
+              <div class="ew-sheet__handle"></div>
+              <div class="ew-sheet__title">Choose your game</div>
+              <div class="ew-sheet__sub">You'll earn 750 Stars once you reach 1 hour of play time. Pick the one you'll enjoy most, you can't switch later.</div>
+              <div style="text-align: center; margin-bottom: 20px;">
+                <span class="ew-sheet__chip">
+                  <i class="ph-bold ph-clock"></i>
+                  About 1 hour total
+                </span>
+              </div>
+              <div class="ew-card" style="max-width: none;">
+                <div class="ew-card__icon" style="background: rgba(232,145,58,.12); color: #E8913A;"><i class="ph-duotone ph-diamonds-four"></i></div>
+                <div class="ew-card__body">
+                  <div class="ew-card__title">Candy Crush</div>
+                  <div class="ew-card__sub">Match-3 puzzle</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Usage</h3>
+            <pre class="mono" style="font-size: .78rem; line-height: 1.7; background: var(--surface-contrast); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; white-space: pre;">showAppBottomSheet(
+  context: context,
+  builder: (ctx) => YourContent(),
+);</pre>
+            <p style="font-size: .88rem; color: var(--ink-light); margin-top: 18px; max-width: 42ch;">
+              Cream bg, 24px top radius, grab handle, safe-area bottom inset.
+              The helper wraps <span class="mono">showModalBottomSheet</span>
+              and is the only sanctioned way to present a sheet.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="plate" data-animate>
+        <p class="plate__label">showAppToast &middot; lib/widgets/app_toast.dart</p>
+        <div class="two-col">
+          <div class="canvas">
+            <div class="ew-toast">
+              <div class="ew-toast__icon"><i class="ph-fill ph-flame"></i></div>
+              <div style="flex: 1;">
+                <div class="ew-toast__title">1-day streak, nice start</div>
+                <div class="ew-toast__sub">Come back tomorrow to keep it going</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Usage</h3>
+            <pre class="mono" style="font-size: .78rem; line-height: 1.7; background: var(--surface-contrast); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; white-space: pre;">showAppToast(
+  context,
+  title: '1-day streak, nice start',
+  subtitle: 'Come back tomorrow…',
+  icon: PhosphorIcons.flame(
+    PhosphorIconsStyle.fill,
+  ),
+  iconColor: Color(0xFFFF6B35),
+  iconBackground: Color(0xFFFFF0E8),
+);</pre>
+            <p style="font-size: .88rem; color: var(--ink-light); margin-top: 14px; max-width: 42ch;">
+              Overlay-based, auto-removes after 3.5s with a 400ms fade. Can be
+              called from any screen, no Stack plumbing in the caller.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Misc primitives -->
+      <div class="plate" data-animate>
+        <p class="plate__label">Secondary primitives</p>
+        <div class="two-col">
+          <div class="canvas">
+            <div class="showcase-stack" style="gap: 20px;">
+              <div class="ew-pill">
+                <span class="ew-pill__dot"><i class="ph-fill ph-users-three" style="font-size: 11px;"></i></span>
+                People like you earn ~$47/month
+              </div>
+              <div class="ew-back-btn"><i class="ph-bold ph-arrow-left"></i></div>
+              <div class="ew-stepper">
+                <div class="ew-stepper__dot ew-stepper__dot--active"></div>
+                <div class="ew-stepper__dot"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">What's shown</h3>
+            <ul class="mono" style="font-size: .78rem; line-height: 2; color: var(--ink-light); list-style: none; padding: 0;">
+              <li><strong style="color:var(--ink)">Pill</strong>: social-proof badge, radius 100, white with soft shadow</li>
+              <li><strong style="color:var(--ink)">Circular back</strong>: 48 px, creamDeep bg, Phosphor arrow</li>
+              <li><strong style="color:var(--ink)">Stepper dots</strong>: 7 px dots, active morphs to a 24 by 7 pill</li>
+            </ul>
+            <p style="font-size: .88rem; color: var(--ink-light); margin-top: 14px; max-width: 42ch;">
+              These are brand signatures, not primitives yet. Each is built
+              inline where it's needed.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget index -->
+      <div class="plate" data-animate style="padding-top: 36px; padding-bottom: 36px;">
+        <p class="plate__label">Index &middot; theme + widgets</p>
+        <div class="widget-list">
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">AppText</div>
+              <div class="widget-row__path">lib/theme/app_text.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              10 named text styles:
+              <span class="mono">display</span>, <span class="mono">brandMark</span>,
+              <span class="mono">prompt</span>, <span class="mono">sectionTitle</span>,
+              <span class="mono">sheetTitle</span>, <span class="mono">ctaLabel</span>,
+              <span class="mono">listItem</span>, <span class="mono">bodyStrong</span>,
+              <span class="mono">body</span>, <span class="mono">caption</span>.
+              Use <span class="mono">.copyWith()</span> for color or weight tweaks.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">AppButtonStyles</div>
+              <div class="widget-row__path">lib/theme/app_buttons.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              <span class="mono">primary</span> (filled teal CTA, 68 tall,
+              stadium) and <span class="mono">primaryOutline</span> (66 tall
+              outline). Pass to
+              <span class="mono">ElevatedButton.style</span> /
+              <span class="mono">OutlinedButton.style</span>.
+              <em>Currently no call sites.</em> All 5 CTAs migrated to
+              <span class="mono">PhysicalPress</span>. Kept as a reference
+              recipe in case a flat CTA is needed later.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">AppCard</div>
+              <div class="widget-row__path">lib/widgets/app_card.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              The repeating choice-card surface (white, 18r, creamDeep border,
+              soft shadow). Supports <span class="mono">selected</span> state
+              (primary fill + border) and optional <span class="mono">onTap</span>,
+              <span class="mono">padding</span>, <span class="mono">constraints</span>.
+              When <span class="mono">onTap</span> is non-null the card
+              automatically wraps in <span class="mono">PressScale</span>;
+              <span class="mono">haptic</span> defaults to none (chrome rule).
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">PressScale</div>
+              <div class="widget-row__path">lib/widgets/press_scale.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Spring-driven press feedback wrapper for choice cards, chrome
+              targets, and anything that isn't a primary CTA. Optional
+              <span class="mono">brightOnPress</span> overlay,
+              <span class="mono">HapticIntensity</span> on press-in,
+              <span class="mono">enabled</span> mirrors button disabled state.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">PhysicalPress</div>
+              <div class="widget-row__path">lib/widgets/physical_press.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              The primary CTA idiom. A fully-rendered pill button with a
+              solid offset shadow that the face sinks into on press.
+              <span class="mono">backgroundColor</span>,
+              <span class="mono">shadowColor</span>,
+              <span class="mono">depth</span>,
+              <span class="mono">height</span>,
+              <span class="mono">haptic</span>, and
+              <span class="mono">enabled</span> are the knobs. Used on all
+              5 primary CTAs.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">RewardGlow</div>
+              <div class="widget-row__path">lib/widgets/reward_glow.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Celebration flourish for hero reward moments. Wraps a child
+              and, when its <span class="mono">RewardGlowController</span>
+              fires <span class="mono">play()</span>, runs a 900 ms
+              three-beat sequence: pop, radial halo, settle. Used on the
+              home gift reveal (<span class="mono">_giftGlow</span>) and
+              goal completion (<span class="mono">_ringGlow</span>, rising
+              edge on progress crossing 100).
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">AnimatedCounter</div>
+              <div class="widget-row__path">lib/widgets/animated_counter.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Interpolates a numeric <span class="mono">value</span> to its
+              new state over <span class="mono">AppDurations.hero</span>
+              (<span class="mono">warmOut</span>). Takes a caller-supplied
+              <span class="mono">format</span> function so the same widget
+              works for Stars and dollar balances. Snaps on first build.
+              Mid-animation updates chain smoothly.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">Breathing</div>
+              <div class="widget-row__path">lib/widgets/breathing.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Quiet cosine-driven scale oscillation for elements that should
+              feel alive when nothing is happening. 5s period / 1.5%
+              amplitude default. Used on the welcome logo.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">ScreenScaffold</div>
+              <div class="widget-row__path">lib/widgets/screen_scaffold.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              The standard <span class="mono">Scaffold</span> wrapper. Defaults
+              to cream background, <span class="mono">SafeArea</span>, and
+              24 px horizontal gutter padding. Flags:
+              <span class="mono">safeArea</span>, <span class="mono">padding</span>,
+              <span class="mono">animatedGradient</span>,
+              <span class="mono">bottomNavigationBar</span>. Used by every
+              screen.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">fadeRoute&lt;T&gt;()</div>
+              <div class="widget-row__path">lib/widgets/fade_route.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              The standard screen-to-screen route. Now wraps
+              <span class="mono">CupertinoPageRoute</span>, so every push
+              gets the iOS-native slide-from-right with parallax plus the
+              edge-swipe-back gesture for free. <em>Name is a misnomer</em>,
+              kept for legacy call sites. The original prototype was a
+              fade-through.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">BottomSheetShell</div>
+              <div class="widget-row__path">lib/widgets/bottom_sheet_shell.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Cream shell, 24px top radius, grab handle, safe-area bottom
+              inset. Helper <span class="mono">showAppBottomSheet()</span>
+              wires up <span class="mono">showModalBottomSheet</span> with the
+              right defaults.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">showAppToast()</div>
+              <div class="widget-row__path">lib/widgets/app_toast.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Overlay-based transient toast: icon + title + subtitle. Auto-fades
+              in and out, self-removing. Callable from any context.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">AnimatedGradientBg</div>
+              <div class="widget-row__path">lib/widgets/animated_gradient_bg.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Ambient gradient backdrop used on welcome and home. Opt in via
+              <span class="mono">ScreenScaffold(animatedGradient: true)</span>.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">ProgressRing</div>
+              <div class="widget-row__path">lib/widgets/progress_ring.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Circular tier-progress indicator used on home and in the trust
+              carousel. Monochrome teal over creamDeep track.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">TypewriterText</div>
+              <div class="widget-row__path">lib/widgets/typewriter_text.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Character-by-character reveal used for onboarding prompts.
+              Exposes an <span class="mono">onComplete</span> callback to
+              gate the next reveal.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== INTERACTION ===================== -->
+    <section class="section section--narrow" id="interaction">
+      <div class="section__intro">
+        <p class="section__eyebrow">Motion</p>
+        <h2 class="section__title">Interaction patterns</h2>
+        <p class="section__lede">
+          Three recipes cover almost every transition in the app.
+        </p>
+      </div>
+      <div data-animate>
+        <div class="callout">
+          <p class="callout__label">01 · Screen transition</p>
+          <p style="margin: 0;">
+            All route changes go through <span class="mono">fadeRoute()</span>,
+            which now wraps <span class="mono">CupertinoPageRoute</span>.
+            Every push gets the iOS-native slide-from-right with parallax
+            on the outgoing screen and the swipe-back-to-pop gesture for
+            free. The name is a legacy misnomer. The helper is no longer
+            a fade.
+          </p>
+        </div>
+        <div class="callout">
+          <p class="callout__label">02 · Press feedback</p>
+          <p style="margin: 0;">
+            Two primitives cover every tap in the app. Primary CTAs use
+            <span class="mono">PhysicalPress</span>, which renders its own
+            pill button with an offset shadow and sinks the face into it on
+            press, firing <span class="mono">HapticIntensity.confirm</span>.
+            Everything else (choice cards via <span class="mono">AppCard</span>,
+            chrome buttons, the home conversational card) wraps in
+            <span class="mono">PressScale</span> for a 0.97 shrink with no
+            haptic. Both share <span class="mono">AppSprings.pressSettle</span>.
+          </p>
+        </div>
+        <div class="callout">
+          <p class="callout__label">03 · Celebration</p>
+          <p style="margin: 0;">
+            Hero reward moments use <span class="mono">RewardGlow</span>
+            driven by a <span class="mono">RewardGlowController</span>, paired
+            with <span class="mono">Haptics.celebrate(momentId)</span>. The
+            visual is a 900 ms three-beat pop, halo, settle sequence. The
+            haptic fires at most once per app run per moment id. Canonical
+            ids live in <span class="mono">CelebrateMoments</span>:
+            <span class="mono">welcomeGift</span> and
+            <span class="mono">legendReached</span>.
+          </p>
+        </div>
+        <div class="callout">
+          <p class="callout__label">04 · Bottom sheet</p>
+          <p style="margin: 0;">
+            <span class="mono">showAppBottomSheet()</span> is the single
+            entry point. Cream background, 24 px top corners, 4 by 40 grab
+            handle, safe-area bottom inset. Dismissable by drag or backdrop
+            tap (Flutter default).
+          </p>
+        </div>
+        <div class="callout">
+          <p class="callout__label">05 · Transient feedback</p>
+          <p style="margin: 0;">
+            <span class="mono">showAppToast()</span> for short confirmations.
+            Top of screen, fade in <span class="mono">long</span>, hold 3.5 s,
+            fade out <span class="mono">long</span>, remove. Not a snackbar.
+            No action slot, no persistent dismiss.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GAPS ===================== -->
+    <section class="section" id="gaps">
+      <div class="section__intro">
+        <p class="section__eyebrow">Known drift</p>
+        <h2 class="section__title">Drift register</h2>
+        <p class="section__lede">
+          Originally four items. Three are now closed; one remains deferred
+          until there's a real use case.
+        </p>
+      </div>
+      <div data-animate>
+        <div class="gaps-grid">
+          <div class="gap-card gap-card--resolved">
+            <div class="gap-card__num">01</div>
+            <div class="gap-card__title">
+              No button style constants
+              <span class="gap-card__pill">Superseded</span>
+            </div>
+            <div class="gap-card__body">
+              First closed by <span class="mono">AppButtonStyles.primary</span> /
+              <span class="mono">primaryOutline</span>. The visual then
+              evolved to the <span class="mono">PhysicalPress</span> idiom
+              (pill face over offset shadow) and all 5 CTAs migrated there.
+              <span class="mono">AppButtonStyles</span> is still defined but
+              has no call sites. Kept as a reference recipe for any future
+              flat CTA.
+            </div>
+          </div>
+          <div class="gap-card gap-card--resolved">
+            <div class="gap-card__num">02</div>
+            <div class="gap-card__title">
+              No card decoration
+              <span class="gap-card__pill">Closed</span>
+            </div>
+            <div class="gap-card__body">
+              Resolved by <span class="mono">AppCard</span> for the choice-card
+              pattern. Feature cards (task tiles, conv card, streak)
+              intentionally remain inline. They vary too much.
+            </div>
+          </div>
+          <div class="gap-card gap-card--resolved">
+            <div class="gap-card__num">03</div>
+            <div class="gap-card__title">
+              No named text styles
+              <span class="gap-card__pill">Closed</span>
+            </div>
+            <div class="gap-card__body">
+              Resolved by <span class="mono">AppText</span> (10 named getters).
+              ~40 inline <span class="mono">GoogleFonts.outfit()</span> calls
+              migrated. The 6 remaining outliers in
+              <span class="mono">home_screen.dart</span> are display-scale
+              one-offs (28 / 56 / 64) intentionally left inline.
+            </div>
+          </div>
+          <div class="gap-card">
+            <div class="gap-card__num">04</div>
+            <div class="gap-card__title">
+              No adaptive dialog
+              <span class="gap-card__pill" style="background: var(--ink-faint);">Deferred</span>
+            </div>
+            <div class="gap-card__body">
+              Zero alerts today, so no infrastructure yet. Build
+              <span class="mono">showAppDialog()</span> when the first real
+              use case arrives.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    var reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function reduceMotionEnabled() { return reduceMotionQuery.matches; }
+
+    function currentTheme() {
+      var root = document.documentElement;
+      if (root.classList.contains('dark')) return 'dark';
+      if (root.classList.contains('light')) return 'light';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function applyThemeLabel() {
+      document.getElementById('theme-toggle').textContent = currentTheme() === 'dark' ? 'Light' : 'Dark';
+    }
+
+    function readStoredTheme() {
+      try { return window.localStorage.getItem('presenter-theme'); }
+      catch (e) { return null; }
+    }
+
+    function persistTheme(theme) {
+      try { window.localStorage.setItem('presenter-theme', theme); }
+      catch (e) { return; }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var storedTheme = readStoredTheme();
+      if (storedTheme === 'dark' || storedTheme === 'light') {
+        document.documentElement.classList.add(storedTheme);
+      }
+      applyThemeLabel();
+
+      var themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', function() {
+        var html = document.documentElement;
+        var nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+        html.classList.remove('dark', 'light');
+        html.classList.add(nextTheme);
+        persistTheme(nextTheme);
+        applyThemeLabel();
+      });
+
+      /* ---- TOC: auto-generate ---- */
+      var toc = document.getElementById('toc');
+      var tocToggle = document.getElementById('toc-toggle');
+      var tocBackdrop = document.getElementById('toc-backdrop');
+      var tocList = toc.querySelector('.toc__list');
+      var contentEl = document.querySelector('.content');
+      var children = contentEl.children;
+      var introInserted = false;
+
+      for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if (child.tagName === 'SECTION' && child.id) {
+          var heading = child.querySelector('.section__title');
+          if (!heading) continue;
+
+          if (!introInserted) {
+            var introGroup = document.createElement('li');
+            introGroup.className = 'toc__group';
+            introGroup.textContent = 'Contents';
+            tocList.appendChild(introGroup);
+            introInserted = true;
+          }
+
+          var listItem = document.createElement('li');
+          var link = document.createElement('a');
+          link.href = '#' + child.id;
+          link.textContent = heading.textContent;
+          listItem.appendChild(link);
+          tocList.appendChild(listItem);
+        }
+      }
+
+      function closeToc() {
+        toc.classList.remove('open');
+        tocBackdrop.classList.remove('visible');
+      }
+
+      tocToggle.addEventListener('click', function() {
+        toc.classList.toggle('open');
+        tocBackdrop.classList.toggle('visible');
+      });
+
+      tocBackdrop.addEventListener('click', closeToc);
+      tocList.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', closeToc);
+      });
+
+      var allSections = document.querySelectorAll('section[id]');
+      var tocLinks = tocList.querySelectorAll('a');
+
+      function updateActiveToc() {
+        var scrollY = window.scrollY || window.pageYOffset;
+        var current = null;
+        for (var s = 0; s < allSections.length; s++) {
+          if (scrollY >= allSections[s].offsetTop - 120) {
+            current = allSections[s].id;
+          }
+        }
+        tocLinks.forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+      }
+
+      window.addEventListener('scroll', updateActiveToc, { passive: true });
+      updateActiveToc();
+
+      var animateObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var parent = el.parentElement;
+          var siblings = parent ? parent.querySelectorAll(':scope > [data-animate]') : [];
+          if (siblings.length > 1 && !reduceMotionEnabled()) {
+            var index = Array.prototype.indexOf.call(siblings, el);
+            el.style.transitionDelay = (index * 80) + 'ms';
+          }
+          el.classList.add('visible');
+          animateObserver.unobserve(el);
+        });
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll('[data-animate]').forEach(function(element) {
+        animateObserver.observe(element);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -30,7 +30,7 @@ class AppCard extends StatelessWidget {
     this.onTap,
     this.selected = false,
     this.constraints,
-    this.haptic = HapticIntensity.tick,
+    this.haptic, // null by default — chrome interactions don't fire haptics
   });
 
   @override

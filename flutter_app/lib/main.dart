@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
 import 'state/app_state.dart';
-import 'screens/welcome_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class EarnWiseApp extends StatelessWidget {
         title: 'EarnWise',
         theme: AppTheme.theme,
         debugShowCheckedModeBanner: false,
-        home: const WelcomeScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

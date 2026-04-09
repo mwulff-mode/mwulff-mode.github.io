@@ -50,9 +50,9 @@ class AppText {
         color: AppColors.ink,
       );
 
-  /// 18 / 600 / white · primary button label
+  /// 20 / 600 / white · primary button label
   static TextStyle get ctaLabel => GoogleFonts.outfit(
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.w600,
         color: Colors.white,
       );

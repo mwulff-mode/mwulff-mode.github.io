@@ -73,13 +73,14 @@ const legendTrackColor = Color(0xFFFEF3C7);
 class AppState extends ChangeNotifier {
   String userName = 'Lisa';
   int stars = 125; // welcome gift
+  int earnedToday = 0; // Stars earned from tasks this session (excludes welcome gift)
   int goalIndex = 0;
   int tasksCompleted = 0;
   bool screen5Played = false;
   int streakCount = 0;
-  bool showDollars = false;
   bool isLegend = false;
   Set<String> completedTasks = {};
+  String? lastCompletedTask;
   List<String> selectedPreferences = [];
   List<JourneyEntry> journeyLog = [];
 
@@ -117,10 +118,7 @@ class AppState extends ChangeNotifier {
   double starsToDollars(int s) => s / starsPerDollar;
 
   String formatBalance() {
-    if (showDollars) {
-      return '\$${starsToDollars(stars).toStringAsFixed(2)}';
-    }
-    return formatNumber(stars);
+    return '\$${starsToDollars(stars).toStringAsFixed(2)}';
   }
 
   String formatRingProgress() {
@@ -129,10 +127,18 @@ class AppState extends ChangeNotifier {
   }
 
   String formatToday() {
-    if (showDollars) {
-      return '\$${starsToDollars(stars).toStringAsFixed(2)} today';
-    }
-    return '${formatNumber(stars)} today';
+    return '\$${starsToDollars(stars).toStringAsFixed(2)} today';
+  }
+
+  /// Dollars earned from tasks this session (excludes welcome gift).
+  String formatEarnedToday() {
+    return '\$${starsToDollars(earnedToday).toStringAsFixed(2)}';
+  }
+
+  /// The current goal target formatted as dollars.
+  String formatGoal() {
+    if (isLegend) return '∞';
+    return '\$${starsToDollars(currentGoal.goalStars).toStringAsFixed(2)}';
   }
 
   static String formatNumber(int n) {
@@ -143,11 +149,6 @@ class AppState extends ChangeNotifier {
       return '$thousands,${remainder.toString().padLeft(3, '0')}';
     }
     return '$n';
-  }
-
-  void toggleCurrency() {
-    showDollars = !showDollars;
-    notifyListeners();
   }
 
   void setUserName(String name) {
@@ -205,8 +206,11 @@ class AppState extends ChangeNotifier {
   bool completeTask(String task) {
     if (completedTasks.contains(task)) return false;
     completedTasks.add(task);
+    lastCompletedTask = task;
     final prevStars = stars;
-    stars += taskStars[task] ?? 0;
+    final earned = taskStars[task] ?? 0;
+    stars += earned;
+    earnedToday += earned;
     tasksCompleted++;
     notifyListeners();
 

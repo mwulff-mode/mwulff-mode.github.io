@@ -11,7 +11,7 @@ import '../theme/motion.dart';
 /// legend reached) and require a `momentId` for the per-session guard, which
 /// the enum cannot carry. PressScale call sites that need a celebrate
 /// haptic should fire it separately via `Haptics.celebrate(momentId)`.
-enum HapticIntensity { tick, reward, milestone }
+enum HapticIntensity { confirm, reward, milestone, warning }
 
 /// Wraps any tappable child with spring-driven press feedback and an optional
 /// haptic on press-in.
@@ -19,6 +19,10 @@ enum HapticIntensity { tick, reward, milestone }
 /// On press-in: scales `child` to [pressedScale] via the `pressSettle` spring.
 /// On press-out: scales back to `1.0` via the same spring.
 /// On release inside bounds: fires [onTap].
+///
+/// When [brightOnPress] is true, layers a translucent white overlay (clipped
+/// to [pressedBorderRadius] if set) over the child during press, fading from
+/// 0 to [brightOnPressOpacity] in lockstep with the scale spring.
 ///
 /// When [enabled] is false, the widget renders the child but does not respond
 /// to taps and does not animate.
@@ -31,6 +35,9 @@ class PressScale extends StatefulWidget {
   final double pressedScale;
   final HapticIntensity? haptic;
   final bool enabled;
+  final bool brightOnPress;
+  final BorderRadius? pressedBorderRadius;
+  final double brightOnPressOpacity;
 
   const PressScale({
     super.key,
@@ -39,6 +46,9 @@ class PressScale extends StatefulWidget {
     this.pressedScale = 0.97,
     this.haptic,
     this.enabled = true,
+    this.brightOnPress = false,
+    this.pressedBorderRadius,
+    this.brightOnPressOpacity = 0.15,
   });
 
   @override
@@ -83,12 +93,14 @@ class _PressScaleState extends State<PressScale>
     switch (widget.haptic) {
       case null:
         return;
-      case HapticIntensity.tick:
-        Haptics.tick();
+      case HapticIntensity.confirm:
+        Haptics.confirm();
       case HapticIntensity.reward:
         Haptics.reward();
       case HapticIntensity.milestone:
         Haptics.milestone();
+      case HapticIntensity.warning:
+        Haptics.warning();
     }
   }
 
@@ -113,6 +125,17 @@ class _PressScaleState extends State<PressScale>
     widget.onTap?.call();
   }
 
+  /// Maps the spring controller value to the brightness overlay opacity.
+  /// At rest (value == 1.0) → 0. At full press (value == pressedScale) →
+  /// brightOnPressOpacity. Spring overshoots are clamped.
+  double _brightnessAt(double scale) {
+    final delta = (scale - 1.0).abs();
+    final maxDelta = (widget.pressedScale - 1.0).abs();
+    if (maxDelta == 0) return 0;
+    final t = (delta / maxDelta).clamp(0.0, 1.0);
+    return widget.brightOnPressOpacity * t;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -124,9 +147,30 @@ class _PressScaleState extends State<PressScale>
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _controller.value,
-            child: child,
+          final scale = _controller.value;
+          final transformed = Transform.scale(scale: scale, child: child);
+          if (!widget.brightOnPress) return transformed;
+          final opacity = _brightnessAt(scale);
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              transformed,
+              if (opacity > 0)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Transform.scale(
+                      scale: scale,
+                      child: ClipRRect(
+                        borderRadius:
+                            widget.pressedBorderRadius ?? BorderRadius.zero,
+                        child: Container(
+                          color: Colors.white.withValues(alpha: opacity),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           );
         },
         child: widget.child,

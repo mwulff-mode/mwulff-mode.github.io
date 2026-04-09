@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
-import '../theme/app_buttons.dart';
+
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/app_card.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/fade_route.dart';
+import '../widgets/physical_press.dart';
 import '../widgets/screen_scaffold.dart';
 import '../widgets/typewriter_text.dart';
 import 'home_screen.dart';
@@ -208,25 +209,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            PressScale(
-              // Navigation handled by inner ElevatedButton.onPressed.
-              // PressScale's onTap is a no-op so it only contributes the
-              // press-scale animation; the inner InkWell still handles
-              // the tap. enabled mirrors the button's disabled state so
-              // the press feedback also disables when the button is.
-              onTap: () {},
-              haptic: null,
+            PhysicalPress(
+              onTap: prefs.isNotEmpty ? () => _goToStep(2) : null,
+              backgroundColor: AppColors.primary,
+              shadowColor: AppColors.primaryDark,
+              depth: 6,
+              haptic: HapticIntensity.confirm,
               enabled: prefs.isNotEmpty,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: prefs.isNotEmpty
-                      ? () => _goToStep(2)
-                      : null, // goes to name step
-                  style: AppButtonStyles.primary,
-                  child: Text('Continue', style: AppText.ctaLabel),
-                ),
-              ),
+              child: Text('Continue', style: AppText.ctaLabel),
             ),
           ],
         );
@@ -305,19 +295,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               : const SizedBox.shrink(),
         ),
         const Spacer(),
-        PressScale(
-          // Navigation handled by inner ElevatedButton.onPressed.
-          // See Continue button comment above.
-          onTap: () {},
-          haptic: null,
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _finishOnboarding,
-              style: AppButtonStyles.primary,
-              child: Text("That's me", style: AppText.ctaLabel),
-            ),
-          ),
+        PhysicalPress(
+          onTap: _finishOnboarding,
+          backgroundColor: AppColors.primary,
+          shadowColor: AppColors.primaryDark,
+          depth: 6,
+          haptic: HapticIntensity.confirm,
+          child: Text("That's me", style: AppText.ctaLabel),
         ),
       ],
     );

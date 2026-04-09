@@ -1,21 +1,14 @@
-import 'package:flutter/material.dart';
-import '../theme/motion.dart';
+import 'package:flutter/cupertino.dart';
 
-/// Standard fade-through route used across the app.
+/// Standard screen-to-screen route used across the app.
 ///
-/// Every screen-to-screen transition should go through this helper so the
-/// timing curve is identical everywhere. Default duration is
-/// `AppDurations.long`.
-PageRouteBuilder<T> fadeRoute<T>(
-  Widget page, {
-  Duration? duration,
-}) {
-  final d = duration ?? AppDurations.long;
-  return PageRouteBuilder<T>(
-    pageBuilder: (_, __, ___) => page,
-    transitionsBuilder: (_, animation, __, child) =>
-        FadeTransition(opacity: animation, child: child),
-    transitionDuration: d,
-    reverseTransitionDuration: d,
-  );
+/// Wraps `CupertinoPageRoute` so every push gets the iOS-native slide-from-
+/// right transition with parallax on the outgoing screen and the swipe-back-
+/// to-pop gesture for free.
+///
+/// The function is still named `fadeRoute` for legacy reasons — the original
+/// prototype used a fade-through helper here. The name is now a misnomer;
+/// rename in a follow-up if it becomes confusing. Call sites are unchanged.
+Route<T> fadeRoute<T>(Widget page) {
+  return CupertinoPageRoute<T>(builder: (_) => page);
 }

@@ -2,10 +2,18 @@ import 'package:flutter/services.dart';
 
 /// Single source of truth for the EarnWise haptic policy.
 ///
-/// Every haptic in the app must go through these four methods. No raw
-/// `HapticFeedback.*` calls anywhere else in `lib/`. See
-/// `docs/superpowers/specs/2026-04-08-flutter-motion-system-design.md`
-/// Section 2 for the full call-site map and policy notes.
+/// Every haptic in the app must go through these methods. No raw
+/// `HapticFeedback.*` calls anywhere else in `lib/`.
+///
+/// **Policy (revised after first user test):**
+/// - ✅ CTA confirmation — primary buttons (Continue with Google, Let's get
+///   started, That's me, future Cashout)
+/// - ✅ Reward moments — task completion, goal completion, hero moments;
+///   subtle, never casino-like
+/// - ✅ Error prevention — form mistakes, blocked actions
+/// - ❌ Chrome (nav switch, currency toggle, conv card open, AppCard rows,
+///   task card press-in) — no haptic. The visual + transition is the
+///   confirmation
 class Haptics {
   Haptics._();
 
@@ -13,30 +21,48 @@ class Haptics {
   /// per app run. Different moments are independent.
   static final Set<String> _firedMoments = <String>{};
 
-  /// Ordinary state changes: nav switch, currency toggle, tap on `AppCard`-based
-  /// rows. Quiet, non-intrusive.
-  static void tick() {
-    HapticFeedback.selectionClick();
+  /// CTA confirmation — fires when the user presses a primary action button
+  /// (Continue with Google/Apple/Email, Let's get started, Continue, That's
+  /// me, future Cashout). Light impact: a soft, confident "yes."
+  static void confirm() {
+    HapticFeedback.lightImpact();
   }
 
   /// Completing a single task (profile / survey / game / daily_*).
-  /// Slightly stronger than tick — "something real just happened."
+  /// Light impact — same intensity as `confirm`, different semantic moment.
   static void reward() {
     HapticFeedback.lightImpact();
   }
 
-  /// Milestone: goal completed, all-tasks unlocked.
+  /// Milestone: goal completed, all-tasks unlocked. Medium impact.
   static void milestone() {
     HapticFeedback.mediumImpact();
   }
 
   /// Rare hero moments: welcome gift reveal, legend reached.
-  /// Each [momentId] fires at most once per app run. Use the constants in
-  /// `CelebrateMoments` to avoid typos.
+  ///
+  /// Medium impact (was heavy in the first iteration — heavy felt
+  /// casino-like, per user feedback). Each [momentId] fires at most once per
+  /// app run. Use the constants in `CelebrateMoments` to avoid typos.
   static void celebrate(String momentId) {
     if (_firedMoments.contains(momentId)) return;
     _firedMoments.add(momentId);
+    HapticFeedback.mediumImpact();
+  }
+
+  /// Error prevention — form validation failures, blocked actions, "you
+  /// can't do that right now." Heavy impact, no guard. No call sites yet
+  /// (added for the future error states).
+  static void warning() {
     HapticFeedback.heavyImpact();
+  }
+
+  /// Deprecated: was used for chrome interactions (nav switch, currency
+  /// toggle). The new policy doesn't fire haptics on chrome. Kept as a
+  /// no-op so any forgotten call site doesn't fire selectionClick.
+  @Deprecated('Chrome interactions no longer fire haptics. Remove the call.')
+  static void tick() {
+    // No-op under the new policy.
   }
 
   /// Test-only: clear the celebrate guard between tests.

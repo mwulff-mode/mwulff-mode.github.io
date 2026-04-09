@@ -22,6 +22,7 @@ class ScreenScaffold extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final bool safeArea;
   final bool animatedGradient;
+  final Widget? bottomNavigationBar;
 
   const ScreenScaffold({
     super.key,
@@ -30,6 +31,7 @@ class ScreenScaffold extends StatelessWidget {
     this.padding,
     this.safeArea = true,
     this.animatedGradient = false,
+    this.bottomNavigationBar,
   });
 
   @override
@@ -51,6 +53,7 @@ class ScreenScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor ?? AppColors.cream,
       body: content,
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

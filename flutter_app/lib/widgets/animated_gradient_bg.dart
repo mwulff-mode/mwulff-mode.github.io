@@ -35,7 +35,6 @@ class _AnimatedGradientBgState extends State<AnimatedGradientBg>
       animation: _controller,
       builder: (context, child) {
         final t = _controller.value;
-        // Slowly shift the gradient alignment in a circular path
         final angle = t * 2 * pi;
         final beginX = 0.3 * cos(angle);
         final beginY = -0.5 + 0.3 * sin(angle);

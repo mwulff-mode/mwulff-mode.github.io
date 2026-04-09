@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import '../theme/app_buttons.dart';
+
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/fade_route.dart';
+import '../widgets/physical_press.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/screen_scaffold.dart';
 import 'onboarding_screen.dart';
@@ -95,7 +96,8 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
           Expanded(
             child: PressScale(
               onTap: _advanceSlide,
-              haptic: HapticIntensity.tick,
+              haptic: null,
+              pressedScale: 0.99, // large surface: subtler shrink
               child: Center(
                 child: AnimatedSwitcher(
                   duration: AppDurations.long,
@@ -125,21 +127,13 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
           const SizedBox(height: AppSpacing.md),
 
           // CTA
-          PressScale(
-            // Navigation handled by inner ElevatedButton.onPressed.
-            // PressScale's onTap is a no-op so it only contributes the
-            // press-scale animation; the inner InkWell still handles
-            // the tap and routes to _navigate exactly once.
-            onTap: () {},
-            haptic: null,
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _navigate,
-                style: AppButtonStyles.primary,
-                child: Text("Let's get started", style: AppText.ctaLabel),
-              ),
-            ),
+          PhysicalPress(
+            onTap: _navigate,
+            backgroundColor: AppColors.primary,
+            shadowColor: AppColors.primaryDark,
+            depth: 6,
+            haptic: HapticIntensity.confirm,
+            child: Text("Let's get started", style: AppText.ctaLabel),
           ),
           const SizedBox(height: AppSpacing.xl),
         ],
