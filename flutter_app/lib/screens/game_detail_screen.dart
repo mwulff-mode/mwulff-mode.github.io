@@ -108,29 +108,26 @@ class GameDetailScreen extends StatelessWidget {
       ),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppLayout.gutter,
-            AppSpacing.md,
-            AppLayout.gutter,
-            AppSpacing.md,
-          ),
-          child: PhysicalPress(
-            onTap: () {
-              onInstall();
-              Navigator.of(context).pop();
-            },
-            backgroundColor: AppColors.primary,
-            shadowColor: AppColors.primaryDark,
-            depth: 6,
-            height: 68,
-            haptic: HapticIntensity.confirm,
-            child: Container(
-              key: const Key('game_detail_install'),
-              alignment: Alignment.center,
-              child: Text('Install Game', style: AppText.ctaLabel),
-            ),
-          ),
+        minimum: const EdgeInsets.fromLTRB(
+          AppLayout.gutter,
+          AppSpacing.md,
+          AppLayout.gutter,
+          AppSpacing.md,
+        ),
+        child: PhysicalPress(
+          key: const Key('game_detail_install'),
+          onTap: () {
+            // Fire onInstall before pop so the caller's state update runs
+            // while this route is still mounted.
+            onInstall();
+            Navigator.of(context).pop();
+          },
+          backgroundColor: AppColors.primary,
+          shadowColor: AppColors.primaryDark,
+          depth: 6,
+          height: 68,
+          haptic: HapticIntensity.confirm,
+          child: Text('Install Game', style: AppText.ctaLabel),
         ),
       ),
     );
