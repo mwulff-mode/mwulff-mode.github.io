@@ -24,18 +24,18 @@ class GameDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final heroHeight = _kHeroBandHeight + topPadding;
 
     return Scaffold(
       backgroundColor: AppColors.cream,
       body: Stack(
         children: [
-          // Hero band: gradient background with centered game icon.
-          // The close button and title row are added in separate tasks.
+          // Hero band, full width, gradient with centered icon.
           Positioned(
             top: 0,
             left: 0,
             right: 0,
-            height: _kHeroBandHeight + topPadding,
+            height: heroHeight,
             child: Container(
               padding: EdgeInsets.only(top: topPadding),
               decoration: BoxDecoration(
@@ -47,6 +47,26 @@ class GameDetailScreen extends StatelessWidget {
               ),
               child: Center(
                 child: _GameIcon(game: game),
+              ),
+            ),
+          ),
+          // Scrolling content begins under the hero.
+          Positioned.fill(
+            top: heroHeight,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                left: AppLayout.gutter,
+                right: AppLayout.gutter,
+                top: AppSpacing.lg,
+                bottom: AppSpacing.xl,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _TitleRow(game: game),
+                  const SizedBox(height: AppSpacing.lg),
+                  const _TopProgressBar(),
+                ],
               ),
             ),
           ),
@@ -72,16 +92,119 @@ class GameDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Below the hero, a positioned Text holds the game name so the
-          // first widget test can find it. The real title row is added in
-          // a later task and replaces this stub.
-          Positioned(
-            top: _kHeroBandHeight + topPadding + 24,
-            left: 24,
-            child: Text(game.name, style: AppText.sectionTitle),
-          ),
         ],
       ),
+    );
+  }
+}
+
+/// Game name on the left, max-earning badge on the right. A second line
+/// shows the rating (Phosphor star plus number) and the category, separated
+/// by a centered dot.
+class _TitleRow extends StatelessWidget {
+  final Game game;
+
+  const _TitleRow({required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                game.name,
+                style: AppText.brandMark.copyWith(fontSize: 28),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            const _EarningBadge(amount: 1.00),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Row(
+          children: [
+            Icon(
+              PhosphorIcons.star(PhosphorIconsStyle.fill),
+              size: 16,
+              color: AppColors.gold,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              game.rating.toStringAsFixed(1),
+              style: AppText.caption.copyWith(color: AppColors.inkSecondary),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              '·',
+              style: AppText.caption.copyWith(color: AppColors.inkTertiary),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Text(
+              game.category,
+              style: AppText.caption.copyWith(color: AppColors.inkSecondary),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Pill-shaped earning badge. Primary-pale background, primary text,
+/// shows a dollar amount.
+class _EarningBadge extends StatelessWidget {
+  final double amount;
+
+  const _EarningBadge({required this.amount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      decoration: BoxDecoration(
+        color: AppColors.primaryPale,
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+            color: AppColors.primary.withValues(alpha: 0.2), width: 1.5),
+      ),
+      child: Text(
+        '\$${amount.toStringAsFixed(2)}',
+        style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+      ),
+    );
+  }
+}
+
+/// Top progress bar. Cream-deep track, primary fill, label row above.
+/// Progress is always 0 in v1 because no steps complete in-session.
+class _TopProgressBar extends StatelessWidget {
+  const _TopProgressBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '\$0.00 earned of \$1.00',
+          style: AppText.caption.copyWith(color: AppColors.inkSecondary),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Container(
+          height: 8,
+          decoration: BoxDecoration(
+            color: AppColors.creamDeep,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          // Foreground fill is rendered as a 0-width container in v1.
+          child: const SizedBox.shrink(),
+        ),
+      ],
     );
   }
 }

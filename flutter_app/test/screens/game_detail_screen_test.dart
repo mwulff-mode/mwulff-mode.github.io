@@ -54,6 +54,23 @@ void main() {
       expect(find.text('open'), findsOneWidget);
     });
 
+    testWidgets('renders the game category and rating', (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('Puzzle'), findsOneWidget);
+      expect(find.text('4.7'), findsOneWidget);
+    });
+
+    testWidgets('renders the max earning badge as \$1.00', (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('\$1.00'), findsWidgets);
+    });
+
+    testWidgets('renders the progress label "\$0.00 earned of \$1.00"',
+        (tester) async {
+      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
+      expect(find.text('\$0.00 earned of \$1.00'), findsOneWidget);
+    });
+
     testWidgets(
       'falls back to a colored letter square when the icon asset is missing',
       (tester) async {
