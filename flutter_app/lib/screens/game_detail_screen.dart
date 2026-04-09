@@ -7,6 +7,8 @@ import '../widgets/press_scale.dart';
 
 const double _kHeroBandHeight = 220.0;
 const double _kSectionHeadingLetterSpacing = 1.6;
+const double _kStepCardWidth = 180.0;
+const double _kStepCardHeight = 160.0;
 
 /// Full-page detail view for a single game. Opens after the user picks a
 /// game from the home screen game picker. The X button in the hero band
@@ -386,7 +388,7 @@ class _RegularStepsSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 160,
+          height: _kStepCardHeight,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.zero,
@@ -418,7 +420,7 @@ class _StepCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 180,
+      width: _kStepCardWidth,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -484,7 +486,7 @@ class _StatePill extends StatelessWidget {
     };
     return Container(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm, vertical: 4),
+          horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(100),
