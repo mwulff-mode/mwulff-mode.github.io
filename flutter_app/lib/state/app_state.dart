@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
 
 class JourneyEntry {
   final String msg;
@@ -89,6 +90,12 @@ class AppState extends ChangeNotifier {
   IconData convCardIcon = Icons.waving_hand;
   Color convCardIconColor = const Color(0xFF0D9488);
   Color convCardIconBg = const Color(0xFFF0FDFA);
+
+  // Profile fields (fictional demo values, surfaced on ProfileScreen)
+  String email = 'lisa@earnwise.demo';
+  String authProvider = 'Google'; // 'Google' | 'Apple'
+  String ageRange = '26-35';
+  String gender = 'Female';
 
   // Conversion: 750 stars = $1.00
   static const double starsPerDollar = 750;
@@ -233,4 +240,32 @@ class AppState extends ChangeNotifier {
   }
 
   bool get allTasksCompleted => tasksCompleted >= 3;
+
+  /// Resets every in-session field to the same initial value the field
+  /// declaration uses today. Called by the Sign Out button on
+  /// [ProfileScreen]. After reset the next onboarding run sees the
+  /// welcome gift animation again because [stars] goes back to 125.
+  void reset() {
+    userName = 'Lisa';
+    stars = 125;
+    earnedToday = 0;
+    goalIndex = 0;
+    tasksCompleted = 0;
+    screen5Played = false;
+    streakCount = 0;
+    isLegend = false;
+    completedTasks = <String>{};
+    lastCompletedTask = null;
+    selectedPreferences = <String>[];
+    journeyLog = <JourneyEntry>[];
+    convCardMsg = '';
+    convCardIcon = Icons.waving_hand;
+    convCardIconColor = AppColors.primary;
+    convCardIconBg = AppColors.primaryPale;
+    email = 'lisa@earnwise.demo';
+    authProvider = 'Google';
+    ageRange = '26-35';
+    gender = 'Female';
+    notifyListeners();
+  }
 }
