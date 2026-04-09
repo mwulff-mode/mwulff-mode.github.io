@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../widgets/press_scale.dart';
 
 const double _kHeroBandHeight = 220.0;
+const double _kSectionHeadingLetterSpacing = 1.6;
 
 /// Full-page detail view for a single game. Opens after the user picks a
 /// game from the home screen game picker. The X button in the hero band
@@ -278,7 +279,7 @@ class _SectionHeading extends StatelessWidget {
               label,
               style: AppText.caption.copyWith(
                 color: AppColors.inkTertiary,
-                letterSpacing: 1.6,
+                letterSpacing: _kSectionHeadingLetterSpacing,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -311,7 +312,7 @@ class _HowItWorksSection extends StatelessWidget {
   }
 }
 
-/// ABOUT [GAME NAME] section: heading plus a short blurb.
+/// "ABOUT {game name}" section: heading plus a short blurb.
 class _AboutSection extends StatelessWidget {
   final Game game;
 
@@ -344,6 +345,8 @@ class _DisclaimerSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _SectionHeading(label: 'DISCLAIMER'),
+        // Fine print is intentionally lighter than the default caption weight
+        // (w600) so it reads as legal copy rather than as an active label.
         Text(
           game.disclaimer,
           style: AppText.caption.copyWith(
