@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
+import '../data/games.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
@@ -19,6 +20,7 @@ import '../widgets/fade_route.dart';
 import '../widgets/screen_scaffold.dart';
 import 'journey_screen.dart';
 import 'conv_card_content.dart';
+import 'game_detail_screen.dart';
 import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
@@ -44,10 +46,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _giftAmountController = AnimationController(
-        vsync: this, duration: AppDurations.hero);
-    _giftLabelController = AnimationController(
-        vsync: this, duration: AppDurations.long);
+    _giftAmountController =
+        AnimationController(vsync: this, duration: AppDurations.hero);
+    _giftLabelController =
+        AnimationController(vsync: this, duration: AppDurations.long);
     _playGiftAnimation();
   }
 
@@ -222,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'You\'ll earn \$1.00 once you reach 1 hour of play time. Pick the one you\'ll enjoy most — you can\'t switch later.',
+              'Tap a game to see the details. You can come back and pick a different one anytime.',
               textAlign: TextAlign.center,
               style: AppText.body
                   .copyWith(fontWeight: FontWeight.w400, height: 1.5),
@@ -276,8 +278,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       },
     ).then((picked) {
       if (picked == null || !mounted) return;
+      final game = gamesByName[picked];
+      if (game == null) return;
       _selectedGame = picked;
-      _completeTask('game');
+      Navigator.of(context).push(
+        fadeRoute(GameDetailScreen(
+          game: game,
+          onInstall: () => _completeTask('game'),
+        )),
+      );
     });
   }
 
@@ -489,7 +498,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
           ],
         );
       },
@@ -615,87 +623,87 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       // plenty of space even on small phones.
       final ringSize = (constraints.maxWidth * 0.52).clamp(140.0, 220.0);
 
-    final ring = RewardGlow(
-      controller: _ringGlow,
-      glowColor: ringColor,
-      child: AnimatedContainer(
-        duration: AppDurations.long,
-        curve: AppCurves.warmOut,
-        width: ringSize,
-        height: ringSize,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: isSolidFill
-              ? [
-                  BoxShadow(
-                      color: ringColor.withValues(
-                          alpha: state.isLegend ? 0.4 : 0.3),
-                      blurRadius: state.isLegend ? 40 : 30,
-                      spreadRadius: state.isLegend ? 8 : 4)
-                ]
-              : [],
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: state.goalProgress),
-              duration: AppDurations.hero,
-              curve: AppCurves.warmOut,
-              builder: (context, value, _) {
-                return CustomPaint(
-                  size: Size(ringSize, ringSize),
-                  painter: _GoalRingPainter(
-                    percentage: value,
-                    fillColor: ringColor,
-                  ),
-                );
-              },
-            ),
-            if (state.isLegend)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(PhosphorIcons.crown(PhosphorIconsStyle.fill),
-                      size: 28, color: Colors.white),
-                  const SizedBox(height: 4),
-                  Text("You've\nearned it all.",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white)),
-                ],
-              )
-            else
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    state.formatGoal(),
-                    style: GoogleFonts.outfit(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -1),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Daily Goal',
-                    style: GoogleFonts.outfit(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white.withValues(alpha: 0.75)),
-                  ),
-                ],
+      final ring = RewardGlow(
+        controller: _ringGlow,
+        glowColor: ringColor,
+        child: AnimatedContainer(
+          duration: AppDurations.long,
+          curve: AppCurves.warmOut,
+          width: ringSize,
+          height: ringSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: isSolidFill
+                ? [
+                    BoxShadow(
+                        color: ringColor.withValues(
+                            alpha: state.isLegend ? 0.4 : 0.3),
+                        blurRadius: state.isLegend ? 40 : 30,
+                        spreadRadius: state.isLegend ? 8 : 4)
+                  ]
+                : [],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: state.goalProgress),
+                duration: AppDurations.hero,
+                curve: AppCurves.warmOut,
+                builder: (context, value, _) {
+                  return CustomPaint(
+                    size: Size(ringSize, ringSize),
+                    painter: _GoalRingPainter(
+                      percentage: value,
+                      fillColor: ringColor,
+                    ),
+                  );
+                },
               ),
-          ],
+              if (state.isLegend)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(PhosphorIcons.crown(PhosphorIconsStyle.fill),
+                        size: 28, color: Colors.white),
+                    const SizedBox(height: 4),
+                    Text("You've\nearned it all.",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white)),
+                  ],
+                )
+              else
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      state.formatGoal(),
+                      style: GoogleFonts.outfit(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -1),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Daily Goal',
+                      style: GoogleFonts.outfit(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withValues(alpha: 0.75)),
+                    ),
+                  ],
+                ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 
-    return Row(
+      return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -722,7 +730,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
         ],
-    );
+      );
     }); // LayoutBuilder
   }
 
@@ -1021,8 +1029,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             mainAxisSize: MainAxisSize.min,
             children: [
               _navItem(0, PhosphorIcons.house(PhosphorIconsStyle.fill), 'Home'),
-              _navItem(1, PhosphorIcons.wallet(PhosphorIconsStyle.fill), 'Wallet'),
-              _navItem(2, PhosphorIcons.user(PhosphorIconsStyle.fill), 'Profile'),
+              _navItem(
+                  1, PhosphorIcons.wallet(PhosphorIconsStyle.fill), 'Wallet'),
+              _navItem(
+                  2, PhosphorIcons.user(PhosphorIconsStyle.fill), 'Profile'),
             ],
           ),
         ),
@@ -1075,7 +1085,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
 }
 
 class _GoalRingPainter extends CustomPainter {
@@ -1095,8 +1104,8 @@ class _GoalRingPainter extends CustomPainter {
 
     // Arc centred at the disc's perimeter — half bleeds inside the disc,
     // half extends outside it — matching the reference design.
-    final discRadius = totalRadius - stroke;     // disc fills ~77% of widget
-    final arcCenterRadius = discRadius;           // arc centre == disc edge
+    final discRadius = totalRadius - stroke; // disc fills ~77% of widget
+    final arcCenterRadius = discRadius; // arc centre == disc edge
     final pct = (percentage / 100).clamp(0.0, 1.0);
 
     // Filled disc
