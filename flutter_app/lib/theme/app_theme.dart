@@ -42,6 +42,7 @@ class AppColors {
 
   // Teal secondary (gift gradient endpoint)
   static const tealSecondary = Color(0xFF2BA08E);
+  static const tealRing = Color(0xFF00C6B2);
 
   // Ink
   static const ink = Color(0xFF3B3230);

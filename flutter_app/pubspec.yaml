@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
   google_fonts: ^6.1.0
   phosphor_flutter: ^2.1.0
   provider: ^6.1.1
@@ -25,4 +26,7 @@ flutter:
     - assets/images/personas/
     - assets/images/games/
     - assets/icons/
+    - assets/icons/graphics/
+    - assets/logos/svg/
+    - assets/app_icons/
     - assets/animations/

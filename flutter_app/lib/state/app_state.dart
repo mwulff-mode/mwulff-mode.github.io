@@ -78,6 +78,7 @@ class AppState extends ChangeNotifier {
   int goalIndex = 0;
   int tasksCompleted = 0;
   bool screen5Played = false;
+  bool welcomeModalShown = false;
   int streakCount = 0;
   bool isLegend = false;
   Set<String> completedTasks = {};
@@ -269,6 +270,7 @@ class AppState extends ChangeNotifier {
     goalIndex = 0;
     tasksCompleted = 0;
     screen5Played = false;
+    welcomeModalShown = false;
     streakCount = 0;
     isLegend = false;
     completedTasks = <String>{};

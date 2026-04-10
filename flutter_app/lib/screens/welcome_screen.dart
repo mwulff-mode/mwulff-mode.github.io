@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/app_text.dart';
@@ -103,9 +104,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo: Hero-linked to the splash screen "E"
-                Hero(
-                  tag: 'earnwise-logo',
-                  child: Breathing(
+                Breathing(
+                  child: Hero(
+                    tag: 'earnwise-logo',
                     child: Container(
                       width: 160,
                       height: 160,
@@ -127,16 +128,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: Text(
-                          'E',
-                          style: TextStyle(
-                            fontSize: 72,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            letterSpacing: -2,
-                            decoration: TextDecoration.none,
-                          ),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          'assets/logos/svg/EarnWise_Logo.svg',
+                          width: 80,
+                          height: 80,
                         ),
                       ),
                     ),
@@ -241,20 +237,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               // PressScale so you can A/B the feel directly.
               PhysicalPress(
                 onTap: _navigate,
-                backgroundColor: AppColors.primary,
-                shadowColor: AppColors.primaryDark,
+                backgroundColor: AppColors.white,
+                shadowColor: const Color(0xFFD4C9BC),
                 depth: 6,
                 haptic: HapticIntensity.confirm,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.g_mobiledata,
-                        size: 24, color: Colors.white),
-                    const SizedBox(width: 4),
+                    SvgPicture.asset(
+                      'assets/logos/svg/Google_Logo.svg',
+                      width: 20,
+                      height: 20,
+                    ),
+                    const SizedBox(width: 8),
                     Text(
                       'Continue with Google',
-                      style: AppText.ctaLabel,
+                      style: AppText.ctaLabel.copyWith(color: AppColors.ink),
                     ),
                   ],
                 ),
@@ -264,20 +263,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               // Apple button
               PhysicalPress(
                 onTap: _navigate,
-                backgroundColor: AppColors.white,
-                shadowColor: AppColors.creamDeep,
+                backgroundColor: const Color(0xFF2D2D2D),
+                shadowColor: const Color(0xFF0A0A0A),
                 depth: 5,
                 haptic: HapticIntensity.confirm,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(PhosphorIcons.appleLogo(),
-                        size: 22, color: AppColors.primary),
+                    SvgPicture.asset(
+                      'assets/logos/svg/Apple_Logo.svg',
+                      width: 20,
+                      height: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Continue with Apple',
-                      style: AppText.ctaLabel.copyWith(color: AppColors.primary),
+                      style: AppText.ctaLabel,
                     ),
                   ],
                 ),

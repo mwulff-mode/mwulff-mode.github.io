@@ -30,7 +30,8 @@ void main() {
       expect(find.byType(HomeShell), findsOneWidget);
     });
 
-    testWidgets('tapping the Wallet tab shows the Wallet stub', (tester) async {
+    testWidgets('tapping the Wallet tab shows the Wallet screen',
+        (tester) async {
       await pumpShell(tester);
       expect(find.text('Withdraw'), findsNothing);
 

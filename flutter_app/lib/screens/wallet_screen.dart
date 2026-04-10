@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
@@ -9,7 +9,6 @@ import '../theme/motion.dart';
 import '../services/haptics.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
-import '../widgets/reward_glow.dart';
 
 /// First payout threshold in stars. Completing all onboarding tasks
 /// (250 + 375 + 750 = 1375 task stars + 125 welcome gift) lands exactly here.
@@ -50,16 +49,10 @@ class _WalletScreenState extends State<WalletScreen> {
 
   void _handleRedeem() async {
     final state = context.read<AppState>();
-    Haptics.milestone();
     state.redeemPayout();
 
-    // Switch to home tab first so it's visible when congrats dismisses
-    widget.onNavigateHome();
-
-    // Brief pause for tab switch, then show celebration
-    await Future.delayed(const Duration(milliseconds: 200));
     if (!mounted) return;
-    Navigator.of(context).push(_congratsRoute(const _PayoutCongratsScreen()));
+    await _showPayoutCelebration(context);
   }
 
   @override
@@ -74,12 +67,9 @@ class _WalletScreenState extends State<WalletScreen> {
             state.stars >= _kPayoutThresholdStars && !state.hasRedeemed;
         final isRedeemed = state.hasRedeemed;
 
-        return Container(
-          color: AppColors.cream,
-          child: SafeArea(
+        return SafeArea(
             child: Column(
               children: [
-                _buildHeader(state),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
@@ -87,6 +77,8 @@ class _WalletScreenState extends State<WalletScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 38),
+                        Text('Wallet', style: AppText.sectionTitle),
                         const SizedBox(height: AppSpacing.lg),
                         _buildBalanceSection(state, progress, isUnlocked),
                         const SizedBox(height: AppSpacing.xl),
@@ -107,48 +99,8 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ],
             ),
-          ),
-        );
+          );
       },
-    );
-  }
-
-  // ── Header ──────────────────────────────────────────────────
-
-  Widget _buildHeader(AppState state) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppLayout.gutter, vertical: 12),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Text('Withdraw', style: AppText.sectionTitle),
-          Positioned(
-            right: 0,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.primaryPale,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(PhosphorIcons.star(PhosphorIconsStyle.fill),
-                      size: 16, color: AppColors.primary),
-                  const SizedBox(width: 4),
-                  Text(
-                    AppState.formatNumber(state.stars),
-                    style: AppText.caption.copyWith(
-                        color: AppColors.primary, fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -163,11 +115,6 @@ class _WalletScreenState extends State<WalletScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Your balance',
-          style: AppText.body.copyWith(color: AppColors.inkTertiary),
-        ),
-        const SizedBox(height: 4),
-        Text(
           '$balanceStr / $_kPayoutDollars',
           style: AppText.prompt.copyWith(
             fontSize: 28,
@@ -178,14 +125,14 @@ class _WalletScreenState extends State<WalletScreen> {
         const SizedBox(height: 12),
         // Progress bar
         ClipRRect(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(11),
           child: TweenAnimationBuilder<double>(
             tween: Tween(begin: 0, end: progress),
             duration: AppDurations.hero,
             curve: AppCurves.warmOut,
             builder: (context, value, _) {
               return SizedBox(
-                height: 10,
+                height: 22,
                 child: LinearProgressIndicator(
                   value: value,
                   backgroundColor: AppColors.creamDeep,
@@ -261,10 +208,12 @@ class _WalletScreenState extends State<WalletScreen> {
                     color: _kPaypalBlue.withValues(alpha: 0.10),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Icon(
-                    PhosphorIcons.paypalLogo(PhosphorIconsStyle.fill),
-                    size: 28,
-                    color: _kPaypalBlue,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/logos/svg/PayPal.svg',
+                      width: 28,
+                      height: 28,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -287,40 +236,29 @@ class _WalletScreenState extends State<WalletScreen> {
                   Icon(PhosphorIcons.checkCircle(PhosphorIconsStyle.fill),
                       size: 32, color: AppColors.primary)
                 else
-                  Icon(PhosphorIcons.lockSimple(PhosphorIconsStyle.fill),
-                      size: 32, color: AppColors.accent),
+                  Icon(PhosphorIcons.lockSimple(PhosphorIconsStyle.regular),
+                      size: 32, color: AppColors.inkTertiary),
               ],
             ),
-            const SizedBox(height: 14),
-            // Status badge
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: isRedeemed
-                    ? AppColors.primaryPale
-                    : isUnlocked
-                        ? AppColors.primary
-                        : AppColors.accent.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                isRedeemed
-                    ? 'Redeemed'
-                    : isUnlocked
-                        ? 'Unlocked -- Tap to redeem'
-                        : 'Locked -- $_kPayoutDollars required',
-                textAlign: TextAlign.center,
-                style: AppText.caption.copyWith(
-                  color: isRedeemed
-                      ? AppColors.primary
-                      : isUnlocked
-                          ? Colors.white
-                          : AppColors.accent,
-                  fontWeight: FontWeight.w600,
+            if (isUnlocked || isRedeemed) ...[
+              const SizedBox(height: 14),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: isRedeemed ? AppColors.primaryPale : AppColors.primary,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  isRedeemed ? 'Redeemed' : 'Tap to redeem',
+                  textAlign: TextAlign.center,
+                  style: AppText.caption.copyWith(
+                    color: isRedeemed ? AppColors.primary : Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -333,7 +271,7 @@ class _WalletScreenState extends State<WalletScreen> {
     return Column(
       children: [
         Text(
-          'Complete tasks on the Home screen to unlock rewards',
+          'Finish your starter tasks to cash out \$2.00',
           textAlign: TextAlign.center,
           style: AppText.body.copyWith(
               color: AppColors.inkTertiary, fontWeight: FontWeight.w400),
@@ -344,18 +282,20 @@ class _WalletScreenState extends State<WalletScreen> {
           haptic: HapticIntensity.confirm,
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 18),
+            height: 60,
             decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: AppColors.primary, width: 1.5),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Finish onboarding tasks', style: AppText.ctaLabel),
+                Text('Finish onboarding tasks',
+                    style: AppText.ctaLabel.copyWith(color: AppColors.primary)),
                 const SizedBox(width: 6),
                 Icon(PhosphorIcons.arrowRight(PhosphorIconsStyle.bold),
-                    size: 20, color: Colors.white),
+                    size: 20, color: AppColors.primary),
               ],
             ),
           ),
@@ -391,7 +331,7 @@ class _ConfirmRedeemContent extends StatelessWidget {
   });
 
   String _dollars(int stars) =>
-      '\$${(stars / AppState.starsPerDollar).toStringAsFixed(2)}';
+      '\$${AppState.starsToDollars(stars).toStringAsFixed(2)}';
 
   @override
   Widget build(BuildContext context) {
@@ -404,8 +344,11 @@ class _ConfirmRedeemContent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(PhosphorIcons.paypalLogo(PhosphorIconsStyle.fill),
-                size: 22, color: _kPaypalBlue),
+            SvgPicture.asset(
+              'assets/logos/svg/PayPal.svg',
+              width: 22,
+              height: 22,
+            ),
             const SizedBox(width: 8),
             Text('$_kPayoutDollars PayPal Gift Card',
                 style: AppText.listItem),
@@ -413,12 +356,6 @@ class _ConfirmRedeemContent extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Text('Confirm your withdrawal', style: AppText.sectionTitle),
-        const SizedBox(height: 8),
-        Text(
-          '$_kPayoutDollars will be deducted from your balance',
-          textAlign: TextAlign.center,
-          style: AppText.body.copyWith(fontWeight: FontWeight.w400),
-        ),
         const SizedBox(height: 20),
 
         // Balance breakdown
@@ -507,159 +444,222 @@ class _ConfirmRedeemContent extends StatelessWidget {
 }
 
 // ──────────────────────────────────────────────────────────────
-// Payout Congrats (full-screen celebration)
+// Payout Celebration Modal
 // ──────────────────────────────────────────────────────────────
 
-/// Fade-in route for the congrats overlay. Reverse is near-instant because
-/// the screen fades itself out internally before popping.
-PageRouteBuilder<void> _congratsRoute(Widget page) {
-  return PageRouteBuilder<void>(
-    opaque: true,
-    pageBuilder: (_, __, ___) => page,
-    transitionsBuilder: (_, animation, __, child) {
-      return FadeTransition(opacity: animation, child: child);
-    },
-    transitionDuration: AppDurations.medium,
-    reverseTransitionDuration: const Duration(milliseconds: 1),
+Future<void> _showPayoutCelebration(BuildContext context) {
+  return showGeneralDialog(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.transparent,
+    transitionDuration: const Duration(milliseconds: 400),
+    pageBuilder: (_, __, ___) => const _PayoutCelebrationModal(),
   );
 }
 
-class _PayoutCongratsScreen extends StatefulWidget {
-  const _PayoutCongratsScreen();
+class _PayoutCelebrationModal extends StatefulWidget {
+  const _PayoutCelebrationModal();
 
   @override
-  State<_PayoutCongratsScreen> createState() => _PayoutCongratsScreenState();
+  State<_PayoutCelebrationModal> createState() =>
+      _PayoutCelebrationModalState();
 }
 
-class _PayoutCongratsScreenState extends State<_PayoutCongratsScreen>
-    with TickerProviderStateMixin {
-  final RewardGlowController _glowCtrl = RewardGlowController();
-  late final AnimationController _scaleCtrl;
-  late final AnimationController _textCtrl;
-  bool _fading = false;
+class _PayoutCelebrationModalState extends State<_PayoutCelebrationModal>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _barrierOpacity;
+  late final Animation<double> _cardScale;
+  late final Animation<double> _cardOpacity;
 
   @override
   void initState() {
     super.initState();
-    _scaleCtrl =
-        AnimationController(vsync: this, duration: AppDurations.hero);
-    _textCtrl =
-        AnimationController(vsync: this, duration: AppDurations.long);
-    _play();
-  }
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _barrierOpacity = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.75, curve: Curves.easeOut),
+      ),
+    );
+    _cardScale = Tween(begin: 0.85, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: AppCurves.warmOut),
+    );
+    _cardOpacity = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
 
-  Future<void> _play() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    if (!mounted) return;
-    _glowCtrl.play();
     Haptics.celebrate(CelebrateMoments.payoutConfirmed);
-
-    await Future.delayed(const Duration(milliseconds: 300));
-    if (!mounted) return;
-    _scaleCtrl.forward();
-
-    await Future.delayed(const Duration(milliseconds: 400));
-    if (!mounted) return;
-    _textCtrl.forward();
-
-    // Hold for a beat, then auto-dismiss
-    await Future.delayed(const Duration(seconds: 3));
-    _dismiss();
+    _ctrl.forward();
   }
 
-  void _dismiss() {
-    if (_fading || !mounted) return;
-    setState(() => _fading = true);
-    Future.delayed(AppDurations.long, () {
-      if (mounted) Navigator.of(context).pop();
-    });
+  Future<void> _dismiss() async {
+    await _ctrl.reverse();
+    if (mounted) Navigator.of(context).pop();
   }
 
   @override
   void dispose() {
-    _scaleCtrl.dispose();
-    _textCtrl.dispose();
-    _glowCtrl.dispose();
+    _ctrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _dismiss,
-      child: AnimatedOpacity(
-        opacity: _fading ? 0 : 1,
-        duration: AppDurations.long,
-        child: Container(
-          color: AppColors.cream,
-          width: double.infinity,
-          height: double.infinity,
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RewardGlow(
-                  controller: _glowCtrl,
-                  glowColor: AppColors.primary,
-                  child: Container(
-                    width: 96,
-                    height: 96,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AppColors.primary, AppColors.tealSecondary],
-                      ),
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 40,
-                          offset: const Offset(0, 12),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                        PhosphorIcons.check(PhosphorIconsStyle.bold),
-                        size: 48,
-                        color: Colors.white),
-                  ),
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: Opacity(
+                opacity: _barrierOpacity.value,
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.45),
                 ),
-                const SizedBox(height: AppSpacing.md),
-                ScaleTransition(
-                  scale: CurvedAnimation(
-                      parent: _scaleCtrl, curve: AppCurves.warmOut),
-                  child: Text(_kPayoutDollars, style: AppText.heroAmount),
-                ),
-                ScaleTransition(
-                  scale: CurvedAnimation(
-                      parent: _scaleCtrl, curve: AppCurves.warmOut),
-                  child: Text(
-                    'Payout confirmed',
-                    style: AppText.prompt.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary.withValues(alpha: 0.6),
-                      letterSpacing: 1,
-                      height: null,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                FadeTransition(
-                  opacity: _textCtrl,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
-                      'Your reward is on its way to PayPal',
-                      textAlign: TextAlign.center,
-                      style:
-                          AppText.sectionTitle.copyWith(letterSpacing: -0.4),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            Center(
+              child: Opacity(
+                opacity: _cardOpacity.value,
+                child: Transform.scale(
+                  scale: _cardScale.value,
+                  child: _buildCard(),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCard() {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 40,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Close X
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: _dismiss,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: const BoxDecoration(
+                    color: AppColors.creamDeep,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    PhosphorIcons.x(PhosphorIconsStyle.bold),
+                    size: 14,
+                    color: AppColors.inkSecondary,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primary, AppColors.tealSecondary],
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Icon(
+                PhosphorIcons.check(PhosphorIconsStyle.bold),
+                size: 28,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Amount
+            Text(
+              _kPayoutDollars,
+              style: AppText.prompt.copyWith(
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -1.5,
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Label
+            Text(
+              'PAYOUT CONFIRMED',
+              style: AppText.caption.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Body
+            Text(
+              'Your reward is on its way to PayPal. It usually arrives within a few minutes.',
+              textAlign: TextAlign.center,
+              style: AppText.body.copyWith(
+                fontWeight: FontWeight.w400,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // CTA
+            PressScale(
+              onTap: _dismiss,
+              haptic: HapticIntensity.confirm,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  'Back to earning',
+                  textAlign: TextAlign.center,
+                  style: AppText.bodyStrong.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EarnWise · Home screen · 20 color explorations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --page-bg: #0B0B0D;
+    --page-ink: #EDECE7;
+    --page-muted: rgba(237, 236, 231, 0.5);
+    --page-line: rgba(237, 236, 231, 0.12);
+  }
+
+  html, body { background: var(--page-bg); color: var(--page-ink); }
+  body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    padding: 64px 0 80px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    padding: 0 64px 56px;
+    max-width: 1100px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: var(--page-muted);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 56px;
+    letter-spacing: -1.4px;
+    line-height: 1;
+    font-variation-settings: "opsz" 144;
+    color: var(--page-ink);
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: rgba(237, 236, 231, 0.7);
+  }
+  .subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--page-muted);
+    margin-top: 22px;
+    max-width: 640px;
+  }
+  .meta-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--page-line);
+    font-size: 12px;
+    color: var(--page-muted);
+    font-feature-settings: "tnum";
+    max-width: 720px;
+  }
+  .meta-row span strong {
+    color: var(--page-ink);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .meta-row span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 500;
+  }
+
+  /* ---------- Scroller ---------- */
+  .scroller {
+    display: flex;
+    gap: 40px;
+    padding: 0 64px 80px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  }
+  .scroller::-webkit-scrollbar { height: 10px; }
+  .scroller::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 999px;
+  }
+  .scroller::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+  }
+  .scroller::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.38); }
+
+  .variant {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: 344px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* ---------- Variant label ---------- */
+  .variant-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+  }
+  .variant-num {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--page-muted);
+    font-feature-settings: "tnum";
+    letter-spacing: 0.3px;
+  }
+  .variant-swatches {
+    display: flex;
+    gap: 4px;
+  }
+  .variant-swatches i {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .variant-meta {
+    padding: 0 4px;
+  }
+  .variant-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    color: var(--page-ink);
+    font-variation-settings: "opsz" 144;
+    line-height: 1.1;
+  }
+  .variant-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--page-muted);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* ---------- Phone frame ---------- */
+  .phone {
+    width: 344px;
+    height: 768px;
+    background: var(--bg);
+    color: var(--ink);
+    border-radius: 48px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.06),
+      0 0 0 9px #141416,
+      0 0 0 10px rgba(255, 255, 255, 0.08),
+      0 40px 70px -30px rgba(0, 0, 0, 0.8),
+      0 24px 48px -24px rgba(0, 0, 0, 0.5);
+    font-family: 'Outfit', sans-serif;
+  }
+  .phone::before {
+    /* dynamic island */
+    content: "";
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 108px;
+    height: 28px;
+    background: #000;
+    border-radius: 999px;
+    z-index: 10;
+  }
+
+  /* ---------- Status bar ---------- */
+  .status-bar {
+    position: relative;
+    z-index: 2;
+    padding: 18px 28px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    font-feature-settings: "tnum";
+    letter-spacing: -0.2px;
+  }
+  .status-bar .icons {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    color: var(--ink);
+  }
+  .status-bar .icons svg { width: 15px; height: 12px; display: block; }
+
+  /* ---------- Home body ---------- */
+  .home-body {
+    position: relative;
+    z-index: 1;
+    padding: 16px 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* conv card */
+  .conv {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  .conv-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: var(--accent-pale);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .conv-icon svg { width: 18px; height: 18px; display: block; }
+  .conv-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    letter-spacing: -0.1px;
+  }
+
+  /* balance row */
+  .balance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 2px 0;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+  }
+  .stat-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--surface-alt);
+    color: var(--ink-secondary);
+    display: grid;
+    place-items: center;
+  }
+  .stat-circle svg { width: 19px; height: 19px; display: block; }
+  .stat-value {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    color: var(--ink);
+    font-feature-settings: "tnum";
+  }
+  .stat-label {
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--ink-secondary);
+    letter-spacing: 0.1px;
+  }
+
+  .ring-wrap {
+    width: 148px;
+    height: 148px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .ring-wrap svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .ring-text {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    z-index: 1;
+  }
+  .ring-value {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.9px;
+    line-height: 1;
+    font-feature-settings: "tnum";
+  }
+  .ring-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    opacity: 0.78;
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  /* section */
+  .section-head {
+    margin-bottom: 11px;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.25px;
+  }
+  .section-sub {
+    font-size: 11px;
+    color: var(--ink-tertiary);
+    margin-top: 3px;
+    font-weight: 400;
+  }
+
+  .tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .task {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  }
+  .task-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .task-icon svg { width: 22px; height: 22px; display: block; }
+  .task-text { flex: 1; min-width: 0; }
+  .task-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.15px;
+  }
+  .task-meta {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-secondary);
+    margin-top: 1px;
+  }
+  .task-play {
+    width: 34px;
+    height: 34px;
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+  .task-play svg { width: 100%; height: 100%; display: block; }
+
+  /* earn more */
+  .earn-wrap { margin-top: 4px; }
+  .earn-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.15px;
+  }
+  .earn-head svg { width: 11px; height: 11px; color: var(--ink); }
+  .earn-sub {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--ink-tertiary);
+    margin-top: 3px;
+  }
+  .earn-tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 9px;
+    margin-top: 10px;
+    opacity: 0.55;
+  }
+  .earn-tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 11px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 74px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  }
+  .earn-tile-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+  }
+  .earn-tile-icon svg { width: 14px; height: 14px; display: block; }
+  .earn-tile-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.1px;
+  }
+  .earn-tile-sub {
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--ink-tertiary);
+    margin-top: -3px;
+  }
+
+  /* bottom nav */
+  .nav-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 130px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, var(--bg-fade) 0%, var(--bg) 58%);
+    z-index: 3;
+  }
+  .nav-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 22px;
+    display: grid;
+    place-items: center;
+    z-index: 4;
+  }
+  .nav {
+    background: var(--nav-bg);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--nav-border);
+    border-radius: 999px;
+    padding: 7px;
+    display: flex;
+    gap: 3px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+  }
+  .nav-item {
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    color: var(--ink-tertiary);
+  }
+  .nav-item svg { width: 22px; height: 22px; display: block; }
+  .nav-item.active {
+    background: var(--primary);
+    color: #fff;
+  }
+  .nav-item.active svg { color: #fff; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 48px 64px 0;
+    max-width: 800px;
+    color: var(--page-muted);
+    font-size: 12px;
+    line-height: 1.6;
+    border-top: 1px solid var(--page-line);
+    margin: 24px 64px 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="eyebrow">EarnWise · Home screen · Color study</div>
+    <h1>Twenty ways<br />the home screen<br /><em>could feel.</em></h1>
+    <p class="subtitle">
+      Same layout, same content, twenty different palettes. The point is to see
+      which tonal direction suits our audience before we commit. Every option
+      was tuned to feel trustworthy and rewarding, never loud.
+    </p>
+    <div class="meta-row">
+      <span><strong>20</strong><br />Palettes</span>
+      <span><strong>1</strong><br />Screen</span>
+      <span><strong>Scroll →</strong><br />To compare</span>
+    </div>
+  </header>
+
+  <div class="scroller" id="scroller"></div>
+
+  <footer>
+    Reference layout adapted from <code style="font-family:inherit;opacity:0.8">flutter_app/lib/screens/home_screen.dart</code>.
+    Light palettes use cream or tinted neutrals with a colored primary. Dark
+    palettes invert surfaces and use alpha tints for task backgrounds. Every
+    variant preserves the same visual hierarchy so only the color personality
+    changes.
+  </footer>
+
+<script>
+/* ---------- Icons (inline SVG, currentColor) ---------- */
+const icons = {
+  star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.6 7.2.6-5.5 4.8 1.7 7-6.2-3.8-6.2 3.8 1.7-7L2 9.7l7.2-.6L12 2.5z"/></svg>',
+  wallet: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h12v4"/><path d="M3 7v10a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="17" cy="13" r="1.2" fill="currentColor"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 10-13h-7l1-7z" opacity="0.95"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3.2"/><path d="M6 18.5a6.5 6.5 0 0 1 12 0"/></svg>',
+  clipboard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="4" width="13" height="18" rx="2.2"/><rect x="9" y="2.5" width="6" height="4" rx="1" fill="currentColor" stroke="none"/><path d="M8.5 11h7M8.5 15h5"/></svg>',
+  game: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6.5 12h3M8 10.5v3"/><circle cx="15.5" cy="11" r="0.9" fill="currentColor"/><circle cx="17.5" cy="13" r="0.9" fill="currentColor"/></svg>',
+  tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 13.4l-7 7a2 2 0 0 1-2.8 0L3.6 13.4a1 1 0 0 1-.3-.7V4.5a1 1 0 0 1 1-1h8.2a1 1 0 0 1 .7.3l7.2 7.2a2 2 0 0 1 0 2.8z"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/></svg>',
+  receipt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l1.5 1.5L8 3l1.5 1.5L11 3l1.5 1.5L14 3l1.5 1.5L17 3l1.5 1.5L20 3v18l-1.5-1.5L17 21l-1.5-1.5L14 21l-1.5-1.5L11 21l-1.5-1.5L8 21l-1.5-1.5L5 21V3z"/><path d="M8.5 9h8M8.5 13h8M8.5 17h5"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="11"/><path d="M10 8.2v7.6L16.5 12z" fill="#fff"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 11.4 12 3l9 8.4V21a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1v-9.6z"/></svg>',
+  coins: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="9" cy="7" rx="6" ry="3"/><path d="M3 7v4c0 1.6 2.7 3 6 3"/><path d="M3 11v4c0 1.6 2.7 3 6 3"/><ellipse cx="15" cy="16" rx="6" ry="3"/><path d="M9 16v4c0 1.6 2.7 3 6 3s6-1.4 6-3v-4"/></svg>',
+  compass: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16 8 13.7 13.7 8 16 10.3 10.3" fill="currentColor" stroke="none"/></svg>',
+  profile: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  signal: '<svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="0.6"/><rect x="5" y="6" width="3" height="6" rx="0.6"/><rect x="10" y="3" width="3" height="9" rx="0.6"/><rect x="15" y="0" width="3" height="12" rx="0.6"/></svg>',
+  wifi: '<svg viewBox="0 0 18 12" fill="currentColor"><path d="M9 11.2a1.3 1.3 0 1 0 0-2.6 1.3 1.3 0 0 0 0 2.6z"/><path d="M15 6a8.5 8.5 0 0 0-12 0l1.3 1.3a6.6 6.6 0 0 1 9.4 0L15 6z"/><path d="M17.6 3.4a12 12 0 0 0-17.2 0l1.3 1.3a10.1 10.1 0 0 1 14.6 0l1.3-1.3z"/></svg>',
+  battery: '<svg viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="2.6" stroke="currentColor" stroke-width="1" opacity="0.55"/><rect x="2" y="2" width="17" height="8" rx="1.4" fill="currentColor"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="currentColor" opacity="0.55"/></svg>'
+};
+
+/* ---------- Color helpers ---------- */
+function hexToRgba(hex, a) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function lerpWhite(hex, amt) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  const lr = Math.round(r + (255 - r) * amt);
+  const lg = Math.round(g + (255 - g) * amt);
+  const lb = Math.round(b + (255 - b) * amt);
+  return `rgb(${lr},${lg},${lb})`;
+}
+
+/* ---------- Ring SVG ---------- */
+function ringSvg(primary, ringTrack, pct) {
+  const r = 52;
+  const c = 2 * Math.PI * r;
+  const dash = c * (pct / 100);
+  const arcColor = lerpWhite(primary, 0.4);
+  return `
+    <svg viewBox="0 0 148 148" aria-hidden="true">
+      <circle cx="74" cy="74" r="${r}" fill="${primary}"/>
+      <circle cx="74" cy="74" r="${r}" fill="none"
+        stroke="${ringTrack}" stroke-width="22"
+        opacity="1"/>
+      <circle cx="74" cy="74" r="${r}" fill="${primary}"/>
+      <circle cx="74" cy="74" r="${r}" fill="none"
+        stroke="${arcColor}" stroke-width="22" stroke-linecap="round"
+        stroke-dasharray="${c}" stroke-dashoffset="${c - dash}"
+        transform="rotate(-90 74 74)"/>
+    </svg>
+  `;
+}
+
+/* ---------- 20 palettes ---------- */
+const palettes = [
+  {
+    id: 1, name: 'Cream Teal', tag: 'Warm · Default',
+    bg: '#FAF8F5', surface: '#FFFFFF', surfaceAlt: '#F2EDE6', border: 'rgba(0,0,0,0.06)',
+    primary: '#0D9488', primaryPale: '#E7FAF6',
+    accent: '#F59E0B', accentPale: '#FEF3C7',
+    survey: '#6366F1', surveyBg: '#EEF2FF',
+    game: '#F97316', gameBg: '#FFF7ED',
+    offers: '#F59E0B', offersBg: '#FFFBEB',
+    receipts: '#10B981', receiptsBg: '#ECFDF5',
+    ink: '#3B3230', inkSecondary: '#6B5E58', inkTertiary: '#8A7D76',
+    ringTrack: '#E4E4E4',
+    navBg: 'rgba(255,255,255,0.82)', navBorder: 'rgba(0,0,0,0.06)'
+  },
+  {
+    id: 2, name: 'Midnight Mint', tag: 'Dark · Fresh',
+    bg: '#0D1623', surface: '#172235', surfaceAlt: '#1F2C40', border: 'rgba(255,255,255,0.06)',
+    primary: '#34D399', primaryPale: 'rgba(52,211,153,0.12)',
+    accent: '#FBBF24', accentPale: 'rgba(251,191,36,0.14)',
+    survey: '#A78BFA', surveyBg: 'rgba(167,139,250,0.14)',
+    game: '#FB923C', gameBg: 'rgba(251,146,60,0.14)',
+    offers: '#FCD34D', offersBg: 'rgba(252,211,77,0.14)',
+    receipts: '#34D399', receiptsBg: 'rgba(52,211,153,0.14)',
+    ink: '#EAF1F8', inkSecondary: '#9AA7B6', inkTertiary: '#6E7A88',
+    ringTrack: 'rgba(255,255,255,0.10)',
+    navBg: 'rgba(23,34,53,0.78)', navBorder: 'rgba(255,255,255,0.10)'
+  },
+  {
+    id: 3, name: 'Peach Plum', tag: 'Warm · Soft',
+    bg: '#FFF4ED', surface: '#FFFBF7', surfaceAlt: '#FCE2CE', border: 'rgba(120,53,15,0.08)',
+    primary: '#C2410C', primaryPale: '#FFEDD5',
+    accent: '#7C3AED', accentPale: '#F3E8FF',
+    survey: '#7C3AED', surveyBg: '#F3E8FF',
+    game: '#DC2626', gameBg: '#FEF2F2',
+    offers: '#D97706', offersBg: '#FFFBEB',
+    receipts: '#059669', receiptsBg: '#D1FAE5',
+    ink: '#4A180A', inkSecondary: '#8A3E16', inkTertiary: '#B46C3E',
+    ringTrack: '#FED7AA',
+    navBg: 'rgba(255,251,247,0.85)', navBorder: 'rgba(120,53,15,0.08)'
+  },
+  {
+    id: 4, name: 'Forest Gold', tag: 'Earthy · Natural',
+    bg: '#F7F4EC', surface: '#FFFBF2', surfaceAlt: '#EDE4CE', border: 'rgba(28,37,23,0.08)',
+    primary: '#15803D', primaryPale: '#DCFCE7',
+    accent: '#CA8A04', accentPale: '#FEF9C3',
+    survey: '#4338CA', surveyBg: '#E0E7FF',
+    game: '#B45309', gameBg: '#FEF3C7',
+    offers: '#CA8A04', offersBg: '#FEFCE8',
+    receipts: '#15803D', receiptsBg: '#DCFCE7',
+    ink: '#1C2517', inkSecondary: '#4A5843', inkTertiary: '#78866E',
+    ringTrack: '#D6CEB8',
+    navBg: 'rgba(255,251,242,0.85)', navBorder: 'rgba(28,37,23,0.08)'
+  },
+  {
+    id: 5, name: 'Lilac Dusk', tag: 'Soft · Premium',
+    bg: '#FAF5FF', surface: '#FFFFFF', surfaceAlt: '#ECE0FB', border: 'rgba(46,16,101,0.08)',
+    primary: '#6D28D9', primaryPale: '#F3E8FF',
+    accent: '#F472B6', accentPale: '#FCE7F3',
+    survey: '#6D28D9', surveyBg: '#F3E8FF',
+    game: '#EC4899', gameBg: '#FCE7F3',
+    offers: '#F59E0B', offersBg: '#FEF3C7',
+    receipts: '#059669', receiptsBg: '#D1FAE5',
+    ink: '#2E1065', inkSecondary: '#5B21B6', inkTertiary: '#8B5CF6',
+    ringTrack: '#E9D5FF',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(46,16,101,0.08)'
+  },
+  {
+    id: 6, name: 'Arctic Royal', tag: 'Crisp · Trustworthy',
+    bg: '#F0F7FF', surface: '#FFFFFF', surfaceAlt: '#DBE8F6', border: 'rgba(15,23,42,0.08)',
+    primary: '#1D4ED8', primaryPale: '#DBEAFE',
+    accent: '#F59E0B', accentPale: '#FEF3C7',
+    survey: '#7C3AED', surveyBg: '#EDE9FE',
+    game: '#EA580C', gameBg: '#FFEDD5',
+    offers: '#F59E0B', offersBg: '#FEF3C7',
+    receipts: '#0D9488', receiptsBg: '#CCFBF1',
+    ink: '#0F172A', inkSecondary: '#334155', inkTertiary: '#64748B',
+    ringTrack: '#CBD5E1',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(15,23,42,0.08)'
+  },
+  {
+    id: 7, name: 'Terracotta Olive', tag: 'Earthy · Grounded',
+    bg: '#FDF5EC', surface: '#FFFBF3', surfaceAlt: '#F3E4CE', border: 'rgba(62,38,8,0.08)',
+    primary: '#B45309', primaryPale: '#FEF3C7',
+    accent: '#65A30D', accentPale: '#ECFCCB',
+    survey: '#7C3AED', surveyBg: '#F3E8FF',
+    game: '#B91C1C', gameBg: '#FEE2E2',
+    offers: '#C2410C', offersBg: '#FFEDD5',
+    receipts: '#65A30D', receiptsBg: '#ECFCCB',
+    ink: '#3E2608', inkSecondary: '#6B4410', inkTertiary: '#9E6E20',
+    ringTrack: '#E7D3AF',
+    navBg: 'rgba(255,251,243,0.85)', navBorder: 'rgba(62,38,8,0.08)'
+  },
+  {
+    id: 8, name: 'Mocha Butter', tag: 'Cozy · Classic',
+    bg: '#F5EFE6', surface: '#FFFBF1', surfaceAlt: '#E6DBC6', border: 'rgba(45,27,14,0.08)',
+    primary: '#57382B', primaryPale: '#EFE3D3',
+    accent: '#D4A843', accentPale: '#FEF3C7',
+    survey: '#7E22CE', surveyBg: '#F3E8FF',
+    game: '#B91C1C', gameBg: '#FEE2E2',
+    offers: '#D4A843', offersBg: '#FEF9C3',
+    receipts: '#15803D', receiptsBg: '#DCFCE7',
+    ink: '#2D1B0E', inkSecondary: '#5C4A35', inkTertiary: '#8A7257',
+    ringTrack: '#D8C9A8',
+    navBg: 'rgba(255,251,241,0.85)', navBorder: 'rgba(45,27,14,0.08)'
+  },
+  {
+    id: 9, name: 'Retro Sorbet', tag: 'Playful · Bright',
+    bg: '#ECFEF5', surface: '#FFFFFF', surfaceAlt: '#D1FAE5', border: 'rgba(19,78,74,0.08)',
+    primary: '#BE185D', primaryPale: '#FCE7F3',
+    accent: '#EAB308', accentPale: '#FEF9C3',
+    survey: '#7C3AED', surveyBg: '#EDE9FE',
+    game: '#BE185D', gameBg: '#FCE7F3',
+    offers: '#EAB308', offersBg: '#FEF9C3',
+    receipts: '#059669', receiptsBg: '#D1FAE5',
+    ink: '#134E4A', inkSecondary: '#115E59', inkTertiary: '#14B8A6',
+    ringTrack: '#A7F3D0',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(19,78,74,0.08)'
+  },
+  {
+    id: 10, name: 'Pure Noir', tag: 'Minimal · Editorial',
+    bg: '#FCFCFC', surface: '#FFFFFF', surfaceAlt: '#F3F3F3', border: 'rgba(0,0,0,0.08)',
+    primary: '#111111', primaryPale: '#EBEBEB',
+    accent: '#DC2626', accentPale: '#FEE2E2',
+    survey: '#111111', surveyBg: '#F1F1F1',
+    game: '#DC2626', gameBg: '#FEE2E2',
+    offers: '#111111', offersBg: '#F1F1F1',
+    receipts: '#16A34A', receiptsBg: '#DCFCE7',
+    ink: '#0A0A0A', inkSecondary: '#525252', inkTertiary: '#8A8A8A',
+    ringTrack: '#E5E5E5',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(0,0,0,0.08)'
+  },
+  {
+    id: 11, name: 'Emerald Night', tag: 'Dark · Luxe',
+    bg: '#0A1512', surface: '#12201C', surfaceAlt: '#1A2D27', border: 'rgba(255,255,255,0.06)',
+    primary: '#10B981', primaryPale: 'rgba(16,185,129,0.14)',
+    accent: '#FBBF24', accentPale: 'rgba(251,191,36,0.14)',
+    survey: '#818CF8', surveyBg: 'rgba(129,140,248,0.14)',
+    game: '#FB923C', gameBg: 'rgba(251,146,60,0.14)',
+    offers: '#FCD34D', offersBg: 'rgba(252,211,77,0.14)',
+    receipts: '#34D399', receiptsBg: 'rgba(52,211,153,0.14)',
+    ink: '#E9F6F0', inkSecondary: '#94B5AA', inkTertiary: '#6C8A81',
+    ringTrack: 'rgba(255,255,255,0.10)',
+    navBg: 'rgba(18,32,28,0.78)', navBorder: 'rgba(255,255,255,0.10)'
+  },
+  {
+    id: 12, name: 'Nordic Sea', tag: 'Scandi · Calm',
+    bg: '#EDF2F7', surface: '#FFFFFF', surfaceAlt: '#DCE4EE', border: 'rgba(26,35,51,0.08)',
+    primary: '#1E3A5F', primaryPale: '#E0E7EF',
+    accent: '#B8664B', accentPale: '#F5E6DE',
+    survey: '#475569', surveyBg: '#E2E8F0',
+    game: '#B8664B', gameBg: '#F5E6DE',
+    offers: '#C48518', offersBg: '#FEF3C7',
+    receipts: '#2C5F2D', receiptsBg: '#D6E8D7',
+    ink: '#1A2333', inkSecondary: '#475569', inkTertiary: '#64748B',
+    ringTrack: '#CBD5E1',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(26,35,51,0.08)'
+  },
+  {
+    id: 13, name: 'Jade Champagne', tag: 'Refined · Quiet',
+    bg: '#F4F7F3', surface: '#FFFFFF', surfaceAlt: '#E1EADD', border: 'rgba(26,46,40,0.08)',
+    primary: '#046A5B', primaryPale: '#D8ECE8',
+    accent: '#C9A86A', accentPale: '#F5EDD8',
+    survey: '#6D28D9', surveyBg: '#EDE9FE',
+    game: '#DC2626', gameBg: '#FEE2E2',
+    offers: '#C9A86A', offersBg: '#F5EDD8',
+    receipts: '#046A5B', receiptsBg: '#D8ECE8',
+    ink: '#1A2E28', inkSecondary: '#4A6058', inkTertiary: '#7A8F85',
+    ringTrack: '#C6D5C1',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(26,46,40,0.08)'
+  },
+  {
+    id: 14, name: 'Wine Rose', tag: 'Warm · Feminine',
+    bg: '#FDF2F8', surface: '#FFFFFF', surfaceAlt: '#F9D4E6', border: 'rgba(74,14,42,0.08)',
+    primary: '#9D174D', primaryPale: '#FCE7F3',
+    accent: '#D97706', accentPale: '#FED7AA',
+    survey: '#6D28D9', surveyBg: '#EDE9FE',
+    game: '#D97706', gameBg: '#FED7AA',
+    offers: '#D97706', offersBg: '#FED7AA',
+    receipts: '#059669', receiptsBg: '#D1FAE5',
+    ink: '#4A0E2A', inkSecondary: '#7E2B4D', inkTertiary: '#B34D76',
+    ringTrack: '#F9A8D4',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(74,14,42,0.08)'
+  },
+  {
+    id: 15, name: 'Ocean Coral', tag: 'Fresh · Coastal',
+    bg: '#ECFAFF', surface: '#FFFFFF', surfaceAlt: '#CFEDF9', border: 'rgba(12,74,110,0.08)',
+    primary: '#0369A1', primaryPale: '#E0F2FE',
+    accent: '#FB7185', accentPale: '#FFE4E6',
+    survey: '#6366F1', surveyBg: '#E0E7FF',
+    game: '#FB7185', gameBg: '#FFE4E6',
+    offers: '#F59E0B', offersBg: '#FEF3C7',
+    receipts: '#0D9488', receiptsBg: '#CCFBF1',
+    ink: '#0C4A6E', inkSecondary: '#075985', inkTertiary: '#0EA5E9',
+    ringTrack: '#BAE6FD',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(12,74,110,0.08)'
+  },
+  {
+    id: 16, name: 'Clay Ink', tag: 'Editorial · Warm',
+    bg: '#EFE8DC', surface: '#FBF7EE', surfaceAlt: '#DFD4C0', border: 'rgba(31,41,55,0.10)',
+    primary: '#1F2937', primaryPale: '#E5E7EB',
+    accent: '#E07B3F', accentPale: '#FEEBDD',
+    survey: '#4338CA', surveyBg: '#E0E7FF',
+    game: '#E07B3F', gameBg: '#FEEBDD',
+    offers: '#CA8A04', offersBg: '#FEF9C3',
+    receipts: '#15803D', receiptsBg: '#DCFCE7',
+    ink: '#1F2937', inkSecondary: '#4B5563', inkTertiary: '#6B7280',
+    ringTrack: '#D4C8B0',
+    navBg: 'rgba(251,247,238,0.85)', navBorder: 'rgba(31,41,55,0.10)'
+  },
+  {
+    id: 17, name: 'Indigo Frost', tag: 'Crisp · Modern',
+    bg: '#EEF2FF', surface: '#FFFFFF', surfaceAlt: '#DCE3FA', border: 'rgba(30,27,75,0.08)',
+    primary: '#3730A3', primaryPale: '#E0E7FF',
+    accent: '#06B6D4', accentPale: '#CFFAFE',
+    survey: '#3730A3', surveyBg: '#E0E7FF',
+    game: '#06B6D4', gameBg: '#CFFAFE',
+    offers: '#F59E0B', offersBg: '#FEF3C7',
+    receipts: '#10B981', receiptsBg: '#D1FAE5',
+    ink: '#1E1B4B', inkSecondary: '#3730A3', inkTertiary: '#6366F1',
+    ringTrack: '#C7D2FE',
+    navBg: 'rgba(255,255,255,0.85)', navBorder: 'rgba(30,27,75,0.08)'
+  },
+  {
+    id: 18, name: 'Olive Amethyst', tag: 'Earthy · Unexpected',
+    bg: '#F0F4EC', surface: '#FCFDF8', surfaceAlt: '#DCE3D0', border: 'rgba(31,42,23,0.08)',
+    primary: '#6B21A8', primaryPale: '#F3E8FF',
+    accent: '#CA8A04', accentPale: '#FEF9C3',
+    survey: '#6B21A8', surveyBg: '#F3E8FF',
+    game: '#B45309', gameBg: '#FEF3C7',
+    offers: '#CA8A04', offersBg: '#FEF9C3',
+    receipts: '#4D7C0F', receiptsBg: '#ECFCCB',
+    ink: '#1F2A17', inkSecondary: '#4D7C0F', inkTertiary: '#84A35F',
+    ringTrack: '#C8D4B5',
+    navBg: 'rgba(252,253,248,0.85)', navBorder: 'rgba(31,42,23,0.08)'
+  },
+  {
+    id: 19, name: 'Midnight Rose', tag: 'Dark · Romantic',
+    bg: '#1A0F16', surface: '#271720', surfaceAlt: '#33202B', border: 'rgba(255,255,255,0.06)',
+    primary: '#FB7185', primaryPale: 'rgba(251,113,133,0.14)',
+    accent: '#FCD34D', accentPale: 'rgba(252,211,77,0.14)',
+    survey: '#C4B5FD', surveyBg: 'rgba(196,181,253,0.14)',
+    game: '#FDA4AF', gameBg: 'rgba(253,164,175,0.14)',
+    offers: '#FCD34D', offersBg: 'rgba(252,211,77,0.14)',
+    receipts: '#6EE7B7', receiptsBg: 'rgba(110,231,183,0.14)',
+    ink: '#FCE7F3', inkSecondary: '#F9A8D4', inkTertiary: '#BE9A9F',
+    ringTrack: 'rgba(255,255,255,0.10)',
+    navBg: 'rgba(38,23,33,0.78)', navBorder: 'rgba(255,255,255,0.10)'
+  },
+  {
+    id: 20, name: 'Honey Forest', tag: 'Warm · Optimistic',
+    bg: '#FEF7E0', surface: '#FFFDF3', surfaceAlt: '#F5E9B8', border: 'rgba(20,48,26,0.08)',
+    primary: '#166534', primaryPale: '#DCFCE7',
+    accent: '#BE185D', accentPale: '#FCE7F3',
+    survey: '#7C3AED', surveyBg: '#EDE9FE',
+    game: '#B45309', gameBg: '#FEF3C7',
+    offers: '#BE185D', offersBg: '#FCE7F3',
+    receipts: '#166534', receiptsBg: '#DCFCE7',
+    ink: '#14301A', inkSecondary: '#365B3D', inkTertiary: '#5E8566',
+    ringTrack: '#E9D88A',
+    navBg: 'rgba(255,253,243,0.85)', navBorder: 'rgba(20,48,26,0.08)'
+  }
+];
+
+/* ---------- Template ---------- */
+function phone(p) {
+  const vars = `
+    --bg:${p.bg};
+    --bg-fade:${hexToRgba(p.bg, 0)};
+    --surface:${p.surface};
+    --surface-alt:${p.surfaceAlt};
+    --border:${p.border};
+    --primary:${p.primary};
+    --primary-pale:${p.primaryPale};
+    --accent:${p.accent};
+    --accent-pale:${p.accentPale};
+    --ink:${p.ink};
+    --ink-secondary:${p.inkSecondary};
+    --ink-tertiary:${p.inkTertiary};
+    --ring-track:${p.ringTrack};
+    --nav-bg:${p.navBg};
+    --nav-border:${p.navBorder};
+  `;
+
+  return `
+  <div class="variant">
+    <div class="variant-head">
+      <span class="variant-num">No. ${String(p.id).padStart(2, '0')} / 20</span>
+      <div class="variant-swatches" title="bg · primary · accent">
+        <i style="background:${p.bg}"></i>
+        <i style="background:${p.primary}"></i>
+        <i style="background:${p.accent}"></i>
+      </div>
+    </div>
+    <div class="variant-meta">
+      <div class="variant-name">${p.name}</div>
+      <div class="variant-tag">${p.tag}</div>
+    </div>
+
+    <div class="phone" style="${vars}">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="icons">${icons.signal}${icons.wifi}${icons.battery}</div>
+      </div>
+
+      <div class="home-body">
+        <!-- Conversational card -->
+        <div class="conv">
+          <div class="conv-icon">${icons.star}</div>
+          <div class="conv-text">Hey Alex — one survey puts you past today's goal.</div>
+        </div>
+
+        <!-- Balance / Ring / Today -->
+        <div class="balance">
+          <div class="stat">
+            <div class="stat-circle">${icons.wallet}</div>
+            <div class="stat-value">$1.34</div>
+            <div class="stat-label">Balance</div>
+          </div>
+          <div class="ring-wrap">
+            ${ringSvg(p.primary, p.ringTrack, 46)}
+            <div class="ring-text">
+              <div class="ring-value">46%</div>
+              <div class="ring-label">Daily Goal</div>
+            </div>
+          </div>
+          <div class="stat">
+            <div class="stat-circle">${icons.bolt}</div>
+            <div class="stat-value">$0.92</div>
+            <div class="stat-label">Today</div>
+          </div>
+        </div>
+
+        <!-- Tasks -->
+        <div>
+          <div class="section-head">
+            <div class="section-title">Complete all 3 to cash out $2</div>
+            <div class="section-sub">Finish these and withdraw to PayPal right away</div>
+          </div>
+          <div class="tasks">
+            <div class="task">
+              <div class="task-icon" style="background:${p.primaryPale};color:${p.primary}">${icons.user}</div>
+              <div class="task-text">
+                <div class="task-title">Complete your profile</div>
+                <div class="task-meta">~2 min</div>
+              </div>
+              <div class="task-play">${icons.play}</div>
+            </div>
+            <div class="task">
+              <div class="task-icon" style="background:${p.surveyBg};color:${p.survey}">${icons.clipboard}</div>
+              <div class="task-text">
+                <div class="task-title">Complete a survey</div>
+                <div class="task-meta">~5 min</div>
+              </div>
+              <div class="task-play">${icons.play}</div>
+            </div>
+            <div class="task">
+              <div class="task-icon" style="background:${p.gameBg};color:${p.game}">${icons.game}</div>
+              <div class="task-text">
+                <div class="task-title">Play a game</div>
+                <div class="task-meta">~1 hour total</div>
+              </div>
+              <div class="task-play">${icons.play}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Earn more -->
+        <div class="earn-wrap">
+          <div class="earn-head">${icons.lock}<span>Earn more</span></div>
+          <div class="earn-sub">Finish your first 3 tasks to unlock these</div>
+          <div class="earn-tiles">
+            <div class="earn-tile">
+              <div class="earn-tile-icon" style="background:${p.offersBg};color:${p.offers}">${icons.tag}</div>
+              <div>
+                <div class="earn-tile-title">Offers</div>
+                <div class="earn-tile-sub">Save & earn</div>
+              </div>
+            </div>
+            <div class="earn-tile">
+              <div class="earn-tile-icon" style="background:${p.receiptsBg};color:${p.receipts}">${icons.receipt}</div>
+              <div>
+                <div class="earn-tile-title">Receipts</div>
+                <div class="earn-tile-sub">Cashback</div>
+              </div>
+            </div>
+            <div class="earn-tile">
+              <div class="earn-tile-icon" style="background:${p.gameBg};color:${p.game}">${icons.game}</div>
+              <div>
+                <div class="earn-tile-title">Games</div>
+                <div class="earn-tile-sub">Play & earn</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom nav -->
+      <div class="nav-fade"></div>
+      <div class="nav-wrap">
+        <div class="nav">
+          <div class="nav-item active">${icons.home}</div>
+          <div class="nav-item">${icons.coins}</div>
+          <div class="nav-item">${icons.compass}</div>
+          <div class="nav-item">${icons.profile}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
+}
+
+document.getElementById('scroller').innerHTML = palettes.map(phone).join('');
+</script>
+</body>
+</html>

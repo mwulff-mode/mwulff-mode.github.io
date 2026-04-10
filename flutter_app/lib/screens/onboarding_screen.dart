@@ -24,7 +24,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentStep = 1;
   bool _choicesVisible = false;
-  final _nameController = TextEditingController(text: 'Lisa');
+  final _nameController = TextEditingController();
   final _nameFocus = FocusNode();
 
   @override
@@ -59,6 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
+      animatedGradient: true,
       padding: EdgeInsets.zero,
       child: Stack(
         children: [
@@ -274,7 +275,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         TypewriterText(
           key: const ValueKey('tw2'),
-          text: 'One last thing.\nWhat should we call you?',
+          text: 'Great choices.\nWhat name should we use\nwhen we talk to you?',
           onComplete: _onTypewriterComplete,
         ),
         const Spacer(),
@@ -286,9 +287,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   autofocus: true,
                   textAlign: TextAlign.center,
                   style: AppText.display,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Your name',
+                    hintStyle: AppText.display.copyWith(
+                      color: AppColors.inkTertiary.withValues(alpha: 0.4),
+                    ),
                   ),
                   onSubmitted: (_) => _finishOnboarding(),
                 )

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import 'welcome_screen.dart';
@@ -25,7 +26,6 @@ class _SplashScreenState extends State<SplashScreen>
   late final AnimationController _controller;
   late final Animation<double> _scale;
   late final Animation<double> _fade;
-
   @override
   void initState() {
     super.initState();
@@ -75,11 +75,13 @@ class _SplashScreenState extends State<SplashScreen>
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        transitionDuration: AppDurations.long,
+        transitionDuration: const Duration(milliseconds: 800),
         reverseTransitionDuration: AppDurations.long,
         pageBuilder: (_, __, ___) => const WelcomeScreen(),
         transitionsBuilder: (_, animation, __, child) {
-          return FadeTransition(opacity: animation, child: child);
+          // No fade on the child - let the Hero fly unobstructed.
+          // The teal splash fades out naturally as its route is replaced.
+          return child;
         },
       ),
     );
@@ -124,24 +126,12 @@ class _SplashScreenState extends State<SplashScreen>
             AppColors.primary.withValues(alpha: 0.8),
           ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
-            blurRadius: 40,
-            offset: const Offset(0, 12),
-          ),
-        ],
       ),
-      child: const Center(
-        child: Text(
-          'E',
-          style: TextStyle(
-            fontSize: 72,
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-            letterSpacing: -2,
-            decoration: TextDecoration.none,
-          ),
+      child: Center(
+        child: SvgPicture.asset(
+          'assets/logos/svg/EarnWise_Logo.svg',
+          width: 80,
+          height: 80,
         ),
       ),
     );

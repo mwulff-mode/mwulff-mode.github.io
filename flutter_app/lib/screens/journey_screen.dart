@@ -13,6 +13,7 @@ class JourneyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
+      animatedGradient: true,
       padding: EdgeInsets.zero,
       child: Consumer<AppState>(
         builder: (context, state, _) {

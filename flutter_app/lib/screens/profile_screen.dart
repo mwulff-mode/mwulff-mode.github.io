@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
@@ -30,21 +31,46 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SafeArea(
       key: const Key('profile_screen_root'),
-      color: AppColors.cream,
-      child: SafeArea(
         child: Consumer<AppState>(
           builder: (context, state, _) {
             return SingleChildScrollView(
               padding: const EdgeInsets.only(
                 left: AppLayout.gutter,
                 right: AppLayout.gutter,
-                top: AppSpacing.xl,
+                top: 32,
                 bottom: _kNavClearance,
               ),
               child: Column(
                 children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text('Profile', style: AppText.sectionTitle),
+                      ),
+                      PressScale(
+                        onTap: () {},
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.92),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.black.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          child: Icon(
+                            PhosphorIcons.gear(PhosphorIconsStyle.fill),
+                            size: 20,
+                            color: AppColors.inkSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
                   _ProfileHero(state: state),
                   const SizedBox(height: AppSpacing.xl),
                   const _SectionHeading(label: 'PERSONAL INFO'),
@@ -59,7 +85,6 @@ class ProfileScreen extends StatelessWidget {
             );
           },
         ),
-      ),
     );
   }
 }
@@ -74,19 +99,8 @@ class _ProfileHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final initials =
-        state.userName.isEmpty ? '?' : state.userName[0].toUpperCase();
-    return Column(
-      children: [
-        _AvatarCircle(initials: initials),
-        const SizedBox(height: AppSpacing.lg),
-        Text(
-          state.email,
-          style: AppText.body.copyWith(color: AppColors.inkSecondary),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        _ProviderBadge(provider: state.authProvider),
-      ],
-    );
+        state.displayName[0].toUpperCase();
+    return _AvatarCircle(initials: initials);
   }
 }
 
@@ -167,8 +181,7 @@ class _ProviderBadge extends StatelessWidget {
   }
 }
 
-/// Google G logo asset with a letter fallback for when the asset is
-/// missing. Same pattern as the game detail screen's game icon.
+/// Google G logo from SVG asset.
 class _GoogleLogo extends StatelessWidget {
   final double size;
 
@@ -176,32 +189,10 @@ class _GoogleLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: Image.asset(
-        'assets/images/google_logo.png',
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            width: size,
-            height: size,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              'G',
-              style: AppText.caption.copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-                fontSize: size * 0.62,
-              ),
-            ),
-          );
-        },
-      ),
+    return SvgPicture.asset(
+      'assets/logos/svg/Google_Logo.svg',
+      width: size,
+      height: size,
     );
   }
 }
@@ -263,7 +254,7 @@ class _InfoCard extends StatelessWidget {
           _InfoRow(
             icon: PhosphorIcons.user(PhosphorIconsStyle.regular),
             label: 'Full Name',
-            value: state.userName,
+            value: state.displayName,
           ),
           const _RowDivider(),
           _InfoRow(

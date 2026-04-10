@@ -76,14 +76,18 @@ const Map<String, Game> gamesByName = {
     name: 'Candy Crush',
     category: 'Puzzle',
     rating: 4.7,
-    iconPath: 'assets/images/games/candy_crush.png',
+    iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
     heroGradient: [AppColors.taskVideo, AppColors.accent],
     regularSteps: [
       GameStep(label: 'Install the app', reward: 0.10),
       GameStep(label: 'Reach Level 15', reward: 0.90),
+      GameStep(label: 'Reach Level 50', reward: 2.00),
+      GameStep(label: 'Reach Level 100', reward: 4.00),
+      GameStep(label: 'Reach Level 200', reward: 8.00),
+      GameStep(label: 'Reach Level 350', reward: 12.00),
     ],
     howItWorks:
-        'Download the app for free, swap candies to clear the puzzles, and earn dollars when you hit each milestone.',
+        'Download the app for free, swap candies to clear the puzzles, and earn dollars when you hit each milestone. The further you get, the more you earn.',
     about:
         'A bright, casual matching game where you swap and chain colored candies to clear the board. Great for short sessions while you wait for the bus.',
     disclaimer:
@@ -94,14 +98,18 @@ const Map<String, Game> gamesByName = {
     name: 'Solitaire',
     category: 'Card',
     rating: 4.6,
-    iconPath: 'assets/images/games/solitaire.png',
+    iconPath: 'assets/app_icons/Solitaire_Classic.png',
     heroGradient: [AppColors.primary, AppColors.creamDeep],
     regularSteps: [
       GameStep(label: 'Install the app', reward: 0.10),
       GameStep(label: 'Win 25 games', reward: 0.90),
+      GameStep(label: 'Win 75 games', reward: 2.50),
+      GameStep(label: 'Win 150 games', reward: 5.00),
+      GameStep(label: 'Win 300 games', reward: 9.00),
+      GameStep(label: 'Win 500 games', reward: 8.50),
     ],
     howItWorks:
-        'Download the app for free, sort cards into the four foundation piles, and earn dollars when you hit each milestone.',
+        'Download the app for free, sort cards into the four foundation piles, and earn dollars when you hit each milestone. The further you get, the more you earn.',
     about:
         'The classic single-player card game. Stack cards in descending order, build the foundations, and finish a hand in a few quiet minutes.',
     disclaimer:
@@ -112,14 +120,18 @@ const Map<String, Game> gamesByName = {
     name: 'Word Search',
     category: 'Word',
     rating: 4.5,
-    iconPath: 'assets/images/games/word_search.png',
+    iconPath: 'assets/app_icons/Word_Search.png',
     heroGradient: [AppColors.taskCheckin, AppColors.creamWarm],
     regularSteps: [
       GameStep(label: 'Install the app', reward: 0.10),
       GameStep(label: 'Complete 20 puzzles', reward: 0.90),
+      GameStep(label: 'Complete 60 puzzles', reward: 2.00),
+      GameStep(label: 'Complete 120 puzzles', reward: 4.50),
+      GameStep(label: 'Complete 250 puzzles', reward: 7.50),
+      GameStep(label: 'Complete 400 puzzles', reward: 10.00),
     ],
     howItWorks:
-        'Download the app for free, find every word hidden in the grid, and earn dollars when you hit each milestone.',
+        'Download the app for free, find every word hidden in the grid, and earn dollars when you hit each milestone. The further you get, the more you earn.',
     about:
         'A relaxing puzzle game where you trace hidden words in a grid of letters. New themes and word lists are added every week.',
     disclaimer:

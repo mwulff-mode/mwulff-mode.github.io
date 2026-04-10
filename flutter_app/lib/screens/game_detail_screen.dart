@@ -3,6 +3,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../data/games.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../widgets/animated_gradient_bg.dart';
 import '../widgets/physical_press.dart';
 import '../widgets/press_scale.dart';
 
@@ -32,7 +33,8 @@ class GameDetailScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.cream,
-      body: Stack(
+      body: AnimatedGradientBg(
+        child: Stack(
         children: [
           // Hero band, full width, gradient with centered icon.
           Positioned(
@@ -69,8 +71,6 @@ class GameDetailScreen extends StatelessWidget {
                 children: [
                   _TitleRow(game: game),
                   const SizedBox(height: AppSpacing.lg),
-                  _TopProgressBar(total: game.maxEarning),
-                  const SizedBox(height: AppSpacing.xl),
                   _HowItWorksSection(game: game),
                   const SizedBox(height: AppSpacing.xl),
                   _RegularStepsSection(game: game),
@@ -105,6 +105,7 @@ class GameDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
       bottomNavigationBar: SafeArea(
         top: false,
@@ -305,9 +306,7 @@ class _SectionHeading extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: AppText.caption.copyWith(
-                color: AppColors.inkTertiary,
-                letterSpacing: _kSectionHeadingLetterSpacing,
+              style: AppText.listItem.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -330,7 +329,7 @@ class _HowItWorksSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionHeading(label: 'HOW IT WORKS'),
+        const _SectionHeading(label: 'How It Works'),
         Text(
           game.howItWorks,
           style: AppText.body.copyWith(height: 1.5),
@@ -351,7 +350,7 @@ class _AboutSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeading(label: 'ABOUT ${game.name.toUpperCase()}'),
+        _SectionHeading(label: 'About ${game.name}'),
         Text(
           game.about,
           style: AppText.body.copyWith(height: 1.5),
@@ -372,7 +371,7 @@ class _DisclaimerSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionHeading(label: 'DISCLAIMER'),
+        const _SectionHeading(label: 'Disclaimer'),
         // Fine print is intentionally lighter than the default caption weight
         // (w600) so it reads as legal copy rather than as an active label.
         Text(
@@ -406,7 +405,7 @@ class _RegularStepsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeading(
-          label: 'REGULAR STEPS',
+          label: 'Reward Steps',
           trailing: Text(
             '0 / ${game.regularSteps.length}',
             style: AppText.caption.copyWith(color: AppColors.inkTertiary),

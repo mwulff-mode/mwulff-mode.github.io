@@ -27,18 +27,15 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
 
   final _slides = [
     _SlideData(
-      icon: PhosphorIcons.playCircle(PhosphorIconsStyle.duotone),
-      color: AppColors.taskVideo,
-      title: 'Watch, play, earn real dollars',
+      assetPath: 'assets/icons/graphics/play.png',
+      title: 'Play, Earn, Cash Out!',
     ),
     _SlideData(
-      icon: PhosphorIcons.lightning(PhosphorIconsStyle.duotone),
-      color: AppColors.taskGame,
-      title: 'Cash out same day, straight to PayPal',
+      assetPath: 'assets/icons/graphics/fast.png',
+      title: 'Same-day cash to PayPal',
     ),
     _SlideData(
-      icon: PhosphorIcons.shieldCheck(PhosphorIconsStyle.duotone),
-      color: AppColors.primary,
+      assetPath: 'assets/icons/graphics/trusted.png',
       title: 'No tricks, just real money',
     ),
   ];
@@ -83,6 +80,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
   @override
   Widget build(BuildContext context) {
     return ScreenScaffold(
+      animatedGradient: true,
       child: Column(
         children: [
           const SizedBox(height: 56),
@@ -99,20 +97,22 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
               pressedScale: 0.99, // large surface: subtler shrink
               child: Center(
                 child: AnimatedSwitcher(
-                  duration: AppDurations.long,
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
                   transitionBuilder: (child, animation) {
                     return FadeTransition(
                       opacity: animation,
-                      child: SlideTransition(
-                        position: Tween(
-                          begin: const Offset(0, 0.1),
-                          end: Offset.zero,
-                        ).animate(CurvedAnimation(
-                          parent: animation,
-                          curve: AppCurves.warmOut,
-                        )),
-                        child: child,
-                      ),
+                      child: child,
+                    );
+                  },
+                  layoutBuilder: (currentChild, previousChildren) {
+                    return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ...previousChildren,
+                        if (currentChild != null) currentChild,
+                      ],
                     );
                   },
                   child: _buildSlide(_slides[_currentSlide]),
@@ -177,8 +177,13 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
       key: ValueKey(slide.title),
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(slide.icon, size: 88, color: slide.color),
-        const SizedBox(height: AppSpacing.xl),
+        Image.asset(
+          slide.assetPath,
+          width: 280,
+          height: 280,
+          fit: BoxFit.contain,
+        ),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           slide.title,
           textAlign: TextAlign.center,
@@ -217,7 +222,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
           ),
           const SizedBox(height: 10),
           Text(
-            '\$47 last month just from my couch. I play Candy Crush anyway, now I earn while I do it.',
+            '\$47 last month just from my couch. I play Candy Crush, now I earn while I do it.',
             style: AppText.bodyStrong.copyWith(
               fontWeight: FontWeight.w500,
               fontStyle: FontStyle.italic,
@@ -237,11 +242,9 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
 }
 
 class _SlideData {
-  final IconData icon;
-  final Color color;
+  final String assetPath;
   final String title;
-  const _SlideData(
-      {required this.icon, required this.color, required this.title});
+  const _SlideData({required this.assetPath, required this.title});
 }
 
 class _RingPainter extends CustomPainter {

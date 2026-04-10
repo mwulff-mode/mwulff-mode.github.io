@@ -5,6 +5,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../theme/motion.dart';
+import '../widgets/animated_gradient_bg.dart';
 import '../widgets/press_scale.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
@@ -38,7 +39,8 @@ class _HomeShellState extends State<HomeShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cream,
-      body: Stack(
+      body: AnimatedGradientBg(
+        child: Stack(
         children: [
           Positioned.fill(
             child: IndexedStack(
@@ -63,15 +65,15 @@ class _HomeShellState extends State<HomeShell> {
             child: Container(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).padding.bottom + 16,
-                top: 40,
+                top: 50,
               ),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  end: const Alignment(0, -0.1),
                   colors: [
                     AppColors.cream.withValues(alpha: 0),
-                    AppColors.cream.withValues(alpha: 0.92),
+                    AppColors.cream,
                   ],
                 ),
               ),
@@ -79,6 +81,7 @@ class _HomeShellState extends State<HomeShell> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -91,12 +94,19 @@ class _HomeShellState extends State<HomeShell> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: _kGlassFillAlpha),
+            color: Colors.white.withValues(alpha: 0.92),
             borderRadius: BorderRadius.circular(_kNavPillRadius),
             border: Border.all(
-              color: Colors.white.withValues(alpha: _kGlassBorderAlpha),
+              color: Colors.black.withValues(alpha: 0.08),
               width: 1,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.10),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
