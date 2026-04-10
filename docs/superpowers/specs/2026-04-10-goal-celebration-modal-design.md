@@ -2,16 +2,17 @@
 
 ## Summary
 
-When the user reaches their first daily goal ($2.00 / 1500 stars), show a centered floating card modal over the home screen instead of silently advancing to the next goal. The modal celebrates the milestone and guides the user toward cashing out or continuing to earn.
+When the user completes all four onboarding tasks and crosses the first payout threshold ($2.00 / 1500 stars), show a centered floating card modal over the home screen instead of silently advancing to the next goal. The modal celebrates the onboarding milestone and guides the user toward cashing out or continuing to earn.
 
 ## Trigger & Flow
 
 1. User completes their 4th onboarding task, crossing the 1500-star goal threshold
 2. Ring fills to 100%, milestone haptic fires (unchanged)
 3. After ~1.5s hold (so the user sees the filled ring), the celebration modal appears as a `showGeneralDialog` overlay
-4. Two exit paths:
-   - **"Cash out now"** -- dismiss modal, switch to Wallet tab (user sees their ready balance and can redeem)
-   - **Close X / "Keep earning"** -- dismiss modal, then in order: (1) `advanceGoal()`, (2) add journey log entry, (3) show "Earn More unlocked" toast
+4. On dismissal (any path), immediately: (1) `advanceGoal()` to goal 2 ($5.00), (2) add journey log entry
+5. Two exit paths after shared dismissal logic:
+   - **"Cash out now"** -- switch to Wallet tab (user sees their ready balance and can redeem)
+   - **Close X / "Keep earning"** -- stay on home screen, show "Earn More unlocked" toast (user sees the unlocked section when they scroll)
 
 ## Celebration Modal Widget
 
@@ -43,14 +44,17 @@ Shown via `showGeneralDialog` for full control over barrier and animation.
 ### HomeScreen
 - Constructor accepts `VoidCallback onNavigateToWallet`
 - Goal-completed block in `_completeTask` (lines 172-190) replaced: instead of delayed `advanceGoal()` + journey entry, shows the celebration modal after 1.5s
-- Modal dismiss callbacks handle `advanceGoal()`, journey logging, and toast
+- `allTasksCompleted` block (lines 193-205) removed: unlock feedback consolidated into modal dismiss
+- Modal dismiss callback handles shared logic (`advanceGoal()`, journey entry) then branches on path
 
 ### AppState goals array
 - Goal 2 changes from `goalStars: 5000` ($6.67) to `goalStars: 3750` ($5.00)
 
 ### Earn More unlock
 - Gate remains `allTasksCompleted` (4 tasks) -- no change needed since completing 4 tasks = reaching goal 1
-- Toast shown after modal dismissal via "Keep earning" path: "Earn More is unlocked! Offers, Receipts and Games are now available"
+- **Remove** the existing `allTasksCompleted` block in `_completeTask` (lines 193-205) that schedules a 2s-delayed journey entry. This fires on the same task completion that triggers the modal, causing duplicate/mistimed unlock messaging. All unlock feedback is now consolidated into the modal dismiss flow:
+  - Journey entry logged on any dismissal path (step 4 above)
+  - Toast shown only on "Keep earning" path (user is on home screen to see it)
 
 ## Files Modified
 
