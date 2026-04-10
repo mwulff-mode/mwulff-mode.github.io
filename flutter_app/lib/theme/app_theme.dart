@@ -36,6 +36,13 @@ class AppColors {
   static const progress = Color(0xFF0D9488);
   static const progressLight = Color(0xFFCCFBF1);
 
+  // Flame (streak, daily tasks)
+  static const flame = Color(0xFFFF6B35);
+  static const flameBg = Color(0xFFFFF4ED);
+
+  // Teal secondary (gift gradient endpoint)
+  static const tealSecondary = Color(0xFF2BA08E);
+
   // Ink
   static const ink = Color(0xFF3B3230);
   static const inkSecondary = Color(0xFF6B5E58);

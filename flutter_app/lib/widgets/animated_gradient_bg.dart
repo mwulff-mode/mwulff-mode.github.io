@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class AnimatedGradientBg extends StatefulWidget {
   final Widget child;
@@ -47,9 +48,9 @@ class _AnimatedGradientBgState extends State<AnimatedGradientBg>
               begin: Alignment(beginX, beginY),
               end: Alignment(endX, endY),
               colors: const [
-                Color(0xFFFAF8F5), // cream
+                AppColors.cream, // cream
                 Color(0xFFF8F0E8), // warm peach
-                Color(0xFFF2EDE6), // cream deep
+                AppColors.creamDeep, // cream deep
                 Color(0xFFFAF5F0), // soft blush
               ],
               stops: const [0.0, 0.35, 0.7, 1.0],

@@ -153,15 +153,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           '1-day streak, keep it rolling',
           'Every task adds to your balance',
           PhosphorIcons.flame(PhosphorIconsStyle.fill),
-          const Color(0xFFFF6B35),
-          const Color(0xFFFFF4ED),
+          AppColors.flame,
+          AppColors.flameBg,
         );
         showAppToast(
           context,
           title: '1-day streak, keep it rolling',
           subtitle: 'Every task adds to your balance',
           icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
-          iconColor: const Color(0xFFFF6B35),
+          iconColor: AppColors.flame,
           iconBackground: const Color(0xFFFFF0E8),
         );
       });
@@ -372,7 +372,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [AppColors.primary, Color(0xFF2BA08E)],
+                      colors: [AppColors.primary, AppColors.tealSecondary],
                     ),
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [

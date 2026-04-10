@@ -147,8 +147,8 @@ ConvCard resolveConvCard(AppState state) {
     return ConvCard(
       message: 'Game time logged, ${3 - daily} more to go',
       icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
-      color: const Color(0xFFFF6B35),
-      bg: const Color(0xFFFFF4ED),
+      color: AppColors.flame,
+      bg: AppColors.flameBg,
     );
   }
 
@@ -187,8 +187,8 @@ ConvCard resolveConvCard(AppState state) {
     return ConvCard(
       message: 'Just one more, almost there',
       icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
-      color: const Color(0xFFFF6B35),
-      bg: const Color(0xFFFFF4ED),
+      color: AppColors.flame,
+      bg: AppColors.flameBg,
     );
   }
 
