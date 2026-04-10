@@ -76,4 +76,7 @@ class CelebrateMoments {
 
   /// Wallet payout confirmed celebration overlay.
   static const payoutConfirmed = 'payout_confirmed';
+
+  /// Onboarding goal reached -- first $2 payout threshold crossed.
+  static const goalReached = 'goal_reached';
 }

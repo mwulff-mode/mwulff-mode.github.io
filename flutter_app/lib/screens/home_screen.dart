@@ -13,11 +13,10 @@ import '../services/haptics.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
 import '../widgets/animated_counter.dart';
-import '../widgets/animated_gradient_bg.dart';
+import '../widgets/breathing.dart';
 import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
-import 'journey_screen.dart';
-import 'conv_card_content.dart';
+import '../widgets/teal_header.dart';
 import 'game_detail_screen.dart';
 import 'dart:math';
 
@@ -31,9 +30,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  bool _showGift = true;
+  bool _showGift = false;
   bool _giftFading = false;
-  bool _homeRevealed = false;
+  bool _homeRevealed = true;
   String? _selectedGame;
 
   late AnimationController _giftAmountController;
@@ -49,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: AppDurations.hero);
     _giftLabelController =
         AnimationController(vsync: this, duration: AppDurations.long);
-    _playGiftAnimation();
   }
 
   void _playGiftAnimation() async {
@@ -107,7 +105,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final taskNames = {
       'profile': 'Profile completed',
       'survey': 'Survey completed',
-      'game': _selectedGame ?? 'Game played',
+      'game_install': '${_selectedGame ?? 'Game'} installed',
+      'game_milestone': 'First milestone reached',
       'daily_survey': 'Daily survey completed',
       'daily_play': 'Daily play completed',
       'daily_offer': 'Daily offer completed',
@@ -115,7 +114,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final taskIcons = {
       'profile': PhosphorIcons.userCircle(PhosphorIconsStyle.duotone),
       'survey': PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
-      'game': PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
+      'game_install': PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
+      'game_milestone': PhosphorIcons.trophy(PhosphorIconsStyle.duotone),
       'daily_survey': PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
       'daily_play': PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
       'daily_offer': PhosphorIcons.tag(PhosphorIconsStyle.duotone),
@@ -123,7 +123,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final taskColors = {
       'profile': AppColors.primary,
       'survey': AppColors.taskSurvey,
-      'game': AppColors.taskGame,
+      'game_install': AppColors.taskGame,
+      'game_milestone': AppColors.taskGame,
       'daily_survey': AppColors.taskSurvey,
       'daily_play': AppColors.taskGame,
       'daily_offer': AppColors.taskOffers,
@@ -131,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final taskBgs = {
       'profile': AppColors.primaryPale,
       'survey': AppColors.taskSurveyBg,
-      'game': AppColors.taskGameBg,
+      'game_install': AppColors.taskGameBg,
+      'game_milestone': AppColors.taskGameBg,
       'daily_survey': AppColors.taskSurveyBg,
       'daily_play': AppColors.taskGameBg,
       'daily_offer': AppColors.taskOffersBg,
@@ -147,21 +149,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       taskBgs[task] ?? AppColors.primaryPale,
     );
 
-    if (state.tasksCompleted == 1) {
+    if (state.streakCount == 0) {
       Future.delayed(const Duration(seconds: 2), () {
         if (!mounted) return;
         state.streakCount = 1;
         state.addJourneyEntry(
-          '1-day streak, keep it rolling',
-          'Every task adds to your balance',
+          'Look at that, your first streak!',
+          'One task each day to keep it rolling',
           PhosphorIcons.flame(PhosphorIconsStyle.fill),
           AppColors.flame,
           AppColors.flameBg,
         );
         showAppToast(
           context,
-          title: '1-day streak, keep it rolling',
-          subtitle: 'Every task adds to your balance',
+          title: 'Look at that, your first streak!',
+          subtitle: 'One task each day to keep it rolling',
           icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
           iconColor: AppColors.flame,
           iconBackground: const Color(0xFFFFF0E8),
@@ -253,24 +255,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ctx,
                 'Candy Crush',
                 'Match-3 puzzle: swap & match colorful candies',
-                PhosphorIcons.diamondsFour(PhosphorIconsStyle.duotone),
-                const Color(0xFFE8913A),
+                'assets/app_icons/Candy_Crush_Saga.png',
                 state),
             const SizedBox(height: 10),
             _gameOption(
                 ctx,
                 'Solitaire',
                 'Classic card game: sort cards into suits',
-                PhosphorIcons.cards(PhosphorIconsStyle.duotone),
-                AppColors.primary,
+                'assets/app_icons/Solitaire_Classic.png',
                 state),
             const SizedBox(height: 10),
             _gameOption(
                 ctx,
                 'Word Search',
                 'Find hidden words in a letter grid',
-                PhosphorIcons.textAa(PhosphorIconsStyle.duotone),
-                AppColors.taskVideo,
+                'assets/app_icons/Word_Search.png',
                 state),
           ],
         );
@@ -283,30 +282,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       // Task completes when the user taps Install on the detail screen,
       // not here. The picker just opens the detail page.
       Navigator.of(context).push(
-        fadeRoute(GameDetailScreen(
+        slideUpRoute(GameDetailScreen(
           game: game,
-          onInstall: () => _completeTask('game'),
+          onInstall: () => _completeTask('game_install'),
         )),
       );
     });
   }
 
   Widget _gameOption(BuildContext ctx, String name, String description,
-      IconData icon, Color color, AppState state) {
+      String iconPath, AppState state) {
     return AppCard(
       onTap: () => Navigator.of(ctx).pop(name),
       constraints: const BoxConstraints(minHeight: 72),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       child: Row(
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              iconPath,
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
             ),
-            child: Icon(icon, size: 26, color: color),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -322,8 +321,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ],
             ),
           ),
-          Icon(PhosphorIcons.play(PhosphorIconsStyle.fill),
-              size: 32, color: AppColors.primary),
+          Icon(PhosphorIcons.playCircle(PhosphorIconsStyle.fill),
+              size: 48, color: AppColors.primary),
         ],
       ),
     );
@@ -340,7 +339,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedGradientBg(
+    return Container(
+      color: AppColors.cream,
       child: Stack(
         children: [
           // Home content
@@ -433,28 +433,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 12,
-                  left: 24,
-                  right: 24,
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Conversational card
-                    _buildConvCard(state),
-                    const SizedBox(height: 16),
-
-                    // Balance + Ring row
-                    _buildBalanceRow(state),
-                    const SizedBox(height: AppSpacing.md),
+                    // Teal header with greeting + ring
+                    TealHeader(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top + 32,
+                          left: 24,
+                          right: 24,
+                          bottom: 40,
+                        ),
+                        child: Column(
+                          children: [
+                            _buildGreetingRow(state),
+                            const SizedBox(height: AppSpacing.xl),
+                            _buildBalanceRow(state),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
 
                     // Starter tasks
-                    _buildStarterTasks(state),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _buildStarterTasks(state),
+                    ),
                     const SizedBox(height: AppSpacing.lg),
 
                     // Earn more section
-                    _buildEarnMore(state),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: _buildEarnMore(state),
+                    ),
                     // Extra bottom space so content clears the floating glass nav
                     const SizedBox(height: 120),
                   ],
@@ -467,57 +480,58 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  /// Conversational card content. See [conv_card_content.dart] to edit messages.
-  ConvCard _convCardContent(AppState state) => resolveConvCard(state);
+  String _greeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  }
 
-  Widget _buildConvCard(AppState state) {
-    final content = _convCardContent(state);
-    return PressScale(
-      onTap: () {
-        Navigator.of(context).push(fadeRoute(const JourneyScreen()));
-      },
-      haptic: null,
-      pressedScale: 0.99, // large surface: subtler shrink
-      child: Container(
-        // Fixed height so the card never reflows the page when the message
-        // grows from one line to two. 80px = 16+16 padding + room for two
-        // lines of bodyStrong (16px @ ~1.25 line height).
-        height: 80,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2)),
-          ],
+  Widget _buildGreetingRow(AppState state) {
+    final greeting = state.userName.isNotEmpty
+        ? '${_greeting()}, ${state.userName}'
+        : _greeting();
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(width: 48), // balance the streak badge width
+        Expanded(
+          child: Text(
+            greeting,
+            style: AppText.sectionTitle.copyWith(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: content.bg,
-                borderRadius: BorderRadius.circular(12),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                PhosphorIcons.flame(PhosphorIconsStyle.fill),
+                size: 18,
+                color: state.streakCount > 0
+                    ? const Color(0xFFFFB74D)
+                    : Colors.white.withValues(alpha: 0.6),
               ),
-              child: Icon(content.icon, size: 20, color: content.color),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                content.message,
-                style: AppText.bodyStrong.copyWith(fontWeight: FontWeight.w500),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              const SizedBox(width: 4),
+              Text(
+                '${state.streakCount}',
+                style: AppText.bodyStrong.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: state.streakCount > 0
+                      ? const Color(0xFFFFB74D)
+                      : Colors.white.withValues(alpha: 0.6),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -534,29 +548,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Container(
           width: 50,
           height: 50,
-          decoration: const BoxDecoration(
-            color: AppColors.creamDeep,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 22, color: AppColors.inkSecondary),
+          child: Icon(icon, size: 22, color: Colors.white),
         ),
         const SizedBox(height: 8),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            AnimatedCounter(
-              value: rawValue,
-              format: format,
-              style: numberStyle,
-            ),
-          ],
+        AnimatedCounter(
+          value: rawValue,
+          format: format,
+          style: numberStyle.copyWith(color: Colors.white),
         ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: AppText.caption.copyWith(fontWeight: FontWeight.w400),
-          textAlign: TextAlign.center,
+        Transform.translate(
+          offset: const Offset(0, -2),
+          child: Text(
+            label,
+            style: AppText.caption.copyWith(
+              fontWeight: FontWeight.w400,
+              color: Colors.white.withValues(alpha: 0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );
@@ -579,7 +592,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       // Ring takes 52% of content width; each stat takes the remaining 24%.
       // Stat icon is 50px so the column is narrow enough to give the ring
       // plenty of space even on small phones.
-      final ringSize = (constraints.maxWidth * 0.52).clamp(140.0, 220.0);
+      final ringSize = (constraints.maxWidth * 0.42).clamp(120.0, 180.0);
 
     final ring = RewardGlow(
       controller: _ringGlow,
@@ -661,26 +674,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Left stat: takes remaining space beside the ring
+          // Left stat - nudged down relative to ring center
           Expanded(
-            child: _buildStatBubble(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: _buildStatBubble(
               PhosphorIcons.wallet(PhosphorIconsStyle.duotone),
               state.stars,
               'Balance',
               state,
             ),
-          ),
+          )),
 
-          // Center ring: fixed proportional size
-          ring,
+          // Center ring: fixed proportional size, gentle breathing
+          Breathing(amplitude: 0.03, child: ring),
 
-          // Right stat
+          // Right stat - nudged down relative to ring center
           Expanded(
-            child: _buildStatBubble(
-              PhosphorIcons.lightning(PhosphorIconsStyle.duotone),
-              state.earnedToday,
-              'Today',
-              state,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: _buildStatBubble(
+                PhosphorIcons.lightning(PhosphorIconsStyle.duotone),
+                state.earnedToday,
+                'Today',
+                state,
+              ),
             ),
           ),
         ],
@@ -696,46 +714,97 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildOnboardingTasks(AppState state) {
+    final profileDone = state.completedTasks.contains('profile');
+    final installDone = state.completedTasks.contains('game_install');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Complete all 3 to cash out \$2',
+          'Starter Tasks',
           style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          'Finish these tasks and withdraw to PayPal right away',
+          'Complete all 4 to cash out \$2',
           style: AppText.caption.copyWith(fontWeight: FontWeight.w400),
         ),
         const SizedBox(height: 14),
-        _taskCard(
-          'Complete your profile',
-          '~2 min',
-          PhosphorIcons.userCircle(PhosphorIconsStyle.duotone),
-          AppColors.primary,
-          'profile',
-          state,
+        // Pair 1: Profile -> Survey
+        _linkedTaskPair(
+          parent: _taskCard(
+            'Complete your profile',
+            '~2 min',
+            PhosphorIcons.userCircle(PhosphorIconsStyle.duotone),
+            AppColors.primary,
+            'profile',
+            state,
+          ),
+          child: _taskCard(
+            'Complete a survey',
+            '~5 min',
+            PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
+            AppColors.taskSurvey,
+            'survey',
+            state,
+            locked: !profileDone,
+          ),
+          unlocked: profileDone,
         ),
-        const SizedBox(height: 10),
-        _taskCard(
-          'Complete a survey',
-          '~5 min',
-          PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
-          AppColors.taskSurvey,
-          'survey',
-          state,
+        const SizedBox(height: 20),
+        // Pair 2: Install -> Milestone
+        _linkedTaskPair(
+          parent: _taskCard(
+            'Install a game',
+            '~1 min',
+            PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
+            AppColors.taskGame,
+            'game_install',
+            state,
+            onTap: () => _showGamePicker(state),
+          ),
+          child: _taskCard(
+            'Reach first milestone',
+            '~10 min',
+            PhosphorIcons.trophy(PhosphorIconsStyle.duotone),
+            AppColors.taskGame,
+            'game_milestone',
+            state,
+            locked: !installDone,
+          ),
+          unlocked: installDone,
         ),
-        const SizedBox(height: 10),
-        _taskCard(
-          'Play a game',
-          '~1 hour total',
-          PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
-          AppColors.taskGame,
-          'game',
-          state,
-          onTap: () => _showGamePicker(state),
+      ],
+    );
+  }
+
+  /// Two task cards with a vertical connector line between them showing
+  /// the dependency relationship. The line is centered on the icon pill.
+  Widget _linkedTaskPair({
+    required Widget parent,
+    required Widget child,
+    required bool unlocked,
+  }) {
+    // Icon pill: 20px padding-left + 26px (half of 52px icon) = 46px center
+    const double lineX = 20 + 26;
+    const double connectorHeight = 8;
+
+    return Column(
+      children: [
+        parent,
+        SizedBox(
+          height: connectorHeight,
+          child: Center(
+            child: Container(
+              width: 2,
+              height: connectorHeight,
+              color: unlocked
+                  ? AppColors.primary.withValues(alpha: 0.35)
+                  : AppColors.inkTertiary.withValues(alpha: 0.25),
+            ),
+          ),
         ),
+        child,
       ],
     );
   }
@@ -748,7 +817,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Row(
           children: [
             Text(
-              "Today's tasks",
+              "Today's Tasks",
               style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
             ),
             const Spacer(),
@@ -798,15 +867,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   /// Indigo "pills" style task card: icon pill + play circle action.
   Widget _taskCard(String title, String meta, IconData icon, Color color,
       String taskKey, AppState state,
-      {VoidCallback? onTap}) {
+      {VoidCallback? onTap, bool locked = false}) {
     final completed = state.completedTasks.contains(taskKey);
+    final disabled = completed || locked;
     final bg = color.withValues(alpha: 0.10);
     return PressScale(
-      onTap: completed ? null : (onTap ?? () => _completeTask(taskKey)),
+      onTap: disabled ? null : (onTap ?? () => _completeTask(taskKey)),
       haptic: null,
-      enabled: !completed,
+      enabled: !disabled,
       child: AnimatedOpacity(
-        opacity: completed ? 0.55 : 1,
+        opacity: disabled ? 0.45 : 1,
         duration: AppDurations.medium,
         child: Container(
           constraints: const BoxConstraints(minHeight: 88),
@@ -814,7 +884,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+            border: Border.all(
+              color: disabled ? Colors.black.withValues(alpha: 0.06) : AppColors.primary.withValues(alpha: 0.35),
+              width: disabled ? 1 : 1.5,
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.04),
@@ -854,12 +927,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Icon(
-                completed
-                    ? PhosphorIcons.checkCircle(PhosphorIconsStyle.fill)
-                    : PhosphorIcons.playCircle(PhosphorIconsStyle.fill),
-                size: 48,
-                color: completed ? AppColors.progress : AppColors.primary,
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: Center(
+                  child: Icon(
+                    completed
+                        ? PhosphorIcons.checkCircle(PhosphorIconsStyle.fill)
+                        : locked
+                            ? PhosphorIcons.lockSimple(PhosphorIconsStyle.regular)
+                            : PhosphorIcons.playCircle(PhosphorIconsStyle.fill),
+                    size: locked ? 24 : 48,
+                    color: completed
+                        ? AppColors.progress
+                        : locked
+                            ? AppColors.inkTertiary
+                            : AppColors.primary,
+                  ),
+                ),
               ),
             ],
           ),
@@ -880,15 +965,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const SizedBox(width: 6),
             ],
             Text(
-              'Earn more',
-              style: AppText.bodyStrong,
+              'Earn More',
+              style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
             ),
           ],
         ),
         if (!unlocked) ...[
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Finish your first 3 tasks to unlock these',
+            'Finish your starter tasks to unlock these',
             style: AppText.caption.copyWith(
                 fontWeight: FontWeight.w500, color: AppColors.inkTertiary),
           ),
@@ -965,6 +1050,244 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 }
 
+/// Shows the goal celebration modal as a general dialog overlay.
+/// Returns `true` if the user tapped "Cash out now", `false` if dismissed
+/// via close X or "Keep earning".
+Future<bool> _showGoalCelebration(BuildContext context) {
+  return showGeneralDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    barrierColor: Colors.transparent,
+    transitionDuration: const Duration(milliseconds: 400),
+    pageBuilder: (_, __, ___) => const _GoalCelebrationModal(),
+  ).then((v) => v ?? false);
+}
+
+class _GoalCelebrationModal extends StatefulWidget {
+  const _GoalCelebrationModal();
+
+  @override
+  State<_GoalCelebrationModal> createState() => _GoalCelebrationModalState();
+}
+
+class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _barrierOpacity;
+  late final Animation<double> _cardScale;
+  late final Animation<double> _cardOpacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _barrierOpacity = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.75, curve: Curves.easeOut),
+      ),
+    );
+    _cardScale = Tween(begin: 0.85, end: 1.0).animate(
+      CurvedAnimation(parent: _ctrl, curve: AppCurves.warmOut),
+    );
+    _cardOpacity = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _ctrl,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    Haptics.celebrate(CelebrateMoments.goalReached);
+    _ctrl.forward();
+  }
+
+  Future<void> _dismiss(bool cashOut) async {
+    await _ctrl.reverse();
+    if (mounted) Navigator.of(context).pop(cashOut);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            // Barrier scrim
+            Positioned.fill(
+              child: Opacity(
+                opacity: _barrierOpacity.value,
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.45),
+                ),
+              ),
+            ),
+            // Card
+            Center(
+              child: Opacity(
+                opacity: _cardOpacity.value,
+                child: Transform.scale(
+                  scale: _cardScale.value,
+                  child: _buildCard(),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildCard() {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.15),
+              blurRadius: 40,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Close X - top right
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () => _dismiss(false),
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: const BoxDecoration(
+                    color: AppColors.creamDeep,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    PhosphorIcons.x(PhosphorIconsStyle.bold),
+                    size: 14,
+                    color: AppColors.inkSecondary,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Icon
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primary, AppColors.tealSecondary],
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Icon(
+                PhosphorIcons.star(PhosphorIconsStyle.fill),
+                size: 28,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Amount
+            Text(
+              '\$2.00',
+              style: AppText.prompt.copyWith(
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -1.5,
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Label
+            Text(
+              'GOAL REACHED',
+              style: AppText.caption.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Body
+            Text(
+              'You did it! Your first payout is ready to cash out.',
+              textAlign: TextAlign.center,
+              style: AppText.body.copyWith(
+                fontWeight: FontWeight.w400,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Primary CTA
+            PressScale(
+              onTap: () => _dismiss(true),
+              haptic: HapticIntensity.confirm,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  'Cash out now',
+                  textAlign: TextAlign.center,
+                  style: AppText.bodyStrong.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            // Secondary
+            PressScale(
+              onTap: () => _dismiss(false),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  'Keep earning',
+                  style: AppText.body.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.inkTertiary,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _GoalRingPainter extends CustomPainter {
   final double percentage;
   final Color fillColor;
@@ -979,12 +1302,11 @@ class _GoalRingPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    const stroke = 12.0;
-    const gap = 6.0;
+    const stroke = 18.0;
     final totalRadius = size.width / 2;
 
-    final discRadius = totalRadius - stroke - gap;
     final arcRadius = totalRadius - stroke / 2;
+    final discRadius = arcRadius - stroke / 2;
     final pct = (percentage / 100).clamp(0.0, 1.0);
 
     // Filled disc
@@ -1022,3 +1344,4 @@ class _GoalRingPainter extends CustomPainter {
       old.fillColor != fillColor ||
       old.trackColor != trackColor;
 }
+
