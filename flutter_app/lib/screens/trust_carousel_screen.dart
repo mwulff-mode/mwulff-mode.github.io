@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/app_text.dart';
@@ -183,12 +182,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
         Text(
           slide.title,
           textAlign: TextAlign.center,
-          style: GoogleFonts.outfit(
-            fontSize: 26,
-            fontWeight: FontWeight.w800,
-            color: AppColors.ink,
-            letterSpacing: -0.8,
-          ),
+          style: AppText.slideTitle,
         ),
       ],
     );

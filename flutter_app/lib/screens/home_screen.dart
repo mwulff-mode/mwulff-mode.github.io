@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../data/games.dart';
@@ -394,12 +393,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     parent: _giftAmountController, curve: AppCurves.warmOut),
                 child: Text(
                   '\$0.17',
-                  style: GoogleFonts.outfit(
-                    fontSize: 64,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.primary,
-                    letterSpacing: -3,
-                  ),
+                  style: AppText.heroAmount,
                 ),
               ),
               ScaleTransition(
@@ -407,11 +401,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     parent: _giftAmountController, curve: AppCurves.warmOut),
                 child: Text(
                   'Welcome gift',
-                  style: GoogleFonts.outfit(
-                    fontSize: 24,
+                  style: AppText.prompt.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.primary.withValues(alpha: 0.6),
                     letterSpacing: 1,
+                    height: null,
                   ),
                 ),
               ),
@@ -527,12 +521,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildStatBubble(
       IconData icon, int rawValue, String label, AppState state) {
-    final numberStyle = GoogleFonts.outfit(
-      fontSize: 20,
-      fontWeight: FontWeight.w800,
-      color: AppColors.ink,
-      letterSpacing: -0.5,
-    );
+    final numberStyle = AppText.statNumber;
 
     String format(int v) =>
         '\$${(v / AppState.starsPerDollar).toStringAsFixed(2)}';
@@ -637,8 +626,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     const SizedBox(height: 4),
                     Text("You've\nearned it all.",
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.outfit(
-                            fontSize: 16,
+                        style: AppText.bodyStrong.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white)),
                   ],
@@ -649,16 +637,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     Text(
                       state.formatGoal(),
-                      style: GoogleFonts.outfit(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: -1),
+                      style: AppText.ringGoal,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       'Daily Goal',
-                      style: GoogleFonts.outfit(
+                      style: AppText.caption.copyWith(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: Colors.white.withValues(alpha: 0.75)),
