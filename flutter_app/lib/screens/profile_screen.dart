@@ -10,6 +10,11 @@ import '../theme/app_theme.dart';
 /// every tab. Matches the pill height plus breathing room.
 const double _kNavClearance = 140.0;
 
+/// Letter spacing applied to section headings. Matches the same value
+/// used by game_detail_screen.dart so the two screens render identical
+/// eyebrow headings. A future task extracts both into a shared widget.
+const double _kSectionHeadingLetterSpacing = 1.6;
+
 /// Full-page profile surface shown as the third tab inside [HomeShell].
 /// Displays the user's avatar, email, fictional personal info fields,
 /// a connected-account row, and a Sign Out button.
@@ -213,7 +218,7 @@ class _SectionHeading extends StatelessWidget {
           label,
           style: AppText.caption.copyWith(
             color: AppColors.inkTertiary,
-            letterSpacing: 1.6,
+            letterSpacing: _kSectionHeadingLetterSpacing,
             fontWeight: FontWeight.w700,
           ),
         ),
