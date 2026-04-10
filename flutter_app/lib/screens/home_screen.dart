@@ -579,43 +579,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       // plenty of space even on small phones.
       final ringSize = (constraints.maxWidth * 0.52).clamp(140.0, 220.0);
 
-      final ring = RewardGlow(
-        controller: _ringGlow,
-        glowColor: ringColor,
-        child: AnimatedContainer(
-          duration: AppDurations.long,
-          curve: AppCurves.warmOut,
-          width: ringSize,
-          height: ringSize,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: isSolidFill
-                ? [
-                    BoxShadow(
-                        color: ringColor.withValues(
-                            alpha: state.isLegend ? 0.4 : 0.3),
-                        blurRadius: state.isLegend ? 40 : 30,
-                        spreadRadius: state.isLegend ? 8 : 4)
-                  ]
-                : [],
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            clipBehavior: Clip.none,
-            children: [
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: state.goalProgress),
-                duration: AppDurations.hero,
-                curve: AppCurves.warmOut,
-                builder: (context, value, _) {
-                  return CustomPaint(
-                    size: Size(ringSize, ringSize),
-                    painter: _GoalRingPainter(
-                      percentage: value,
-                      fillColor: ringColor,
-                    ),
-                  );
-                },
+    final ring = RewardGlow(
+      controller: _ringGlow,
+      glowColor: ringColor,
+      child: AnimatedContainer(
+        duration: AppDurations.long,
+        curve: AppCurves.warmOut,
+        width: ringSize,
+        height: ringSize,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: isSolidFill
+              ? [
+                  BoxShadow(
+                      color: ringColor.withValues(
+                          alpha: state.isLegend ? 0.4 : 0.3),
+                      blurRadius: state.isLegend ? 40 : 30,
+                      spreadRadius: state.isLegend ? 8 : 4)
+                ]
+              : [],
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
+          children: [
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: state.goalProgress),
+              duration: AppDurations.hero,
+              curve: AppCurves.warmOut,
+              builder: (context, value, _) {
+                return CustomPaint(
+                  size: Size(ringSize, ringSize),
+                  painter: _GoalRingPainter(
+                    percentage: value,
+                    fillColor: ringColor,
+                    trackColor: state.trackColor,
+                  ),
+                );
+              },
               ),
               if (state.isLegend)
                 Column(
@@ -965,31 +966,38 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 class _GoalRingPainter extends CustomPainter {
   final double percentage;
   final Color fillColor;
+  final Color trackColor;
 
   _GoalRingPainter({
     required this.percentage,
     required this.fillColor,
+    required this.trackColor,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    const stroke = 24.0;
+    const stroke = 12.0;
+    const gap = 6.0;
     final totalRadius = size.width / 2;
 
-    // Arc centred at the disc's perimeter: half bleeds inside the disc,
-    // half extends outside it, matching the reference design.
-    final discRadius = totalRadius - stroke; // disc fills ~77% of widget
-    final arcCenterRadius = discRadius; // arc centre == disc edge
+    final discRadius = totalRadius - stroke - gap;
+    final arcRadius = totalRadius - stroke / 2;
     final pct = (percentage / 100).clamp(0.0, 1.0);
 
     // Filled disc
     canvas.drawCircle(center, discRadius, Paint()..color = fillColor);
 
-    // Progress arc around the disc in a lighter shade
-    final arcColor = Color.lerp(fillColor, Colors.white, 0.40)!;
+    // Track ring (full circle, light)
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke;
+    canvas.drawCircle(center, arcRadius, trackPaint);
+
+    // Progress arc
     final arcPaint = Paint()
-      ..color = arcColor
+      ..color = Color.lerp(fillColor, Colors.white, 0.35)!
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke
       ..strokeCap = StrokeCap.round;
@@ -997,7 +1005,7 @@ class _GoalRingPainter extends CustomPainter {
     final sweepAngle = 2 * pi * pct;
     if (sweepAngle > 0) {
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: arcCenterRadius),
+        Rect.fromCircle(center: center, radius: arcRadius),
         -pi / 2,
         sweepAngle,
         false,
@@ -1008,5 +1016,7 @@ class _GoalRingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_GoalRingPainter old) =>
-      old.percentage != percentage || old.fillColor != fillColor;
+      old.percentage != percentage ||
+      old.fillColor != fillColor ||
+      old.trackColor != trackColor;
 }
