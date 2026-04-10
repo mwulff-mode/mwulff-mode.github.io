@@ -274,7 +274,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         TypewriterText(
           key: const ValueKey('tw2'),
-          text: 'One last thing —\nwhat should we call you?',
+          text: 'One last thing.\nWhat should we call you?',
           onComplete: _onTypewriterComplete,
         ),
         const Spacer(),

@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final stars = AppState.taskStars[task] ?? 0;
     final dollars = (stars / AppState.starsPerDollar).toStringAsFixed(2);
     state.addJourneyEntry(
-      'Earned \$$dollars — ${taskNames[task] ?? 'Task completed'}',
+      'Earned \$$dollars: ${taskNames[task] ?? 'Task completed'}',
       'Task completed',
       taskIcons[task] ?? PhosphorIcons.checkCircle(PhosphorIconsStyle.duotone),
       taskColors[task] ?? AppColors.primary,
@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         if (!mounted) return;
         state.streakCount = 1;
         state.addJourneyEntry(
-          '1-day streak — keep it rolling',
+          '1-day streak, keep it rolling',
           'Every task adds to your balance',
           PhosphorIcons.flame(PhosphorIconsStyle.fill),
           const Color(0xFFFF6B35),
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         );
         showAppToast(
           context,
-          title: '1-day streak — keep it rolling',
+          title: '1-day streak, keep it rolling',
           subtitle: 'Every task adds to your balance',
           icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
           iconColor: const Color(0xFFFF6B35),
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       });
     }
 
-    // Goal completed — hold the solid fill, then advance
+    // Goal completed: hold the solid fill, then advance
     if (goalCompleted) {
       Haptics.milestone();
       Future.delayed(const Duration(milliseconds: 2500), () {
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Future.delayed(const Duration(seconds: 2), () {
         if (!mounted) return;
         state.addJourneyEntry(
-          'All starter tasks done — Earn More unlocked!',
+          'All starter tasks done. Earn More unlocked!',
           'Offers, Receipts & Games are now available',
           PhosphorIcons.lockSimpleOpen(PhosphorIconsStyle.duotone),
           AppColors.primary,
@@ -251,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             _gameOption(
                 ctx,
                 'Candy Crush',
-                'Match-3 puzzle — swap & match colorful candies',
+                'Match-3 puzzle: swap & match colorful candies',
                 PhosphorIcons.diamondsFour(PhosphorIconsStyle.duotone),
                 const Color(0xFFE8913A),
                 state),
@@ -259,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             _gameOption(
                 ctx,
                 'Solitaire',
-                'Classic card game — sort cards into suits',
+                'Classic card game: sort cards into suits',
                 PhosphorIcons.cards(PhosphorIconsStyle.duotone),
                 AppColors.primary,
                 state),
@@ -471,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  /// Conversational card content — see [conv_card_content.dart] to edit messages.
+  /// Conversational card content. See [conv_card_content.dart] to edit messages.
   ConvCard _convCardContent(AppState state) => resolveConvCard(state);
 
   Widget _buildConvCard(AppState state) {
@@ -674,7 +674,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Left stat — takes remaining space beside the ring
+          // Left stat: takes remaining space beside the ring
           Expanded(
             child: _buildStatBubble(
               PhosphorIcons.wallet(PhosphorIconsStyle.duotone),
@@ -684,7 +684,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          // Center ring — fixed proportional size
+          // Center ring: fixed proportional size
           ring,
 
           // Right stat
@@ -808,7 +808,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  /// Indigo "pills" style task card — icon pill + play circle action.
+  /// Indigo "pills" style task card: icon pill + play circle action.
   Widget _taskCard(String title, String meta, IconData icon, Color color,
       String taskKey, AppState state,
       {VoidCallback? onTap}) {
@@ -993,8 +993,8 @@ class _GoalRingPainter extends CustomPainter {
     const stroke = 24.0;
     final totalRadius = size.width / 2;
 
-    // Arc centred at the disc's perimeter — half bleeds inside the disc,
-    // half extends outside it — matching the reference design.
+    // Arc centred at the disc's perimeter: half bleeds inside the disc,
+    // half extends outside it, matching the reference design.
     final discRadius = totalRadius - stroke; // disc fills ~77% of widget
     final arcCenterRadius = discRadius; // arc centre == disc edge
     final pct = (percentage / 100).clamp(0.0, 1.0);

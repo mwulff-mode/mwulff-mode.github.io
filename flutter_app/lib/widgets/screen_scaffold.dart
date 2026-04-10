@@ -11,11 +11,11 @@ import 'animated_gradient_bg.dart';
 ///   - horizontal gutter padding (`AppLayout.gutter`)
 ///
 /// Escape hatches for screens that don't fit the default shell:
-///   - `padding: EdgeInsets.zero` — opt out of the default gutter (e.g. screens
+///   - `padding: EdgeInsets.zero` to opt out of the default gutter (e.g. screens
 ///      that use a top-level `Stack` or manage their own per-section padding).
-///   - `safeArea: false` — opt out of `SafeArea` when the screen needs to bleed
+///   - `safeArea: false` to opt out of `SafeArea` when the screen needs to bleed
 ///      into system insets and compute padding manually.
-///   - `animatedGradient: true` — wrap the body in [AnimatedGradientBg].
+///   - `animatedGradient: true` to wrap the body in [AnimatedGradientBg].
 class ScreenScaffold extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;

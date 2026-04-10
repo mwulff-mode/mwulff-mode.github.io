@@ -102,7 +102,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo — Hero-linked to the splash screen "E"
+                // Logo: Hero-linked to the splash screen "E"
                 Hero(
                   tag: 'earnwise-logo',
                   child: Breathing(
@@ -236,7 +236,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           // Bottom auth area
           Column(
             children: [
-              // Google button — prototype: PhysicalPress idiom (tactile
+              // Google button -- prototype: PhysicalPress idiom (tactile
               // sink-into-shadow). The other 5 primary CTAs still use
               // PressScale so you can A/B the feel directly.
               PhysicalPress(

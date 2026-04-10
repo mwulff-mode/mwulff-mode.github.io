@@ -27,7 +27,7 @@ enum HapticIntensity { confirm, reward, milestone, warning }
 /// When [enabled] is false, the widget renders the child but does not respond
 /// to taps and does not animate.
 ///
-/// When `MediaQuery.disableAnimations` is true, the spring is skipped — but
+/// When `MediaQuery.disableAnimations` is true, the spring is skipped, but
 /// the haptic and `onTap` callback still fire (motion is hidden, not feedback).
 class PressScale extends StatefulWidget {
   final Widget child;

@@ -65,7 +65,7 @@ class _BreathingState extends State<Breathing>
       animation: _controller,
       builder: (context, child) {
         // (1 - cos(t·2π)) / 2 produces a smooth single peak (0 → 1 → 0)
-        // over the full period — one full breath in/out per [period].
+        // over the full period: one full breath in/out per [period].
         // Equivalent to sin²(t·π); more natural feel than abs(sin).
         final t = (1 - cos(_controller.value * 2 * pi)) / 2;
         final scale = 1.0 + (t * widget.amplitude);

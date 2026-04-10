@@ -28,7 +28,7 @@ class AppDurations {
 
 /// Motion curves for the EarnWise app.
 ///
-/// Tuned for "playful warmth" — slightly softer than `Curves.easeOutCubic`,
+/// Tuned for "playful warmth": slightly softer than `Curves.easeOutCubic`,
 /// no overshoot except on `pop` (used for reward flourishes).
 class AppCurves {
   AppCurves._();

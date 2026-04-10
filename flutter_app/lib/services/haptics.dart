@@ -6,14 +6,13 @@ import 'package:flutter/services.dart';
 /// `HapticFeedback.*` calls anywhere else in `lib/`.
 ///
 /// **Policy (revised after first user test):**
-/// - ✅ CTA confirmation — primary buttons (Continue with Google, Let's get
+/// - CTA confirmation: primary buttons (Continue with Google, Let's get
 ///   started, That's me, future Cashout)
-/// - ✅ Reward moments — task completion, goal completion, hero moments;
+/// - Reward moments: task completion, goal completion, hero moments;
 ///   subtle, never casino-like
-/// - ✅ Error prevention — form mistakes, blocked actions
-/// - ❌ Chrome (nav switch, currency toggle, conv card open, AppCard rows,
-///   task card press-in) — no haptic. The visual + transition is the
-///   confirmation
+/// - Error prevention: form mistakes, blocked actions
+/// - No haptic on chrome (nav switch, currency toggle, conv card open, AppCard rows,
+///   task card press-in). The visual + transition is the confirmation
 class Haptics {
   Haptics._();
 
@@ -21,7 +20,7 @@ class Haptics {
   /// per app run. Different moments are independent.
   static final Set<String> _firedMoments = <String>{};
 
-  /// CTA confirmation — fires when the user presses a primary action button
+  /// CTA confirmation: fires when the user presses a primary action button
   /// (Continue with Google/Apple/Email, Let's get started, Continue, That's
   /// me, future Cashout). Light impact: a soft, confident "yes."
   static void confirm() {
@@ -29,7 +28,7 @@ class Haptics {
   }
 
   /// Completing a single task (profile / survey / game / daily_*).
-  /// Light impact — same intensity as `confirm`, different semantic moment.
+  /// Light impact. Same intensity as `confirm`, different semantic moment.
   static void reward() {
     HapticFeedback.lightImpact();
   }
@@ -41,7 +40,7 @@ class Haptics {
 
   /// Rare hero moments: welcome gift reveal, legend reached.
   ///
-  /// Medium impact (was heavy in the first iteration — heavy felt
+  /// Medium impact (was heavy in the first iteration -- heavy felt
   /// casino-like, per user feedback). Each [momentId] fires at most once per
   /// app run. Use the constants in `CelebrateMoments` to avoid typos.
   static void celebrate(String momentId) {
@@ -50,7 +49,7 @@ class Haptics {
     HapticFeedback.mediumImpact();
   }
 
-  /// Error prevention — form validation failures, blocked actions, "you
+  /// Error prevention: form validation failures, blocked actions, "you
   /// can't do that right now." Heavy impact, no guard. No call sites yet
   /// (added for the future error states).
   static void warning() {

@@ -40,7 +40,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
     _SlideData(
       icon: PhosphorIcons.shieldCheck(PhosphorIconsStyle.duotone),
       color: AppColors.primary,
-      title: 'No tricks — just real money',
+      title: 'No tricks, just real money',
     ),
   ];
 
@@ -223,7 +223,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
           ),
           const SizedBox(height: 10),
           Text(
-            '\$47 last month just from my couch. I play Candy Crush anyway — now I earn while I do it.',
+            '\$47 last month just from my couch. I play Candy Crush anyway, now I earn while I do it.',
             style: AppText.bodyStrong.copyWith(
               fontWeight: FontWeight.w500,
               fontStyle: FontStyle.italic,
@@ -233,7 +233,7 @@ class _TrustCarouselScreenState extends State<TrustCarouselScreen>
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            '— Diane, Ohio · cashed out 3 times',
+            'Diane, Ohio · cashed out 3 times',
             style: AppText.caption,
           ),
         ],

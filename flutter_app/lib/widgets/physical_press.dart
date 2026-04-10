@@ -4,7 +4,7 @@ import '../services/haptics.dart';
 import '../theme/motion.dart';
 import 'press_scale.dart' show HapticIntensity;
 
-/// A physical-button press effect — the child sits on top of a solid offset
+/// A physical-button press effect. The child sits on top of a solid offset
 /// shadow, and on press translates down into the shadow so the button looks
 /// like it sinks into the page. Mirrors the "pushable card" idiom from Cash
 /// App, Pinterest, and Duolingo.
@@ -14,7 +14,7 @@ import 'press_scale.dart' show HapticIntensity;
 /// fully covering the shadow; on release the button springs back up using
 /// the `pressSettle` spring from `AppSprings`.
 ///
-/// Unlike [PressScale] this is a fully-rendered button — the child is just
+/// Unlike [PressScale] this is a fully-rendered button: the child is just
 /// its content (Row, Text, Icon). [PhysicalPress] draws the background fill,
 /// shadow, and pill shape itself.
 class PhysicalPress extends StatefulWidget {

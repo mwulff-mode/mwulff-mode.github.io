@@ -22,7 +22,7 @@ class ConvCard {
 }
 
 // ---------------------------------------------------------------------------
-// Editable table — each row is:
+// Editable table. Each row is:
 //   last action  ×  situation  →  message + icon
 //
 // The first matching row wins. Order matters: put the most specific
@@ -43,7 +43,7 @@ ConvCard resolveConvCard(AppState state) {
 
   // ── Onboarding (goal 0) ──────────────────────────────────────────────
 
-  // Fresh account — never completed anything
+  // Fresh account: never completed anything
   if (goal == 0 && last == null) {
     return ConvCard(
       message: 'A good place to start is your Profile',
@@ -66,7 +66,7 @@ ConvCard resolveConvCard(AppState state) {
   // Just finished survey → nudge to game
   if (goal == 0 && last == 'survey' && !done.contains('game')) {
     return ConvCard(
-      message: 'One more — pick a game to play',
+      message: 'One more, pick a game to play',
       icon: PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
       color: AppColors.taskGame,
       bg: AppColors.taskGameBg,
@@ -89,7 +89,7 @@ ConvCard resolveConvCard(AppState state) {
       done.contains('survey') &&
       !done.contains('game')) {
     return ConvCard(
-      message: 'One more — pick a game to play',
+      message: 'One more, pick a game to play',
       icon: PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
       color: AppColors.taskGame,
       bg: AppColors.taskGameBg,
@@ -110,7 +110,7 @@ ConvCard resolveConvCard(AppState state) {
 
   if (state.isLegend) {
     return ConvCard(
-      message: "You've earned it all — keep stacking dollars",
+      message: "You've earned it all, keep stacking dollars",
       icon: PhosphorIcons.crown(PhosphorIconsStyle.fill),
       color: const Color(0xFFD4AF37),
       bg: const Color(0xFFFDF6E3),
@@ -135,7 +135,7 @@ ConvCard resolveConvCard(AppState state) {
   // Just finished a daily survey
   if (last == 'daily_survey' && daily < 3) {
     return ConvCard(
-      message: 'Survey done — ${3 - daily} tasks left today',
+      message: 'Survey done, ${3 - daily} tasks left today',
       icon: PhosphorIcons.lightning(PhosphorIconsStyle.duotone),
       color: AppColors.accent,
       bg: AppColors.accentLight,
@@ -145,7 +145,7 @@ ConvCard resolveConvCard(AppState state) {
   // Just finished daily play
   if (last == 'daily_play' && daily < 3) {
     return ConvCard(
-      message: 'Game time logged — ${3 - daily} more to go',
+      message: 'Game time logged, ${3 - daily} more to go',
       icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
       color: const Color(0xFFFF6B35),
       bg: const Color(0xFFFFF4ED),
@@ -155,7 +155,7 @@ ConvCard resolveConvCard(AppState state) {
   // Just finished daily offer
   if (last == 'daily_offer' && daily < 3) {
     return ConvCard(
-      message: 'Offer checked — ${3 - daily} tasks left',
+      message: 'Offer checked, ${3 - daily} tasks left',
       icon: PhosphorIcons.lightning(PhosphorIconsStyle.duotone),
       color: AppColors.accent,
       bg: AppColors.accentLight,
@@ -165,7 +165,7 @@ ConvCard resolveConvCard(AppState state) {
   // No daily tasks done yet today (or session resume with 0)
   if (daily == 0) {
     return ConvCard(
-      message: "Today's tasks are ready — start with a survey",
+      message: "Today's tasks are ready. Start with a survey",
       icon: PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
       color: AppColors.taskSurvey,
       bg: AppColors.taskSurveyBg,
@@ -185,7 +185,7 @@ ConvCard resolveConvCard(AppState state) {
   // Generic daily progress: 2 done
   if (daily == 2) {
     return ConvCard(
-      message: 'Just one more — almost there',
+      message: 'Just one more, almost there',
       icon: PhosphorIcons.flame(PhosphorIconsStyle.fill),
       color: const Color(0xFFFF6B35),
       bg: const Color(0xFFFFF4ED),
@@ -194,7 +194,7 @@ ConvCard resolveConvCard(AppState state) {
 
   // All daily tasks done
   return ConvCard(
-    message: 'All caught up — every Star adds to your balance',
+    message: 'All caught up. Every Star adds to your balance',
     icon: PhosphorIcons.sparkle(PhosphorIconsStyle.fill),
     color: AppColors.accent,
     bg: AppColors.accentLight,

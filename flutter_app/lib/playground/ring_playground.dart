@@ -445,7 +445,7 @@ class _TierRingPainter extends CustomPainter {
     final radius = (size.width - 28) / 2;
     final pct = (percentage / 100).clamp(0.0, 1.0);
 
-    // Inner fill — grows with progress, solid when complete
+    // Inner fill: grows with progress, solid when complete
     final fillOpacity = solidFill ? 1.0 : (pct * 0.08);
     final innerRadius = solidFill ? radius + 11 : radius - 12;
     final centerFill = Paint()

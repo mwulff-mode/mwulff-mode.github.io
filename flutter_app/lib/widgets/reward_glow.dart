@@ -3,7 +3,7 @@ import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 
 /// Controller for [RewardGlow]. Call [play] to trigger the celebration
-/// flourish. Safe to call multiple times — re-plays the animation from the
+/// flourish. Safe to call multiple times: re-plays the animation from the
 /// start.
 class RewardGlowController extends ChangeNotifier {
   int _playCount = 0;

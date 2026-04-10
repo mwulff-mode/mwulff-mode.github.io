@@ -14,7 +14,7 @@ import 'press_scale.dart';
 ///
 /// This only covers the *choice card* pattern. Full-width feature cards
 /// (task tiles, streak cards, conversational header) intentionally stay
-/// inline — they vary too much to force into a single widget.
+/// inline: they vary too much to force into a single widget.
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -30,7 +30,7 @@ class AppCard extends StatelessWidget {
     this.onTap,
     this.selected = false,
     this.constraints,
-    this.haptic, // null by default — chrome interactions don't fire haptics
+    this.haptic, // null by default: chrome interactions don't fire haptics
   });
 
   @override

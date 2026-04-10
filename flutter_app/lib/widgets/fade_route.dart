@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 /// right transition with parallax on the outgoing screen and the swipe-back-
 /// to-pop gesture for free.
 ///
-/// The function is still named `fadeRoute` for legacy reasons — the original
+/// The function is still named `fadeRoute` for legacy reasons: the original
 /// prototype used a fade-through helper here. The name is now a misnomer;
 /// rename in a follow-up if it becomes confusing. Call sites are unchanged.
 Route<T> fadeRoute<T>(Widget page) {
