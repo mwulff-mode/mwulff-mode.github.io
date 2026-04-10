@@ -73,4 +73,7 @@ class CelebrateMoments {
 
   /// `state.isLegend` becomes true after `advanceGoal()` on the last goal.
   static const legendReached = 'legend_reached';
+
+  /// Wallet payout confirmed celebration overlay.
+  static const payoutConfirmed = 'payout_confirmed';
 }

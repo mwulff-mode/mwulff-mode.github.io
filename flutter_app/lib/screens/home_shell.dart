@@ -8,6 +8,7 @@ import '../theme/motion.dart';
 import '../widgets/press_scale.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
+import 'wallet_screen.dart';
 
 /// Frosted glass pill fill and border alpha values. Coordinated so the
 /// glass effect stays consistent if the colors need to change later.
@@ -42,10 +43,12 @@ class _HomeShellState extends State<HomeShell> {
           Positioned.fill(
             child: IndexedStack(
               index: _navIndex,
-              children: const [
-                HomeScreen(),
-                _WalletTabStub(),
-                ProfileScreen(),
+              children: [
+                const HomeScreen(),
+                WalletScreen(
+                  onNavigateHome: () => setState(() => _navIndex = 0),
+                ),
+                const ProfileScreen(),
               ],
             ),
           ),
@@ -170,32 +173,3 @@ class _HomeShellState extends State<HomeShell> {
   }
 }
 
-/// Placeholder widget for the Wallet tab. A real Wallet screen is out of
-/// scope for this task; the stub keeps the tab tappable and visually
-/// consistent with the cream theme.
-class _WalletTabStub extends StatelessWidget {
-  const _WalletTabStub();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.cream,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Wallet',
-              style: AppText.sectionTitle,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'Wallet coming soon',
-              style: AppText.body.copyWith(color: AppColors.inkTertiary),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

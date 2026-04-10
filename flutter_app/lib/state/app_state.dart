@@ -83,6 +83,7 @@ class AppState extends ChangeNotifier {
   bool isLegend = false;
   Set<String> completedTasks = {};
   String? lastCompletedTask;
+  bool hasRedeemed = false;
   List<String> selectedPreferences = [];
   List<JourneyEntry> journeyLog = [];
 
@@ -231,6 +232,16 @@ class AppState extends ChangeNotifier {
     return false;
   }
 
+  /// Mock payout: deducts the first-goal threshold (1 500 stars = $2.00)
+  /// and marks the reward as redeemed.
+  void redeemPayout() {
+    if (hasRedeemed) return;
+    if (stars < goals[0].goalStars) return;
+    stars -= goals[0].goalStars;
+    hasRedeemed = true;
+    notifyListeners();
+  }
+
   void advanceGoal() {
     if (isLastGoal) {
       isLegend = true;
@@ -257,6 +268,7 @@ class AppState extends ChangeNotifier {
     isLegend = false;
     completedTasks = <String>{};
     lastCompletedTask = null;
+    hasRedeemed = false;
     selectedPreferences = <String>[];
     journeyLog = <JourneyEntry>[];
     convCardMsg = '';
