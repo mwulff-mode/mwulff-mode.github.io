@@ -90,5 +90,60 @@ void main() {
       // Email now appears twice: once in the hero and once in the account row.
       expect(find.text('lisa@earnwise.demo'), findsNWidgets(2));
     });
+
+    testWidgets('renders the Sign Out button', (tester) async {
+      await pumpProfile(tester);
+      expect(find.byKey(const Key('profile_sign_out')), findsOneWidget);
+      expect(find.text('Sign Out'), findsOneWidget);
+    });
+
+    testWidgets('tapping Sign Out calls AppState.reset', (tester) async {
+      final state = AppState();
+      state.userName = 'Dirty';
+      state.stars = 9999;
+      state.tasksCompleted = 5;
+
+      await pumpProfile(tester, state: state);
+      expect(find.text('Sign Out'), findsOneWidget);
+
+      await tester.ensureVisible(find.byKey(const Key('profile_sign_out')));
+      await tester.tap(find.byKey(const Key('profile_sign_out')));
+      // WelcomeScreen._startAnimations fires several Future.delayed timers
+      // (500 ms + 200 ms + 200 ms + 200 ms = 1100 ms total) and Breathing
+      // repeats indefinitely. We pump through all the one-shot delayed timers
+      // so they don't leak, but stop before the repeat loop.
+      await tester.pump(); // process the tap
+      await tester.pump(
+          const Duration(milliseconds: 400)); // CupertinoPageRoute transition
+      await tester.pump(
+          const Duration(milliseconds: 1100)); // drain WelcomeScreen timers
+
+      // AppState is back to defaults.
+      expect(state.userName, 'Lisa');
+      expect(state.stars, 125);
+      expect(state.tasksCompleted, 0);
+    });
+
+    testWidgets('tapping Sign Out pops the profile screen away',
+        (tester) async {
+      await pumpProfile(tester);
+      expect(find.text('Sign Out'), findsOneWidget);
+
+      await tester.ensureVisible(find.byKey(const Key('profile_sign_out')));
+      await tester.tap(find.byKey(const Key('profile_sign_out')));
+      // WelcomeScreen._startAnimations fires several Future.delayed timers
+      // (500 ms + 200 ms + 200 ms + 200 ms = 1100 ms total) and Breathing
+      // repeats indefinitely. We pump through all the one-shot delayed timers
+      // so they don't leak, but stop before the repeat loop.
+      await tester.pump(); // process the tap
+      await tester.pump(
+          const Duration(milliseconds: 400)); // CupertinoPageRoute transition
+      await tester.pump(
+          const Duration(milliseconds: 1100)); // drain WelcomeScreen timers
+
+      // The Sign Out button is no longer in the tree because the profile
+      // screen was popped (and the WelcomeScreen is now on top).
+      expect(find.text('Sign Out'), findsNothing);
+    });
   });
 }

@@ -74,7 +74,8 @@ const legendTrackColor = Color(0xFFFEF3C7);
 class AppState extends ChangeNotifier {
   String userName = 'Lisa';
   int stars = 125; // welcome gift
-  int earnedToday = 0; // Stars earned from tasks this session (excludes welcome gift)
+  int earnedToday =
+      0; // Stars earned from tasks this session (excludes welcome gift)
   int goalIndex = 0;
   int tasksCompleted = 0;
   bool screen5Played = false;

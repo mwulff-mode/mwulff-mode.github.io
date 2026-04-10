@@ -30,14 +30,14 @@ void main() {
       expect(find.byType(HomeShell), findsOneWidget);
     });
 
-    testWidgets('tapping the Wallet tab shows the Wallet stub',
-        (tester) async {
+    testWidgets('tapping the Wallet tab shows the Wallet stub', (tester) async {
       await pumpShell(tester);
       expect(find.text('Wallet coming soon'), findsNothing);
 
       await tester.tap(find.byKey(const Key('shell_nav_wallet')));
       await tester.pump(); // setState and rebuild
-      await tester.pump(const Duration(milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
+      await tester.pump(const Duration(
+          milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
 
       expect(find.text('Wallet coming soon'), findsOneWidget);
     });
@@ -49,7 +49,8 @@ void main() {
 
       await tester.tap(find.byKey(const Key('shell_nav_profile')));
       await tester.pump(); // setState and rebuild
-      await tester.pump(const Duration(milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
+      await tester.pump(const Duration(
+          milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
 
       expect(find.byKey(const Key('profile_screen_root')), findsOneWidget);
     });

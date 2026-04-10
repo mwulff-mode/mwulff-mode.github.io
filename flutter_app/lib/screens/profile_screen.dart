@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../widgets/fade_route.dart';
+import 'welcome_screen.dart';
 
 /// Bottom padding reserved inside the scroll view so the last element
 /// sits above the floating nav pill that HomeShell overlays above
@@ -49,7 +51,8 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: AppSpacing.lg),
                   const _SectionHeading(label: 'ACCOUNT'),
                   _AccountCard(state: state),
-                  // Sign Out is added in the next task.
+                  const SizedBox(height: AppSpacing.xl),
+                  const _SignOutButton(),
                 ],
               ),
             );
@@ -69,9 +72,8 @@ class _ProfileHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initials = state.userName.isEmpty
-        ? '?'
-        : state.userName[0].toUpperCase();
+    final initials =
+        state.userName.isEmpty ? '?' : state.userName[0].toUpperCase();
     return Column(
       children: [
         _AvatarCircle(initials: initials),
@@ -427,3 +429,43 @@ class _AccountRow extends StatelessWidget {
     );
   }
 }
+
+/// Red-outlined pill button. Full width. Tap calls AppState.reset()
+/// and then pushes the welcome screen onto a cleared navigation stack.
+class _SignOutButton extends StatelessWidget {
+  const _SignOutButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        key: const Key('profile_sign_out'),
+        onPressed: () {
+          context.read<AppState>().reset();
+          Navigator.of(context).pushAndRemoveUntil(
+            fadeRoute(const WelcomeScreen()),
+            (route) => false,
+          );
+        },
+        style: OutlinedButton.styleFrom(
+          backgroundColor: AppColors.white,
+          foregroundColor: _kSignOutRed,
+          side: const BorderSide(color: _kSignOutRed, width: 1.5),
+          shape: const StadiumBorder(),
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          minimumSize: const Size(double.infinity, 60),
+        ),
+        child: Text(
+          'Sign Out',
+          style: AppText.ctaLabel.copyWith(color: _kSignOutRed),
+        ),
+      ),
+    );
+  }
+}
+
+/// Red used by the Sign Out button. Not in AppColors because Sign Out
+/// is the only red surface in the app today; if a second red element
+/// ever ships, promote this to AppColors.
+const Color _kSignOutRed = Color(0xFFDC2626);
