@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
@@ -37,8 +38,10 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   _ProfileHero(state: state),
-                  // Personal Info, Account, and Sign Out are added in
-                  // subsequent tasks.
+                  const SizedBox(height: AppSpacing.xl),
+                  const _SectionHeading(label: 'PERSONAL INFO'),
+                  _InfoCard(state: state),
+                  // Account and Sign Out are added in subsequent tasks.
                 ],
               ),
             );
@@ -187,6 +190,159 @@ class _GoogleLogo extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// The eyebrow heading style used by every section on the profile.
+/// Uppercase, letter-spaced, ink-tertiary, weight 700. Matches the same
+/// recipe used by the game detail screen's _SectionHeading.
+class _SectionHeading extends StatelessWidget {
+  final String label;
+
+  const _SectionHeading({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          label,
+          style: AppText.caption.copyWith(
+            color: AppColors.inkTertiary,
+            letterSpacing: 1.6,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Outer card wrapping three _InfoRow children with thin dividers.
+/// Replicates the AppCard visual recipe inline (white, 18 radius,
+/// cream-deep border, soft shadow) because the profile info card is
+/// a fixed three-row layout that does not need the AppCard widget's
+/// tap-target behavior.
+class _InfoCard extends StatelessWidget {
+  final AppState state;
+
+  const _InfoCard({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.creamDeep, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _InfoRow(
+            icon: PhosphorIcons.user(PhosphorIconsStyle.regular),
+            label: 'Full Name',
+            value: state.userName,
+          ),
+          const _RowDivider(),
+          _InfoRow(
+            icon: PhosphorIcons.calendar(PhosphorIconsStyle.regular),
+            label: 'Age Range',
+            value: state.ageRange,
+          ),
+          const _RowDivider(),
+          _InfoRow(
+            icon: PhosphorIcons.usersThree(PhosphorIconsStyle.regular),
+            label: 'Gender',
+            value: state.gender,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One row inside _InfoCard. Circular icon tile on the left, label
+/// above value in the middle, decorative pencil icon on the right.
+/// The pencil icon has no tap handler in v1.
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.primary.withValues(alpha: 0.12),
+            ),
+            child: Center(
+              child: Icon(icon, size: 22, color: AppColors.primary),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style:
+                      AppText.caption.copyWith(color: AppColors.inkSecondary),
+                ),
+                const SizedBox(height: 2),
+                Text(value, style: AppText.listItem),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Icon(
+            PhosphorIcons.pencilSimpleLine(PhosphorIconsStyle.regular),
+            size: 20,
+            color: AppColors.inkTertiary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 1 px cream-deep divider inset from both sides by AppSpacing.md so it
+/// does not touch the card border.
+class _RowDivider extends StatelessWidget {
+  const _RowDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+      child: Divider(
+        height: 1,
+        thickness: 1,
+        color: AppColors.creamDeep,
       ),
     );
   }

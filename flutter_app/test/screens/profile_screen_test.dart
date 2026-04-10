@@ -49,5 +49,33 @@ void main() {
       expect(find.text('via'), findsOneWidget);
       expect(find.text('Google'), findsOneWidget);
     });
+
+    testWidgets('renders the PERSONAL INFO section heading', (tester) async {
+      await pumpProfile(tester);
+      expect(find.text('PERSONAL INFO'), findsOneWidget);
+    });
+
+    testWidgets('renders the Full Name row with label and value',
+        (tester) async {
+      final state = AppState();
+      state.userName = 'Lisa';
+      await pumpProfile(tester, state: state);
+      expect(find.text('Full Name'), findsOneWidget);
+      // The hero shows the initial 'L' and the info row shows the full name 'Lisa'.
+      expect(find.text('Lisa'), findsOneWidget);
+    });
+
+    testWidgets('renders the Age Range row with label and value',
+        (tester) async {
+      await pumpProfile(tester);
+      expect(find.text('Age Range'), findsOneWidget);
+      expect(find.text('26-35'), findsOneWidget);
+    });
+
+    testWidgets('renders the Gender row with label and value', (tester) async {
+      await pumpProfile(tester);
+      expect(find.text('Gender'), findsOneWidget);
+      expect(find.text('Female'), findsOneWidget);
+    });
   });
 }
