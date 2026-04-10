@@ -5,6 +5,7 @@ import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../widgets/fade_route.dart';
+import '../widgets/press_scale.dart';
 import 'welcome_screen.dart';
 
 /// Bottom padding reserved inside the scroll view so the last element
@@ -432,33 +433,36 @@ class _AccountRow extends StatelessWidget {
 
 /// Red-outlined pill button. Full width. Tap calls AppState.reset()
 /// and then pushes the welcome screen onto a cleared navigation stack.
+/// Wrapped in [PressScale] with [HapticIntensity.warning] so the
+/// destructive action feels different from a normal confirm CTA.
 class _SignOutButton extends StatelessWidget {
   const _SignOutButton();
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        key: const Key('profile_sign_out'),
-        onPressed: () {
-          context.read<AppState>().reset();
-          Navigator.of(context).pushAndRemoveUntil(
-            fadeRoute(const WelcomeScreen()),
-            (route) => false,
-          );
-        },
-        style: OutlinedButton.styleFrom(
-          backgroundColor: AppColors.white,
-          foregroundColor: _kSignOutRed,
-          side: const BorderSide(color: _kSignOutRed, width: 1.5),
-          shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          minimumSize: const Size(double.infinity, 60),
+    return PressScale(
+      key: const Key('profile_sign_out'),
+      haptic: HapticIntensity.warning,
+      onTap: () {
+        context.read<AppState>().reset();
+        Navigator.of(context).pushAndRemoveUntil(
+          fadeRoute(const WelcomeScreen()),
+          (route) => false,
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: _kSignOutRed, width: 1.5),
         ),
-        child: Text(
-          'Sign Out',
-          style: AppText.ctaLabel.copyWith(color: _kSignOutRed),
+        child: Center(
+          child: Text(
+            'Sign Out',
+            style: AppText.ctaLabel.copyWith(color: _kSignOutRed),
+          ),
         ),
       ),
     );
