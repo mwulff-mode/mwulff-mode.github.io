@@ -66,9 +66,9 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: (context, state, _) {
-        final balanceDollars = state.starsToDollars(state.stars);
+        final balanceDollars = AppState.starsToDollars(state.stars);
         final thresholdDollars =
-            state.starsToDollars(_kPayoutThresholdStars);
+            AppState.starsToDollars(_kPayoutThresholdStars);
         final progress = (balanceDollars / thresholdDollars).clamp(0.0, 1.0);
         final isUnlocked =
             state.stars >= _kPayoutThresholdStars && !state.hasRedeemed;
@@ -213,7 +213,7 @@ class _WalletScreenState extends State<WalletScreen> {
         else
           Text(
             remaining > 0
-                ? 'Earn \$${state.starsToDollars(remaining).toStringAsFixed(2)} more to unlock your first reward'
+                ? 'Earn \$${AppState.starsToDollars(remaining).toStringAsFixed(2)} more to unlock your first reward'
                 : 'Reward redeemed',
             style: AppText.caption.copyWith(
                 color: AppColors.inkTertiary, fontWeight: FontWeight.w500),

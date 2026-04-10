@@ -22,7 +22,9 @@ import 'game_detail_screen.dart';
 import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onNavigateToWallet;
+
+  const HomeScreen({super.key, this.onNavigateToWallet});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();

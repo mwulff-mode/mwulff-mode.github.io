@@ -44,7 +44,9 @@ class _HomeShellState extends State<HomeShell> {
             child: IndexedStack(
               index: _navIndex,
               children: [
-                const HomeScreen(),
+                HomeScreen(
+                  onNavigateToWallet: () => setState(() => _navIndex = 1),
+                ),
                 WalletScreen(
                   onNavigateHome: () => setState(() => _navIndex = 0),
                 ),

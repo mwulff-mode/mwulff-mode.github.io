@@ -32,14 +32,14 @@ void main() {
 
     testWidgets('tapping the Wallet tab shows the Wallet stub', (tester) async {
       await pumpShell(tester);
-      expect(find.text('Wallet coming soon'), findsNothing);
+      expect(find.text('Withdraw'), findsNothing);
 
       await tester.tap(find.byKey(const Key('shell_nav_wallet')));
       await tester.pump(); // setState and rebuild
       await tester.pump(const Duration(
           milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
 
-      expect(find.text('Wallet coming soon'), findsOneWidget);
+      expect(find.text('Withdraw'), findsOneWidget);
     });
 
     testWidgets('tapping the Profile tab shows the profile screen',
