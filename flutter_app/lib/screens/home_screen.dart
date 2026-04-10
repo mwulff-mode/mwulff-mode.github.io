@@ -171,40 +171,60 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       });
     }
 
-    // Goal completed: hold the solid fill, then advance
+    // Goal completed: hold the solid fill so the user sees it, then celebrate
     if (goalCompleted) {
       Haptics.milestone();
-      Future.delayed(const Duration(milliseconds: 2500), () {
-        if (!mounted) return;
-        final s = context.read<AppState>();
-        s.advanceGoal();
-        if (s.isLegend) {
-          Haptics.celebrate(CelebrateMoments.legendReached);
-        }
-        s.addJourneyEntry(
-          'Goal ${s.goalIndex} complete!',
-          s.isLegend
-              ? "You've earned it all."
-              : 'Next goal: \$${(s.currentGoal.goalStars / AppState.starsPerDollar).toStringAsFixed(2)}',
-          PhosphorIcons.trophy(PhosphorIconsStyle.fill),
-          s.ringColor,
-          s.ringColor.withValues(alpha: 0.1),
-        );
-      });
-    }
-
-    if (state.allTasksCompleted) {
-      Haptics.milestone();
-      Future.delayed(const Duration(seconds: 2), () {
-        if (!mounted) return;
-        state.addJourneyEntry(
-          'All starter tasks done. Earn More unlocked!',
-          'Offers, Receipts & Games are now available',
-          PhosphorIcons.lockSimpleOpen(PhosphorIconsStyle.duotone),
-          AppColors.primary,
-          AppColors.primaryPale,
-        );
-      });
+      // First onboarding goal: show celebration modal
+      if (state.goalIndex == 0) {
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          if (!mounted) return;
+          _showGoalCelebration(context).then((cashOut) {
+            if (!mounted) return;
+            final s = context.read<AppState>();
+            // Shared dismiss logic: advance goal + journal entry
+            s.advanceGoal();
+            s.addJourneyEntry(
+              'Goal complete! Your first \$2 payout is ready.',
+              'Earn More is now unlocked',
+              PhosphorIcons.trophy(PhosphorIconsStyle.fill),
+              s.ringColor,
+              s.ringColor.withValues(alpha: 0.1),
+            );
+            // Branch on path
+            if (cashOut) {
+              widget.onNavigateToWallet?.call();
+            } else {
+              showAppToast(
+                context,
+                title: 'Earn More is unlocked!',
+                subtitle: 'Offers, Receipts and Games are now available',
+                icon: PhosphorIcons.lockSimpleOpen(PhosphorIconsStyle.duotone),
+                iconColor: AppColors.primary,
+                iconBackground: AppColors.primaryPale,
+              );
+            }
+          });
+        });
+      } else {
+        // Later goals: keep the existing silent advance behavior
+        Future.delayed(const Duration(milliseconds: 2500), () {
+          if (!mounted) return;
+          final s = context.read<AppState>();
+          s.advanceGoal();
+          if (s.isLegend) {
+            Haptics.celebrate(CelebrateMoments.legendReached);
+          }
+          s.addJourneyEntry(
+            'Goal ${s.goalIndex} complete!',
+            s.isLegend
+                ? "You've earned it all."
+                : 'Next goal: \$${(s.currentGoal.goalStars / AppState.starsPerDollar).toStringAsFixed(2)}',
+            PhosphorIcons.trophy(PhosphorIconsStyle.fill),
+            s.ringColor,
+            s.ringColor.withValues(alpha: 0.1),
+          );
+        });
+      }
     }
   }
 
