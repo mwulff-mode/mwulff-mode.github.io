@@ -9,6 +9,16 @@ import '../widgets/press_scale.dart';
 import 'home_screen.dart';
 import 'profile_screen.dart';
 
+/// Frosted glass pill fill and border alpha values. Coordinated so the
+/// glass effect stays consistent if the colors need to change later.
+const double _kGlassFillAlpha = 0.55;
+const double _kGlassBorderAlpha = 0.70;
+
+/// Corner radius for the floating nav pill. The inner nav item radius
+/// (32) is intentionally smaller so the active tab highlight floats
+/// inside the pill.
+const double _kNavPillRadius = 40.0;
+
 /// Top-level tab shell that sits between onboarding and the tab content.
 /// Owns the floating glass nav pill that overlays every tab with a
 /// cream-to-transparent gradient fade above it. Children are swapped via
@@ -45,25 +55,22 @@ class _HomeShellState extends State<HomeShell> {
             left: 0,
             right: 0,
             bottom: 0,
-            child: IgnorePointer(
-              ignoring: false,
-              child: Container(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom + 16,
-                  top: 40,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColors.cream.withValues(alpha: 0),
-                      AppColors.cream.withValues(alpha: 0.92),
-                    ],
-                  ),
-                ),
-                child: Center(child: _buildBottomNav()),
+            child: Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom + 16,
+                top: 40,
               ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.cream.withValues(alpha: 0),
+                    AppColors.cream.withValues(alpha: 0.92),
+                  ],
+                ),
+              ),
+              child: Center(child: _buildBottomNav()),
             ),
           ),
         ],
@@ -73,16 +80,16 @@ class _HomeShellState extends State<HomeShell> {
 
   Widget _buildBottomNav() {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(40),
+      borderRadius: BorderRadius.circular(_kNavPillRadius),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.55),
-            borderRadius: BorderRadius.circular(40),
+            color: Colors.white.withValues(alpha: _kGlassFillAlpha),
+            borderRadius: BorderRadius.circular(_kNavPillRadius),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.7),
+              color: Colors.white.withValues(alpha: _kGlassBorderAlpha),
               width: 1,
             ),
           ),
@@ -93,19 +100,19 @@ class _HomeShellState extends State<HomeShell> {
                 0,
                 PhosphorIcons.house(PhosphorIconsStyle.fill),
                 'Home',
-                const Key('shell_nav_home'),
+                key: const Key('shell_nav_home'),
               ),
               _navItem(
                 1,
                 PhosphorIcons.wallet(PhosphorIconsStyle.fill),
                 'Wallet',
-                const Key('shell_nav_wallet'),
+                key: const Key('shell_nav_wallet'),
               ),
               _navItem(
                 2,
                 PhosphorIcons.user(PhosphorIconsStyle.fill),
                 'Profile',
-                const Key('shell_nav_profile'),
+                key: const Key('shell_nav_profile'),
               ),
             ],
           ),
@@ -114,7 +121,7 @@ class _HomeShellState extends State<HomeShell> {
     );
   }
 
-  Widget _navItem(int index, IconData icon, String label, Key key) {
+  Widget _navItem(int index, IconData icon, String label, {required Key key}) {
     final isActive = _navIndex == index;
     return PressScale(
       key: key,
@@ -142,12 +149,14 @@ class _HomeShellState extends State<HomeShell> {
                   ? Row(
                       children: [
                         const SizedBox(width: 8),
+                        // Override font size: the nav pill label is
+                        // intentionally one step smaller than the base
+                        // bodyStrong (16 -> 15). Weight (w600) is unchanged.
                         Text(
                           label,
                           style: AppText.bodyStrong.copyWith(
                             fontSize: 15,
                             color: Colors.white,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],

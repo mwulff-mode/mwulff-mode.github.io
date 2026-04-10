@@ -5,24 +5,22 @@ import 'package:earnwise_mvp/screens/home_shell.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 
 /// Pumps [HomeShell] inside a Provider + MaterialApp harness.
-/// Uses pump() with a fixed duration rather than pumpAndSettle() because
-/// AnimatedGradientBg contains a repeat() animation controller that never
-/// settles, which would cause pumpAndSettle() to time out.
+///
+/// screen5Played is the gate that suppresses the welcome-gift animation
+/// chain in HomeScreen._playGiftAnimation. Skipping it avoids the 5.5 s
+/// of Future.delayed timers that would otherwise run during the test.
+/// AnimatedGradientBg still runs its infinite repeat loop in the
+/// background, but no assertion depends on it, so we never need to
+/// pumpAndSettle.
 Future<void> pumpShell(WidgetTester tester) async {
+  final state = AppState()..screen5Played = true;
   await tester.pumpWidget(
-    ChangeNotifierProvider<AppState>(
-      create: (_) => AppState(),
-      child: const MaterialApp(
-        home: HomeShell(),
-      ),
+    ChangeNotifierProvider<AppState>.value(
+      value: state,
+      child: const MaterialApp(home: HomeShell()),
     ),
   );
-  // Advance past all gift animation timers. The chain in _playGiftAnimation
-  // accumulates to ~3080 ms before hiding the gift, then fires a final
-  // 2500 ms journey-entry timer. Pumping 6 s drains every pending timer
-  // without requiring pumpAndSettle (AnimatedGradientBg uses repeat() and
-  // never settles).
-  await tester.pump(const Duration(seconds: 6));
+  await tester.pump(); // one frame to build the tree
 }
 
 void main() {
@@ -38,7 +36,8 @@ void main() {
       expect(find.text('Wallet coming soon'), findsNothing);
 
       await tester.tap(find.byKey(const Key('shell_nav_wallet')));
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(); // setState and rebuild
+      await tester.pump(const Duration(milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
 
       expect(find.text('Wallet coming soon'), findsOneWidget);
     });
@@ -49,7 +48,8 @@ void main() {
       expect(find.byKey(const Key('profile_screen_root')), findsNothing);
 
       await tester.tap(find.byKey(const Key('shell_nav_profile')));
-      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(); // setState and rebuild
+      await tester.pump(const Duration(milliseconds: 320)); // AnimatedContainer frame (AppDurations.medium)
 
       expect(find.byKey(const Key('profile_screen_root')), findsOneWidget);
     });
