@@ -43,7 +43,7 @@ const goals = [
       trackColor: Color(0xFFE2E8F0)),
   Goal(
       level: 2,
-      goalStars: 5000,
+      goalStars: 3750,
       ringColor: Color(0xFF0D9488),
       trackColor: Color(0xFFE2E8F0)),
   Goal(
@@ -72,10 +72,9 @@ const legendColor = Color(0xFFF59E0B);
 const legendTrackColor = Color(0xFFFEF3C7);
 
 class AppState extends ChangeNotifier {
-  String userName = 'Lisa';
-  int stars = 125; // welcome gift
-  int earnedToday =
-      0; // Stars earned from tasks this session (excludes welcome gift)
+  String userName = '';
+  int stars = 0;
+  int earnedToday = 0;
   int goalIndex = 0;
   int tasksCompleted = 0;
   bool screen5Played = false;
@@ -94,7 +93,12 @@ class AppState extends ChangeNotifier {
   Color convCardIconBg = AppColors.primaryPale;
 
   // Profile fields (fictional demo values, surfaced on ProfileScreen)
-  String email = 'lisa@earnwise.demo';
+  String get displayName => userName.isEmpty ? 'Jane Doe' : userName;
+
+  String get email {
+    final name = displayName.toLowerCase().replaceAll(' ', '.');
+    return '$name@gmail.com';
+  }
   String authProvider = 'Google'; // 'Google' | 'Apple'
   String ageRange = '26-35';
   String gender = 'Female';
@@ -124,7 +128,7 @@ class AppState extends ChangeNotifier {
     return '$hour:${now.minute.toString().padLeft(2, '0')} $period';
   }
 
-  double starsToDollars(int s) => s / starsPerDollar;
+  static double starsToDollars(int s) => s / starsPerDollar;
 
   String formatBalance() {
     return '\$${starsToDollars(stars).toStringAsFixed(2)}';
@@ -196,10 +200,11 @@ class AppState extends ChangeNotifier {
 
   // Task sets per goal phase
   static const taskStars = {
-    // Goal 1 (onboarding)
-    'profile': 250,
-    'survey': 375,
-    'game': 750,
+    // Goal 1 (onboarding) — must total 1500 ($2.00)
+    'profile': 300,        // $0.40
+    'survey': 450,         // $0.60
+    'game_install': 150,   // $0.20
+    'game_milestone': 600, // $0.80
     // Goal 2+ (daily)
     'daily_survey': 500,
     'daily_play': 650,
@@ -251,15 +256,15 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get allTasksCompleted => tasksCompleted >= 3;
+  bool get allTasksCompleted => tasksCompleted >= 4;
 
   /// Resets every in-session field to the same initial value the field
   /// declaration uses today. Called by the Sign Out button on
   /// [ProfileScreen]. After reset the next onboarding run sees the
   /// welcome gift animation again because [stars] goes back to 125.
   void reset() {
-    userName = 'Lisa';
-    stars = 125;
+    userName = '';
+    stars = 0;
     earnedToday = 0;
     goalIndex = 0;
     tasksCompleted = 0;
@@ -275,7 +280,6 @@ class AppState extends ChangeNotifier {
     convCardIcon = Icons.waving_hand;
     convCardIconColor = AppColors.primary;
     convCardIconBg = AppColors.primaryPale;
-    email = 'lisa@earnwise.demo';
     authProvider = 'Google';
     ageRange = '26-35';
     gender = 'Female';

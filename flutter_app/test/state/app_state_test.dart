@@ -41,13 +41,15 @@ void main() {
       state.convCardIcon = Icons.bug_report;
       state.convCardIconColor = Colors.red;
       state.convCardIconBg = Colors.pink;
-      state.email = 'hacked@example.com';
       state.authProvider = 'Facebook';
       state.ageRange = '99+';
       state.gender = 'Dirty';
 
+      state.hasRedeemed = true;
+
       state.reset();
 
+      expect(state.hasRedeemed, isFalse, reason: 'hasRedeemed');
       expect(state.userName, 'Lisa', reason: 'userName should reset to Lisa');
       expect(state.stars, 125,
           reason: 'stars should reset to welcome-gift starting balance');
@@ -84,6 +86,56 @@ void main() {
       state.reset();
 
       expect(notifyCount, 1);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // redeemPayout
+  // ---------------------------------------------------------------------------
+
+  group('redeemPayout', () {
+    test('deducts first-goal stars and sets hasRedeemed', () {
+      final state = AppState();
+      state.stars = 1500; // exactly at threshold
+      state.redeemPayout();
+      expect(state.stars, 0);
+      expect(state.hasRedeemed, isTrue);
+    });
+
+    test('is a no-op when stars are below the threshold', () {
+      final state = AppState();
+      // Default stars == 125, well below 1500.
+      state.redeemPayout();
+      expect(state.stars, 125, reason: 'stars should be unchanged');
+      expect(state.hasRedeemed, isFalse);
+    });
+
+    test('is a no-op when already redeemed (idempotency)', () {
+      final state = AppState();
+      state.stars = 3000;
+      state.redeemPayout(); // first call
+      expect(state.stars, 1500);
+
+      state.redeemPayout(); // second call -- should not deduct again
+      expect(state.stars, 1500, reason: 'stars should not change on repeat');
+      expect(state.hasRedeemed, isTrue);
+    });
+
+    test('notifies listeners', () {
+      final state = AppState();
+      state.stars = 1500;
+      int notifyCount = 0;
+      state.addListener(() => notifyCount++);
+      state.redeemPayout();
+      expect(notifyCount, 1);
+    });
+
+    test('does not notify when insufficient balance', () {
+      final state = AppState();
+      int notifyCount = 0;
+      state.addListener(() => notifyCount++);
+      state.redeemPayout();
+      expect(notifyCount, 0);
     });
   });
 
@@ -295,8 +347,8 @@ void main() {
     test('formatGoal returns correct dollar for goal 1 threshold', () {
       final state = AppState();
       state.goalIndex = 1;
-      // Goal 1 goalStars == 5000; 5000 / 750 ~ $6.67
-      expect(state.formatGoal(), '\$6.67');
+      // Goal 1 goalStars == 3750; 3750 / 750 == $5.00
+      expect(state.formatGoal(), '\$5.00');
     });
 
     test('formatGoal returns infinity symbol when isLegend', () {
