@@ -19,6 +19,9 @@ Future<void> pumpProfile(
       ),
     ),
   );
+  // Safe to pumpAndSettle here: ProfileScreen has no infinite-repeat
+  // animations. HomeShell's test has to skip pumpAndSettle because of
+  // AnimatedGradientBg, but ProfileScreen renders static content only.
   await tester.pumpAndSettle();
 }
 
@@ -31,9 +34,9 @@ void main() {
 
     testWidgets('renders the avatar initial from userName', (tester) async {
       final state = AppState();
-      state.userName = 'Lisa';
+      state.userName = 'Alice';
       await pumpProfile(tester, state: state);
-      expect(find.text('L'), findsOneWidget);
+      expect(find.text('A'), findsOneWidget);
     });
 
     testWidgets('renders the email from AppState', (tester) async {

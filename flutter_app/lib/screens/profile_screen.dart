@@ -4,6 +4,11 @@ import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 
+/// Bottom padding reserved inside the scroll view so the last element
+/// sits above the floating nav pill that HomeShell overlays above
+/// every tab. Matches the pill height plus breathing room.
+const double _kNavClearance = 140.0;
+
 /// Full-page profile surface shown as the third tab inside [HomeShell].
 /// Displays the user's avatar, email, fictional personal info fields,
 /// a connected-account row, and a Sign Out button.
@@ -27,10 +32,7 @@ class ProfileScreen extends StatelessWidget {
                 left: AppLayout.gutter,
                 right: AppLayout.gutter,
                 top: AppSpacing.xl,
-                // Extra bottom padding so the last element sits above the
-                // floating nav pill overlay that HomeShell renders above
-                // every tab.
-                bottom: 140,
+                bottom: _kNavClearance,
               ),
               child: Column(
                 children: [
@@ -89,10 +91,10 @@ class _AvatarCircle extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Glow layer: slightly larger soft circle behind the avatar.
+          // Glow layer: slightly larger soft circle behind the avatar face.
           Container(
-            width: 160,
-            height: 160,
+            width: 140,
+            height: 140,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: RadialGradient(
@@ -111,10 +113,11 @@ class _AvatarCircle extends StatelessWidget {
               shape: BoxShape.circle,
               color: AppColors.primary,
             ),
-            alignment: Alignment.center,
-            child: Text(
-              initials,
-              style: AppText.display.copyWith(color: Colors.white),
+            child: Center(
+              child: Text(
+                initials,
+                style: AppText.display.copyWith(color: Colors.white),
+              ),
             ),
           ),
         ],
