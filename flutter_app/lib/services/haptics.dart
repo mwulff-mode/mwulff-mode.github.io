@@ -56,14 +56,6 @@ class Haptics {
     HapticFeedback.heavyImpact();
   }
 
-  /// Deprecated: was used for chrome interactions (nav switch, currency
-  /// toggle). The new policy doesn't fire haptics on chrome. Kept as a
-  /// no-op so any forgotten call site doesn't fire selectionClick.
-  @Deprecated('Chrome interactions no longer fire haptics. Remove the call.')
-  static void tick() {
-    // No-op under the new policy.
-  }
-
   /// Test-only: clear the celebrate guard between tests.
   /// Not for production use.
   static void debugResetCelebrateGuard() {
