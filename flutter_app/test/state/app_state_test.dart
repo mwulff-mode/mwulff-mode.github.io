@@ -7,7 +7,7 @@ void main() {
   group('AppState profile fields', () {
     test('default values match the spec', () {
       final state = AppState();
-      expect(state.email, 'lisa@earnwise.demo');
+      expect(state.email, 'jane.doe@gmail.com');
       expect(state.authProvider, 'Google');
       expect(state.ageRange, '26-35');
       expect(state.gender, 'Female');
@@ -50,9 +50,9 @@ void main() {
       state.reset();
 
       expect(state.hasRedeemed, isFalse, reason: 'hasRedeemed');
-      expect(state.userName, 'Lisa', reason: 'userName should reset to Lisa');
-      expect(state.stars, 125,
-          reason: 'stars should reset to welcome-gift starting balance');
+      expect(state.userName, '', reason: 'userName should reset to empty');
+      expect(state.stars, 0,
+          reason: 'stars should reset to zero');
       expect(state.earnedToday, 0, reason: 'earnedToday');
       expect(state.goalIndex, 0, reason: 'goalIndex');
       expect(state.tasksCompleted, 0, reason: 'tasksCompleted');
@@ -72,7 +72,7 @@ void main() {
           reason: 'convCardIconColor');
       expect(state.convCardIconBg, AppColors.primaryPale,
           reason: 'convCardIconBg');
-      expect(state.email, 'lisa@earnwise.demo', reason: 'email');
+      expect(state.email, 'jane.doe@gmail.com', reason: 'email');
       expect(state.authProvider, 'Google', reason: 'authProvider');
       expect(state.ageRange, '26-35', reason: 'ageRange');
       expect(state.gender, 'Female', reason: 'gender');
@@ -104,9 +104,9 @@ void main() {
 
     test('is a no-op when stars are below the threshold', () {
       final state = AppState();
-      // Default stars == 125, well below 1500.
+      // Default stars == 0, well below 1500.
       state.redeemPayout();
-      expect(state.stars, 125, reason: 'stars should be unchanged');
+      expect(state.stars, 0, reason: 'stars should be unchanged');
       expect(state.hasRedeemed, isFalse);
     });
 
@@ -146,11 +146,11 @@ void main() {
   group('completeTask', () {
     test('adds the task to completedTasks and increments stars', () {
       final state = AppState();
-      // Fresh state: stars == 125 (welcome gift), no tasks done.
+      // Fresh state: stars == 0, no tasks done.
       state.completeTask('profile');
       expect(state.completedTasks, contains('profile'));
-      // profile awards 250 stars.
-      expect(state.stars, 125 + 250);
+      // profile awards 300 stars.
+      expect(state.stars, 0 + 300);
     });
 
     test('increments tasksCompleted', () {
@@ -164,13 +164,13 @@ void main() {
 
     test('increments earnedToday by the task star value', () {
       final state = AppState();
-      state.completeTask('survey'); // 375 stars
-      expect(state.earnedToday, 375);
+      state.completeTask('survey'); // 450 stars
+      expect(state.earnedToday, 450);
     });
 
     test('returns false when goal is not completed', () {
       final state = AppState();
-      // goal 0 threshold is 1500. Starting stars 125, profile adds 250 = 375.
+      // goal 0 threshold is 1500. Starting stars 0, profile adds 300 = 300.
       // Still far from 1500, so should return false.
       final crossed = state.completeTask('profile');
       expect(crossed, isFalse);
@@ -179,9 +179,9 @@ void main() {
     test('returns true when stars cross the current goal threshold', () {
       final state = AppState();
       // Set stars just below goal 0 threshold (1500).
-      // game task awards 750 stars.
-      state.stars = 1500 - 750; // 750, so completing game takes us to exactly 1500.
-      final crossed = state.completeTask('game');
+      // game_milestone awards 600 stars.
+      state.stars = 1500 - 600; // 900, so completing game_milestone takes us to 1500.
+      final crossed = state.completeTask('game_milestone');
       expect(crossed, isTrue);
     });
 
@@ -207,12 +207,12 @@ void main() {
     test('does not return true when stars cross threshold on a repeat call', () {
       final state = AppState();
       // Push stars to just below goal with a real task.
-      state.stars = 1500 - 750;
-      state.completeTask('game'); // returns true, goal crossed
+      state.stars = 1500 - 600;
+      state.completeTask('game_milestone'); // returns true, goal crossed
 
       // Attempt to complete the same task again -- should be a no-op.
-      state.stars = 1500 - 750; // manually reset to re-trigger condition
-      final result = state.completeTask('game');
+      state.stars = 1500 - 600; // manually reset to re-trigger condition
+      final result = state.completeTask('game_milestone');
       expect(result, isFalse); // already in completedTasks, early-return false
     });
   });
@@ -316,9 +316,9 @@ void main() {
       expect(state.formatBalance(), '\$1.00');
     });
 
-    test('formatBalance with welcome-gift stars (125)', () {
+    test('formatBalance with default stars (0)', () {
       final state = AppState();
-      expect(state.formatBalance(), '\$0.17');
+      expect(state.formatBalance(), '\$0.00');
     });
 
     test('formatBalance with zero stars', () {
