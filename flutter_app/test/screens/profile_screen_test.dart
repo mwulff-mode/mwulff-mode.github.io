@@ -77,5 +77,18 @@ void main() {
       expect(find.text('Gender'), findsOneWidget);
       expect(find.text('Female'), findsOneWidget);
     });
+
+    testWidgets('renders the ACCOUNT section heading', (tester) async {
+      await pumpProfile(tester);
+      expect(find.text('ACCOUNT'), findsOneWidget);
+    });
+
+    testWidgets('renders the Connected Account row with the email',
+        (tester) async {
+      await pumpProfile(tester);
+      expect(find.text('Connected Account'), findsOneWidget);
+      // Email now appears twice: once in the hero and once in the account row.
+      expect(find.text('lisa@earnwise.demo'), findsNWidgets(2));
+    });
   });
 }

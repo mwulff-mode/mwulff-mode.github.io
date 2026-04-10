@@ -46,7 +46,10 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xl),
                   const _SectionHeading(label: 'PERSONAL INFO'),
                   _InfoCard(state: state),
-                  // Account and Sign Out are added in subsequent tasks.
+                  const SizedBox(height: AppSpacing.lg),
+                  const _SectionHeading(label: 'ACCOUNT'),
+                  _AccountCard(state: state),
+                  // Sign Out is added in the next task.
                 ],
               ),
             );
@@ -348,6 +351,78 @@ class _RowDivider extends StatelessWidget {
         height: 1,
         thickness: 1,
         color: AppColors.creamDeep,
+      ),
+    );
+  }
+}
+
+/// Outer card for the connected account row. Same AppCard visual
+/// recipe as _InfoCard (white, 18 radius, cream-deep border, soft
+/// shadow) but holds only one row because there is only one connected
+/// account in v1.
+class _AccountCard extends StatelessWidget {
+  final AppState state;
+
+  const _AccountCard({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.creamDeep, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: _AccountRow(state: state),
+    );
+  }
+}
+
+/// Connected Account row: Google logo on the left, label above the
+/// email in the middle, lock icon on the right. The lock icon signals
+/// that this row is not editable (unlike the decorative pencil icons
+/// on _InfoRow).
+class _AccountRow extends StatelessWidget {
+  final AppState state;
+
+  const _AccountRow({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          const _GoogleLogo(size: 44),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Connected Account',
+                  style:
+                      AppText.caption.copyWith(color: AppColors.inkSecondary),
+                ),
+                const SizedBox(height: 2),
+                Text(state.email, style: AppText.listItem),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Icon(
+            PhosphorIcons.lock(PhosphorIconsStyle.regular),
+            size: 20,
+            color: AppColors.inkTertiary,
+          ),
+        ],
       ),
     );
   }
