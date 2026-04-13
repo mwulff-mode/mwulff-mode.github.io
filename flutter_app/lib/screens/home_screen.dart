@@ -53,11 +53,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      context.read<AppState>().checkDailyReset();
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = context.read<AppState>();
+      state.checkDailyReset();
       if (!state.welcomeModalShown) {
         state.welcomeModalShown = true;
         _showWelcomeModal(context);
