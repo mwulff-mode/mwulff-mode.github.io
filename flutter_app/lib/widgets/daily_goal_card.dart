@@ -34,8 +34,8 @@ class _ProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final earnedDollars = state.earnedToday / AppState.starsPerDollar;
-    final targetDollars = state.dailyGoalStars / AppState.starsPerDollar;
+    final earnedDollars = AppState.starsToDollars(state.earnedToday);
+    final targetDollars = AppState.starsToDollars(state.dailyGoalStars);
     final fillFraction =
         (state.earnedToday / state.dailyGoalStars).clamp(0.0, 1.0);
 
