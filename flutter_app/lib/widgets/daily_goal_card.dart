@@ -5,6 +5,7 @@ import '../services/haptics.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import 'app_card.dart';
 
 /// Hero card at the top of the Post-Onboarding Home body. Renders three
 /// states derived from AppState: default (progress toward target),
@@ -38,20 +39,7 @@ class _ProgressCard extends StatelessWidget {
     final fillFraction =
         (state.earnedToday / state.dailyGoalStars).clamp(0.0, 1.0);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.creamDeep, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -63,7 +51,7 @@ class _ProgressCard extends StatelessWidget {
               letterSpacing: 0.6,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           Text.rich(
             TextSpan(
               children: [
@@ -104,13 +92,8 @@ class _PromptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.primaryPale,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary, width: 1.5),
-      ),
+    return AppCard(
+      selected: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -126,7 +109,7 @@ class _PromptCard extends StatelessWidget {
             'Want to push for \$3 today?',
             style: AppText.body.copyWith(color: AppColors.inkSecondary),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
           Row(
             children: [
               Expanded(
