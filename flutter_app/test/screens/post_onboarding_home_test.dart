@@ -78,6 +78,10 @@ void main() {
       expect(find.text('Surveys'), findsOneWidget);
       expect(find.text('Offers'), findsOneWidget);
       expect(find.text('Tasks'), findsOneWidget);
+      // Blurb assertions guard against future copy regressions.
+      expect(find.textContaining('\$0.50 to \$2.00'), findsOneWidget);
+      expect(find.textContaining('Complete an offer'), findsOneWidget);
+      expect(find.textContaining('Play games'), findsOneWidget);
     });
 
     testWidgets('tapping the Surveys card pushes PlaceholderListScreen',

@@ -743,7 +743,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       const SizedBox(height: 14),
       _buildSectionCard(
         title: 'Surveys',
-        blurb: '\$0.50 to \$2.00 each',
+        blurb: 'Share your opinion and earn \$0.50 to \$2.00 per survey.',
         icon: PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
         iconColor: AppColors.taskSurvey,
         onTap: () => _openPlaceholderList(
@@ -754,7 +754,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       const SizedBox(height: 10),
       _buildSectionCard(
         title: 'Offers',
-        blurb: 'Up to \$10 each',
+        blurb: 'Complete an offer and earn up to \$10 each.',
         icon: PhosphorIcons.tag(PhosphorIconsStyle.duotone),
         iconColor: AppColors.taskOffers,
         onTap: () => _openPlaceholderList(
@@ -765,7 +765,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       const SizedBox(height: 10),
       _buildSectionCard(
         title: 'Tasks',
-        blurb: 'Earn by playing',
+        blurb: 'Play games and earn as you hit new milestones.',
         icon: PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
         iconColor: AppColors.taskGame,
         onTap: () => _openPlaceholderList(
