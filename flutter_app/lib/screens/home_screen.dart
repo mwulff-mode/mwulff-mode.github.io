@@ -740,75 +740,62 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContinueCard(InstalledGame game) {
-    return PressScale(
+    return AppCard(
       onTap: () => _openGameDetail(game),
       haptic: null,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                game.iconPath,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              game.iconPath,
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
                 width: 48,
                 height: 48,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
-                  width: 48,
-                  height: 48,
-                  color: AppColors.creamDeep,
-                  alignment: Alignment.center,
-                  child: Text(
-                    game.name.isEmpty ? '?' : game.name[0].toUpperCase(),
-                    style: AppText.bodyStrong.copyWith(color: AppColors.ink),
-                  ),
+                color: AppColors.creamDeep,
+                alignment: Alignment.center,
+                child: Text(
+                  game.name.isEmpty ? '?' : game.name[0].toUpperCase(),
+                  style: AppText.bodyStrong.copyWith(color: AppColors.ink),
                 ),
               ),
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    game.name,
-                    style: AppText.bodyStrong
-                        .copyWith(fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    game.nextMilestoneLabel,
-                    style: AppText.caption
-                        .copyWith(color: AppColors.inkSecondary),
-                  ),
-                ],
-              ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  game.name,
+                  style: AppText.bodyStrong
+                      .copyWith(fontWeight: FontWeight.w700),
+                ),
+                // intentional 2px, tighter than AppSpacing.xs for name/milestone stack
+                const SizedBox(height: 2),
+                Text(
+                  game.nextMilestoneLabel,
+                  style: AppText.caption
+                      .copyWith(color: AppColors.inkSecondary),
+                ),
+              ],
             ),
-            Text(
-              '\$${game.nextMilestoneReward.toStringAsFixed(2)}',
-              style: AppText.bodyStrong.copyWith(color: AppColors.primary),
-            ),
-            const SizedBox(width: 8),
-            Icon(
-              PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
-              size: 18,
-              color: AppColors.inkTertiary,
-            ),
-          ],
-        ),
+          ),
+          Text(
+            '\$${game.nextMilestoneReward.toStringAsFixed(2)}',
+            style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Icon(
+            PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
+            size: 18,
+            color: AppColors.inkTertiary,
+          ),
+        ],
       ),
     );
   }
@@ -826,6 +813,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       slideUpRoute(
         GameDetailScreen(
           game: match,
+          // v1: these games are already installed, so the detail screen's
+          // Install CTA is intentionally a no-op. A follow-up will wire this
+          // to a deep link or mark-as-played action.
           onInstall: () {},
         ),
       ),
