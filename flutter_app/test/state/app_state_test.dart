@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/services/haptics.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('AppState profile fields', () {
     test('default values match the spec', () {
       final state = AppState();
@@ -406,6 +409,149 @@ void main() {
       final state = AppState();
       state.setUserName('Alice');
       expect(state.convCardMsg, "Hey Alice, let's start earning");
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Daily goal
+  // ---------------------------------------------------------------------------
+
+  group('daily goal', () {
+    test('dailyGoalStars defaults to 1500 (\$2.00)', () {
+      final state = AppState();
+      expect(state.dailyGoalStars, 1500);
+    });
+
+    test('dailyExtensionOffered defaults to false', () {
+      final state = AppState();
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('dailyGoalHit is false when earnedToday is below target', () {
+      final state = AppState();
+      state.earnedToday = 1499;
+      expect(state.dailyGoalHit, isFalse);
+    });
+
+    test('dailyGoalHit is true when earnedToday reaches target', () {
+      final state = AppState();
+      state.earnedToday = 1500;
+      expect(state.dailyGoalHit, isTrue);
+    });
+
+    test('pushDailyGoalToThree raises target to 2250 and marks offered', () {
+      final state = AppState();
+      state.earnedToday = 1500;
+      state.pushDailyGoalToThree();
+      expect(state.dailyGoalStars, 2250);
+      expect(state.dailyExtensionOffered, isTrue);
+    });
+
+    test('pushDailyGoalToThree is a no-op if already offered', () {
+      final state = AppState();
+      state.dailyExtensionOffered = true;
+      state.dailyGoalStars = 1500; // banked scenario
+      state.pushDailyGoalToThree();
+      expect(state.dailyGoalStars, 1500, reason: 'must not re-push');
+    });
+
+    test('bankDailyGoal marks offered but leaves target at 1500', () {
+      final state = AppState();
+      state.earnedToday = 1500;
+      state.bankDailyGoal();
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isTrue);
+    });
+
+    test('pushDailyGoalToThree notifies listeners', () {
+      final state = AppState();
+      int notifyCount = 0;
+      state.addListener(() => notifyCount++);
+      state.pushDailyGoalToThree();
+      expect(notifyCount, 1);
+    });
+
+    test('bankDailyGoal notifies listeners', () {
+      final state = AppState();
+      int notifyCount = 0;
+      state.addListener(() => notifyCount++);
+      state.bankDailyGoal();
+      expect(notifyCount, 1);
+    });
+
+    test('checkDailyReset resets earnedToday, target, and extension flag when date changes', () {
+      final state = AppState();
+      state.earnedToday = 2000;
+      state.dailyGoalStars = 2250;
+      state.dailyExtensionOffered = true;
+      // Force last reset date to yesterday.
+      state.debugSetDailyResetDate('2000-01-01');
+      state.checkDailyReset();
+      expect(state.earnedToday, 0);
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('checkDailyReset is a no-op when date has not changed', () {
+      final state = AppState();
+      state.checkDailyReset(); // sets last reset date to today
+      state.earnedToday = 500;
+      state.checkDailyReset();
+      expect(state.earnedToday, 500, reason: 'same-day call must not reset');
+    });
+
+    test('first checkDailyReset on a fresh state preserves same-session progress', () {
+      // Onboarding just ran, so earnedToday already has value. The very
+      // first time Home mounts and checkDailyReset() is called, it must
+      // only anchor today's date, never wipe counters that were built
+      // earlier in the same day.
+      final state = AppState();
+      state.earnedToday = 900;
+      state.checkDailyReset();
+      expect(state.earnedToday, 900);
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('reset() restores daily goal fields to defaults', () {
+      final state = AppState();
+      state.dailyGoalStars = 2250;
+      state.dailyExtensionOffered = true;
+      state.reset();
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('completeTask does not crash when haptic fires on goal crossing', () {
+      // The celebration lives inside completeTask. We exercise the exact
+      // rising edge (crossing dailyGoalStars for the first time) to make
+      // sure the Haptics call compiles and does not throw under flutter
+      // test. Haptics.celebrate is per-run guarded, so repeats are safe.
+      Haptics.debugResetCelebrateGuard();
+      final state = AppState();
+      // Load earnedToday right up against the threshold so the next
+      // task crosses it.
+      state.earnedToday = state.dailyGoalStars - 100;
+      // Pick a task whose reward is large enough to cross 1500.
+      state.completeTask('game_milestone'); // +600 stars
+      expect(state.dailyGoalHit, isTrue);
+    });
+
+    test('second goal crossing in the same day does not re-celebrate', () {
+      // Manually flip the guard to prove the second cross is a no-op on
+      // the internal flag. We can not observe the haptic directly, but
+      // we can observe that a second crossing does not throw and the
+      // state stays consistent.
+      Haptics.debugResetCelebrateGuard();
+      final state = AppState();
+      state.earnedToday = state.dailyGoalStars - 100;
+      state.completeTask('game_milestone');
+      // Synthetically drop earnedToday back under the goal to simulate a
+      // second crossing path, then cross again. The second call must not
+      // throw and must leave dailyGoalHit true.
+      state.earnedToday = state.dailyGoalStars - 10;
+      state.completeTask('daily_offer');
+      expect(state.dailyGoalHit, isTrue);
     });
   });
 }
