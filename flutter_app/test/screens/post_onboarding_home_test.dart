@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/screens/home_shell.dart';
+import 'package:earnwise_mvp/screens/placeholder_list_screen.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/widgets/daily_goal_card.dart';
 import 'package:earnwise_mvp/models/installed_game.dart';
@@ -69,6 +70,25 @@ void main() {
       expect(find.text('Game 2'), findsOneWidget);
       expect(find.text('Game 1'), findsNothing); // dropped
       expect(find.text('Game 0'), findsNothing); // dropped
+    });
+
+    testWidgets('shows three Earn more section cards', (tester) async {
+      await pumpPostOnboardingHome(tester);
+      expect(find.text('Earn more'), findsOneWidget);
+      expect(find.text('Surveys'), findsOneWidget);
+      expect(find.text('Offers'), findsOneWidget);
+      expect(find.text('Tasks'), findsOneWidget);
+    });
+
+    testWidgets('tapping the Surveys card pushes PlaceholderListScreen',
+        (tester) async {
+      await pumpPostOnboardingHome(tester);
+      await tester.scrollUntilVisible(find.text('Surveys'), 100);
+      await tester.tap(find.text('Surveys'));
+      await tester.pumpAndSettle();
+      expect(find.byType(PlaceholderListScreen), findsOneWidget);
+      expect(find.text('Surveys'), findsWidgets);
+      expect(find.textContaining('coming soon'), findsOneWidget);
     });
   });
 }
