@@ -94,5 +94,34 @@ void main() {
       expect(find.text('Surveys'), findsWidgets);
       expect(find.textContaining('coming soon'), findsOneWidget);
     });
+
+    testWidgets('end-to-end: progress increment to goal-hit flows through UI',
+        (tester) async {
+      await pumpPostOnboardingHome(tester, setup: (s) {
+        s.earnedToday = 1450; // just under $2 target (1500 stars)
+      });
+      expect(find.text('Push to \$3'), findsNothing);
+
+      // Simulate earning the remaining 50 stars.
+      final state = Provider.of<AppState>(
+        tester.element(find.byType(DailyGoalCard)),
+        listen: false,
+      );
+      state.earnedToday = 1500;
+      // ignore: invalid_use_of_protected_member
+      state.notifyListeners();
+      await tester.pump();
+
+      expect(find.text('Push to \$3'), findsOneWidget);
+
+      // Tap Push to $3.
+      await tester.tap(find.text('Push to \$3'));
+      await tester.pump();
+      expect(state.dailyGoalStars, 2250);
+      expect(state.dailyExtensionOffered, isTrue);
+      expect(find.text('Push to \$3'), findsNothing);
+      // Progress card should now target $3.00.
+      expect(find.textContaining('\$3.00'), findsOneWidget);
+    });
   });
 }
