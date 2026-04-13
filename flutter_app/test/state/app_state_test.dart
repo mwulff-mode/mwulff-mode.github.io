@@ -565,4 +565,34 @@ void main() {
       expect(state.dailyGoalHit, isTrue);
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // In-progress games
+  // ---------------------------------------------------------------------------
+
+  group('in-progress games', () {
+    test('installedGames seed contains at least two games', () {
+      final state = AppState();
+      expect(state.installedGames.length, greaterThanOrEqualTo(2));
+    });
+
+    test('inProgressGames returns only games with remaining milestones', () {
+      final state = AppState();
+      final filtered = state.inProgressGames;
+      expect(filtered.every((g) => g.nextMilestoneReward > 0), isTrue);
+    });
+
+    test('inProgressGames is ordered by lastPlayedAt, most recent first', () {
+      final state = AppState();
+      final list = state.inProgressGames;
+      for (int i = 1; i < list.length; i++) {
+        expect(
+          list[i - 1].lastPlayedAt.isAfter(list[i].lastPlayedAt) ||
+              list[i - 1].lastPlayedAt.isAtSameMomentAs(list[i].lastPlayedAt),
+          isTrue,
+          reason: 'index $i should be at or after index ${i - 1}',
+        );
+      }
+    });
+  });
 }

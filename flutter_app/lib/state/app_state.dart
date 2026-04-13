@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../theme/app_theme.dart';
 import '../services/haptics.dart';
+import '../models/installed_game.dart';
 
 class JourneyEntry {
   final String msg;
@@ -93,6 +94,39 @@ class AppState extends ChangeNotifier {
   // counter; it resets at local midnight via checkDailyReset.
   int dailyGoalStars = 1500; // $2.00
   bool dailyExtensionOffered = false;
+
+  // In-progress games for the Post-Onboarding Home "Continue earning"
+  // section. Seeded for v1. Names and icon paths match the real catalog
+  // in `data/games.dart` so `gamesByName[game.name]` resolves and
+  // `Image.asset(game.iconPath)` does not fall back to placeholder art.
+  // Replaced by a real per-game progress model when sub-project 3
+  // (Tasks list screen) lands.
+  List<InstalledGame> installedGames = [
+    InstalledGame(
+      id: 'candy_crush',
+      name: 'Candy Crush',
+      iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+      nextMilestoneLabel: 'Reach Level 50',
+      nextMilestoneReward: 2.00,
+      lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
+    ),
+    InstalledGame(
+      id: 'solitaire',
+      name: 'Solitaire',
+      iconPath: 'assets/app_icons/Solitaire_Classic.png',
+      nextMilestoneLabel: 'Win 75 games',
+      nextMilestoneReward: 2.50,
+      lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
+    ),
+  ];
+
+  List<InstalledGame> get inProgressGames {
+    final filtered =
+        installedGames.where((g) => g.hasRemainingMilestones).toList();
+    filtered.sort((a, b) => b.lastPlayedAt.compareTo(a.lastPlayedAt));
+    return filtered;
+  }
+
   String _dailyResetDate = ''; // yyyy-MM-dd of last reset, empty until first check
   bool _dailyGoalCelebrated = false; // rising-edge guard for the goal-hit celebration
 
@@ -354,6 +388,24 @@ class AppState extends ChangeNotifier {
     dailyExtensionOffered = false;
     _dailyResetDate = '';
     _dailyGoalCelebrated = false;
+    installedGames = [
+      InstalledGame(
+        id: 'candy_crush',
+        name: 'Candy Crush',
+        iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+        nextMilestoneLabel: 'Reach Level 50',
+        nextMilestoneReward: 2.00,
+        lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
+      ),
+      InstalledGame(
+        id: 'solitaire',
+        name: 'Solitaire',
+        iconPath: 'assets/app_icons/Solitaire_Classic.png',
+        nextMilestoneLabel: 'Win 75 games',
+        nextMilestoneReward: 2.50,
+        lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
+      ),
+    ];
     selectedPreferences = <String>[];
     journeyLog = <JourneyEntry>[];
     convCardMsg = '';
