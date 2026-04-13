@@ -14,6 +14,7 @@ import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
 import '../widgets/animated_counter.dart';
 import '../widgets/breathing.dart';
+import '../widgets/daily_goal_card.dart';
 import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
 import 'game_detail_screen.dart';
@@ -47,6 +48,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: AppDurations.hero);
     _giftLabelController =
         AnimationController(vsync: this, duration: AppDurations.long);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<AppState>().checkDailyReset();
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = context.read<AppState>();
@@ -467,17 +473,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     _buildGreetingRow(state),
                     const SizedBox(height: AppSpacing.xl),
-
-                    // Balance + Ring row
-                    _buildBalanceRow(state),
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // Starter tasks
-                    _buildStarterTasks(state),
-                    const SizedBox(height: AppSpacing.lg),
-
-                    // Earn more section
-                    _buildEarnMore(state),
+                    if (state.goalIndex > 0)
+                      ..._buildPostOnboardingBody(state)
+                    else ...[
+                      _buildBalanceRow(state),
+                      const SizedBox(height: AppSpacing.xl),
+                      _buildStarterTasks(state),
+                      const SizedBox(height: AppSpacing.lg),
+                      _buildEarnMore(state),
+                    ],
                     // Extra bottom space so content clears the floating glass nav
                     const SizedBox(height: 120),
                   ],
@@ -711,6 +715,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
       );
     }); // LayoutBuilder
+  }
+
+  List<Widget> _buildPostOnboardingBody(AppState state) {
+    return const [
+      DailyGoalCard(),
+      SizedBox(height: AppSpacing.lg),
+      // Continue earning section added in Task 6.
+      // Earn more section added in Task 7.
+    ];
   }
 
   Widget _buildStarterTasks(AppState state) {
