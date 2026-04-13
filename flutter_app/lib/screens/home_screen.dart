@@ -19,6 +19,7 @@ import '../widgets/daily_goal_card.dart';
 import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
 import 'game_detail_screen.dart';
+import 'placeholder_list_screen.dart';
 import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
@@ -735,7 +736,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
         const SizedBox(height: AppSpacing.lg),
       ],
-      // Earn more section added in Task 7.
+      Text(
+        'Earn more',
+        style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
+      ),
+      const SizedBox(height: 14),
+      _buildSectionCard(
+        title: 'Surveys',
+        blurb: 'Share your opinion and earn \$1–\$5 per survey.',
+        icon: PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
+        iconColor: AppColors.taskSurvey,
+        onTap: () => _openPlaceholderList(
+          'Surveys',
+          'Survey catalog coming soon.\nBuilt in sub-project 3.',
+        ),
+      ),
+      const SizedBox(height: 10),
+      _buildSectionCard(
+        title: 'Offers',
+        blurb: 'Complete offers and earn \$2–\$20 per task.',
+        icon: PhosphorIcons.tag(PhosphorIconsStyle.duotone),
+        iconColor: AppColors.taskOffers,
+        onTap: () => _openPlaceholderList(
+          'Offers',
+          'Offer catalog coming soon.\nBuilt in sub-project 3.',
+        ),
+      ),
+      const SizedBox(height: 10),
+      _buildSectionCard(
+        title: 'Tasks',
+        blurb: 'Play games and earn up to \$50 per milestone.',
+        icon: PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
+        iconColor: AppColors.taskGame,
+        onTap: () => _openPlaceholderList(
+          'Tasks',
+          'Game catalog coming soon.\nBuilt in sub-project 3.',
+        ),
+      ),
+      const SizedBox(height: AppSpacing.lg),
     ];
   }
 
@@ -797,6 +835,64 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSectionCard({
+    required String title,
+    required String blurb,
+    required IconData icon,
+    required Color iconColor,
+    required VoidCallback onTap,
+  }) {
+    return AppCard(
+      onTap: onTap,
+      haptic: null,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, size: 24, color: iconColor),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppText.bodyStrong
+                      .copyWith(fontWeight: FontWeight.w700),
+                ),
+                // intentional 2px, tighter than AppSpacing.xs for title/blurb stack
+                const SizedBox(height: 2),
+                Text(
+                  blurb,
+                  style: AppText.caption
+                      .copyWith(color: AppColors.inkSecondary),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
+            size: 18,
+            color: AppColors.inkTertiary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openPlaceholderList(String title, String subtitle) {
+    Navigator.of(context).push(
+      fadeRoute(PlaceholderListScreen(title: title, subtitle: subtitle)),
     );
   }
 
