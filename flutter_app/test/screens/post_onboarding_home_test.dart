@@ -100,9 +100,14 @@ void main() {
       await pumpPostOnboardingHome(tester, setup: (s) {
         s.earnedToday = 1450; // just under $2 target (1500 stars)
       });
+      // Exact-string matches on 'Push to $3' below are intentional.
+      // textContaining('$3') would also match the $3.00 progress text
+      // after the push, making findsNothing unreliable.
       expect(find.text('Push to \$3'), findsNothing);
 
-      // Simulate earning the remaining 50 stars.
+      // Bypass completeTask and set earnedToday directly to trigger
+      // the goal-hit UI state. This exercises the DailyGoalCard
+      // transitions, not the earning pipeline.
       final state = Provider.of<AppState>(
         tester.element(find.byType(DailyGoalCard)),
         listen: false,
