@@ -417,6 +417,13 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('daily goal', () {
+    setUp(() {
+      // The daily-goal celebration path fires Haptics.celebrate, which is
+      // guarded by a static Set. Reset it between tests so assertions on
+      // the celebration branch stay independent of test ordering.
+      Haptics.debugResetCelebrateGuard();
+    });
+
     test('dailyGoalStars defaults to 1500 (\$2.00)', () {
       final state = AppState();
       expect(state.dailyGoalStars, 1500);
@@ -527,7 +534,6 @@ void main() {
       // rising edge (crossing dailyGoalStars for the first time) to make
       // sure the Haptics call compiles and does not throw under flutter
       // test. Haptics.celebrate is per-run guarded, so repeats are safe.
-      Haptics.debugResetCelebrateGuard();
       final state = AppState();
       // Load earnedToday right up against the threshold so the next
       // task crosses it.
@@ -538,19 +544,24 @@ void main() {
     });
 
     test('second goal crossing in the same day does not re-celebrate', () {
-      // Manually flip the guard to prove the second cross is a no-op on
-      // the internal flag. We can not observe the haptic directly, but
-      // we can observe that a second crossing does not throw and the
-      // state stays consistent.
-      Haptics.debugResetCelebrateGuard();
+      // Rising-edge guard: the first crossing must set _dailyGoalCelebrated,
+      // and a second crossing in the same day must leave it set without
+      // firing the celebration branch a second time. Assert on the guard
+      // getter directly instead of on dailyGoalHit, which only observes
+      // the current earnedToday value.
       final state = AppState();
       state.earnedToday = state.dailyGoalStars - 100;
-      state.completeTask('game_milestone');
-      // Synthetically drop earnedToday back under the goal to simulate a
-      // second crossing path, then cross again. The second call must not
-      // throw and must leave dailyGoalHit true.
+      state.completeTask('game_milestone'); // first crossing
+      expect(state.debugDailyGoalCelebrated, isTrue,
+          reason: 'first crossing must arm the guard');
+
+      // Drop back under the goal without resetting the guard, then cross
+      // again. The guard must remain armed and the second crossing must
+      // not throw or clear it.
       state.earnedToday = state.dailyGoalStars - 10;
-      state.completeTask('daily_offer');
+      state.completeTask('daily_offer'); // second crossing
+      expect(state.debugDailyGoalCelebrated, isTrue,
+          reason: 'second crossing in the same day must leave the guard armed');
       expect(state.dailyGoalHit, isTrue);
     });
   });

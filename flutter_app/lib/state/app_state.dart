@@ -264,6 +264,9 @@ class AppState extends ChangeNotifier {
 
   bool get dailyGoalHit => earnedToday >= dailyGoalStars;
 
+  @visibleForTesting
+  bool get debugDailyGoalCelebrated => _dailyGoalCelebrated;
+
   /// Extend today's goal from $2 to $3. No-op if the user has already
   /// banked or pushed today.
   void pushDailyGoalToThree() {
