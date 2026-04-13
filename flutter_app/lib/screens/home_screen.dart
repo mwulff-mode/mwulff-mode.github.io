@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../data/games.dart';
+import '../models/installed_game.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
@@ -718,12 +719,117 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   List<Widget> _buildPostOnboardingBody(AppState state) {
-    return const [
-      DailyGoalCard(),
-      SizedBox(height: AppSpacing.lg),
-      // Continue earning section added in Task 6.
+    final inProgress = state.inProgressGames.take(3).toList();
+    return [
+      const DailyGoalCard(),
+      const SizedBox(height: AppSpacing.lg),
+      if (inProgress.isNotEmpty) ...[
+        Text(
+          'Continue earning',
+          style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 14),
+        for (int i = 0; i < inProgress.length; i++) ...[
+          _buildContinueCard(inProgress[i]),
+          if (i < inProgress.length - 1) const SizedBox(height: 10),
+        ],
+        const SizedBox(height: AppSpacing.lg),
+      ],
       // Earn more section added in Task 7.
     ];
+  }
+
+  Widget _buildContinueCard(InstalledGame game) {
+    return PressScale(
+      onTap: () => _openGameDetail(game),
+      haptic: null,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                game.iconPath,
+                width: 48,
+                height: 48,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  width: 48,
+                  height: 48,
+                  color: AppColors.creamDeep,
+                  alignment: Alignment.center,
+                  child: Text(
+                    game.name.isEmpty ? '?' : game.name[0].toUpperCase(),
+                    style: AppText.bodyStrong.copyWith(color: AppColors.ink),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    game.name,
+                    style: AppText.bodyStrong
+                        .copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    game.nextMilestoneLabel,
+                    style: AppText.caption
+                        .copyWith(color: AppColors.inkSecondary),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              '\$${game.nextMilestoneReward.toStringAsFixed(2)}',
+              style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+            ),
+            const SizedBox(width: 8),
+            Icon(
+              PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
+              size: 18,
+              color: AppColors.inkTertiary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openGameDetail(InstalledGame game) {
+    // v1: look the installed game up in the real catalog by display name.
+    // `gamesByName` is a `Map<String, Game>` exported from data/games.dart
+    // keyed by the same strings we use for `InstalledGame.name` in the
+    // seed list (Candy Crush, Solitaire, Word Search). `slideUpRoute`
+    // matches the existing `_showGamePicker` route pattern used elsewhere
+    // in this file.
+    final match = gamesByName[game.name];
+    if (match == null) return;
+    Navigator.of(context).push(
+      slideUpRoute(
+        GameDetailScreen(
+          game: match,
+          onInstall: () {},
+        ),
+      ),
+    );
   }
 
   Widget _buildStarterTasks(AppState state) {
