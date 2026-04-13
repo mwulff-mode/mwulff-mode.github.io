@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
 import 'package:earnwise_mvp/services/haptics.dart';
+import 'package:earnwise_mvp/models/installed_game.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -583,16 +584,42 @@ void main() {
     });
 
     test('inProgressGames is ordered by lastPlayedAt, most recent first', () {
+      // The test injects three out-of-order games so an accidentally
+      // ascending sort would surface as a failed assertion. The seeded
+      // pair alone is too short to catch direction flips.
       final state = AppState();
+      final older = DateTime(2026, 4, 10, 8, 0);
+      final newest = DateTime(2026, 4, 13, 22, 0);
+      final middle = DateTime(2026, 4, 12, 15, 0);
+      state.installedGames = [
+        InstalledGame(
+          id: 'older',
+          name: 'Older',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: older,
+        ),
+        InstalledGame(
+          id: 'newest',
+          name: 'Newest',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: newest,
+        ),
+        InstalledGame(
+          id: 'middle',
+          name: 'Middle',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: middle,
+        ),
+      ];
+
       final list = state.inProgressGames;
-      for (int i = 1; i < list.length; i++) {
-        expect(
-          list[i - 1].lastPlayedAt.isAfter(list[i].lastPlayedAt) ||
-              list[i - 1].lastPlayedAt.isAtSameMomentAs(list[i].lastPlayedAt),
-          isTrue,
-          reason: 'index $i should be at or after index ${i - 1}',
-        );
-      }
+      expect(list.map((g) => g.id).toList(), ['newest', 'middle', 'older']);
     });
   });
 }

@@ -74,6 +74,25 @@ const goals = [
 const legendColor = Color(0xFFF59E0B);
 const legendTrackColor = Color(0xFFFEF3C7);
 
+List<InstalledGame> _freshInstalledGamesSeed() => [
+  InstalledGame(
+    id: 'candy_crush',
+    name: 'Candy Crush',
+    iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+    nextMilestoneLabel: 'Reach Level 50',
+    nextMilestoneReward: 2.00,
+    lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
+  ),
+  InstalledGame(
+    id: 'solitaire',
+    name: 'Solitaire',
+    iconPath: 'assets/app_icons/Solitaire_Classic.png',
+    nextMilestoneLabel: 'Win 75 games',
+    nextMilestoneReward: 2.50,
+    lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
+  ),
+];
+
 class AppState extends ChangeNotifier {
   String userName = '';
   int stars = 0;
@@ -101,24 +120,7 @@ class AppState extends ChangeNotifier {
   // `Image.asset(game.iconPath)` does not fall back to placeholder art.
   // Replaced by a real per-game progress model when sub-project 3
   // (Tasks list screen) lands.
-  List<InstalledGame> installedGames = [
-    InstalledGame(
-      id: 'candy_crush',
-      name: 'Candy Crush',
-      iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
-      nextMilestoneLabel: 'Reach Level 50',
-      nextMilestoneReward: 2.00,
-      lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
-    ),
-    InstalledGame(
-      id: 'solitaire',
-      name: 'Solitaire',
-      iconPath: 'assets/app_icons/Solitaire_Classic.png',
-      nextMilestoneLabel: 'Win 75 games',
-      nextMilestoneReward: 2.50,
-      lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
-    ),
-  ];
+  List<InstalledGame> installedGames = _freshInstalledGamesSeed();
 
   List<InstalledGame> get inProgressGames {
     final filtered =
@@ -388,24 +390,7 @@ class AppState extends ChangeNotifier {
     dailyExtensionOffered = false;
     _dailyResetDate = '';
     _dailyGoalCelebrated = false;
-    installedGames = [
-      InstalledGame(
-        id: 'candy_crush',
-        name: 'Candy Crush',
-        iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
-        nextMilestoneLabel: 'Reach Level 50',
-        nextMilestoneReward: 2.00,
-        lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
-      ),
-      InstalledGame(
-        id: 'solitaire',
-        name: 'Solitaire',
-        iconPath: 'assets/app_icons/Solitaire_Classic.png',
-        nextMilestoneLabel: 'Win 75 games',
-        nextMilestoneReward: 2.50,
-        lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
-      ),
-    ];
+    installedGames = _freshInstalledGamesSeed();
     selectedPreferences = <String>[];
     journeyLog = <JourneyEntry>[];
     convCardMsg = '';
