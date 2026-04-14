@@ -32,6 +32,9 @@ jobs:
         working-directory: flutter_app
         run: flutter build web --release --base-href /
 
+      - name: Copy docs into build
+        run: cp -r docs flutter_app/build/web/docs
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
