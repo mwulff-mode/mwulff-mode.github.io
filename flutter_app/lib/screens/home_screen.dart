@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import '../data/games.dart';
+import '../models/installed_game.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
@@ -14,9 +15,11 @@ import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
 import '../widgets/animated_counter.dart';
 import '../widgets/breathing.dart';
+import '../widgets/daily_goal_card.dart';
 import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
 import 'game_detail_screen.dart';
+import 'placeholder_list_screen.dart';
 import 'dart:math';
 
 class HomeScreen extends StatefulWidget {
@@ -49,7 +52,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         AnimationController(vsync: this, duration: AppDurations.long);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       final state = context.read<AppState>();
+      state.checkDailyReset();
       if (!state.welcomeModalShown) {
         state.welcomeModalShown = true;
         _showWelcomeModal(context);
@@ -467,17 +472,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   children: [
                     _buildGreetingRow(state),
                     const SizedBox(height: AppSpacing.xl),
-
-                    // Balance + Ring row
-                    _buildBalanceRow(state),
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // Starter tasks
-                    _buildStarterTasks(state),
-                    const SizedBox(height: AppSpacing.lg),
-
-                    // Earn more section
-                    _buildEarnMore(state),
+                    if (state.goalIndex > 0)
+                      ..._buildPostOnboardingBody(state)
+                    else ...[
+                      _buildBalanceRow(state),
+                      const SizedBox(height: AppSpacing.xl),
+                      _buildStarterTasks(state),
+                      const SizedBox(height: AppSpacing.lg),
+                      _buildEarnMore(state),
+                    ],
                     // Extra bottom space so content clears the floating glass nav
                     const SizedBox(height: 120),
                   ],
@@ -711,6 +714,205 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ],
       );
     }); // LayoutBuilder
+  }
+
+  List<Widget> _buildPostOnboardingBody(AppState state) {
+    final inProgress = state.inProgressGames.take(3).toList();
+    return [
+      const DailyGoalCard(),
+      const SizedBox(height: AppSpacing.lg),
+      if (inProgress.isNotEmpty) ...[
+        Text(
+          'Continue earning',
+          style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 14),
+        for (int i = 0; i < inProgress.length; i++) ...[
+          _buildContinueCard(inProgress[i]),
+          if (i < inProgress.length - 1) const SizedBox(height: 10),
+        ],
+        const SizedBox(height: AppSpacing.lg),
+      ],
+      Text(
+        'Earn more',
+        style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
+      ),
+      const SizedBox(height: 14),
+      _buildSectionCard(
+        title: 'Surveys',
+        blurb: 'Share your opinion and earn \$0.50 to \$2.00 per survey.',
+        icon: PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
+        iconColor: AppColors.taskSurvey,
+        onTap: () => _openPlaceholderList(
+          'Surveys',
+          'Survey catalog coming soon.\nBuilt in sub-project 3.',
+        ),
+      ),
+      const SizedBox(height: 10),
+      _buildSectionCard(
+        title: 'Offers',
+        blurb: 'Complete an offer and earn up to \$10 each.',
+        icon: PhosphorIcons.tag(PhosphorIconsStyle.duotone),
+        iconColor: AppColors.taskOffers,
+        onTap: () => _openPlaceholderList(
+          'Offers',
+          'Offer catalog coming soon.\nBuilt in sub-project 3.',
+        ),
+      ),
+      const SizedBox(height: 10),
+      _buildSectionCard(
+        title: 'Tasks',
+        blurb: 'Play games and earn as you hit new milestones.',
+        icon: PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
+        iconColor: AppColors.taskGame,
+        onTap: () => _openPlaceholderList(
+          'Tasks',
+          'Game catalog coming soon.\nBuilt in sub-project 3.',
+        ),
+      ),
+      const SizedBox(height: AppSpacing.lg),
+    ];
+  }
+
+  Widget _buildContinueCard(InstalledGame game) {
+    return AppCard(
+      onTap: () => _openGameDetail(game),
+      haptic: null,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              game.iconPath,
+              width: 48,
+              height: 48,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                width: 48,
+                height: 48,
+                color: AppColors.creamDeep,
+                alignment: Alignment.center,
+                child: Text(
+                  game.name.isEmpty ? '?' : game.name[0].toUpperCase(),
+                  style: AppText.bodyStrong.copyWith(color: AppColors.ink),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  game.name,
+                  style: AppText.bodyStrong
+                      .copyWith(fontWeight: FontWeight.w700),
+                ),
+                // intentional 2px, tighter than AppSpacing.xs for name/milestone stack
+                const SizedBox(height: 2),
+                Text(
+                  game.nextMilestoneLabel,
+                  style: AppText.caption
+                      .copyWith(color: AppColors.inkSecondary),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            '\$${game.nextMilestoneReward.toStringAsFixed(2)}',
+            style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Icon(
+            PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
+            size: 18,
+            color: AppColors.inkTertiary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionCard({
+    required String title,
+    required String blurb,
+    required IconData icon,
+    required Color iconColor,
+    required VoidCallback onTap,
+  }) {
+    return AppCard(
+      onTap: onTap,
+      haptic: null,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: iconColor.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, size: 24, color: iconColor),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppText.bodyStrong
+                      .copyWith(fontWeight: FontWeight.w700),
+                ),
+                // intentional 2px, tighter than AppSpacing.xs for title/blurb stack
+                const SizedBox(height: 2),
+                Text(
+                  blurb,
+                  style: AppText.caption
+                      .copyWith(color: AppColors.inkSecondary),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
+            size: 18,
+            color: AppColors.inkTertiary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openPlaceholderList(String title, String subtitle) {
+    Navigator.of(context).push(
+      fadeRoute(PlaceholderListScreen(title: title, subtitle: subtitle)),
+    );
+  }
+
+  void _openGameDetail(InstalledGame game) {
+    // v1: look the installed game up in the real catalog by display name.
+    // `gamesByName` is a `Map<String, Game>` exported from data/games.dart
+    // keyed by the same strings we use for `InstalledGame.name` in the
+    // seed list (Candy Crush, Solitaire, Word Search). `slideUpRoute`
+    // matches the existing `_showGamePicker` route pattern used elsewhere
+    // in this file.
+    final match = gamesByName[game.name];
+    if (match == null) return;
+    Navigator.of(context).push(
+      slideUpRoute(
+        GameDetailScreen(
+          game: match,
+          // v1: these games are already installed, so the detail screen's
+          // Install CTA is intentionally a no-op. A follow-up will wire this
+          // to a deep link or mark-as-played action.
+          onInstall: () {},
+        ),
+      ),
+    );
   }
 
   Widget _buildStarterTasks(AppState state) {

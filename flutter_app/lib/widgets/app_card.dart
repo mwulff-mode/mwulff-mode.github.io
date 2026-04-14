@@ -4,7 +4,7 @@ import '../theme/motion.dart';
 import 'press_scale.dart';
 
 /// The repeating "choice card" surface used for list items and selectable
-/// rows: white background, 18px radius, cream-deep 1.5 border, subtle shadow.
+/// rows: white background, AppRadius.card (16) radius, cream-deep 1.5 border, subtle shadow.
 ///
 /// Supports a `selected` state (primary-pale fill, primary border) for use
 /// in multi-select lists like the onboarding preference picker.
@@ -41,7 +41,7 @@ class AppCard extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: selected ? AppColors.primaryPale : AppColors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppRadius.card),
         border: Border.all(
           color: selected ? AppColors.primary : AppColors.creamDeep,
           width: 1.5,

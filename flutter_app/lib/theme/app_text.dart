@@ -68,14 +68,25 @@ class AppText {
         color: AppColors.ink,
       );
 
-  /// 22 / 700 · page / section titles
-  static TextStyle get sectionTitle => GoogleFonts.outfit(
+  /// 22 / 700 · page and section titles. The canonical heading style
+  /// for sections and bottom-sheet headers. Replaces the prior
+  /// `sectionTitle` / `sheetTitle` split.
+  static TextStyle get title => GoogleFonts.outfit(
         fontSize: 22,
         fontWeight: FontWeight.w700,
         color: AppColors.ink,
       );
 
-  /// 20 / 700 · bottom sheet titles
+  @Deprecated('Use AppText.title instead. sectionTitle is 22/700, '
+      'identical to the new title style.')
+  static TextStyle get sectionTitle => title;
+
+  /// 20 / 700 · legacy bottom sheet title. Kept as a real style (not a
+  /// forwarder to `title`) so the one existing call site in
+  /// `home_screen.dart` renders identically until sub-project 2 migrates
+  /// the "Choose your game" sheet onto `AppText.title` (22/700) on purpose.
+  @Deprecated('Use AppText.title instead. sheetTitle is 20/700 and will be '
+      'retired when the bottom sheet header is migrated in sub-project 2.')
   static TextStyle get sheetTitle => GoogleFonts.outfit(
         fontSize: 20,
         fontWeight: FontWeight.w700,

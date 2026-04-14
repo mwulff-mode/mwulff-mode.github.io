@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/services/haptics.dart';
+import 'package:earnwise_mvp/models/installed_game.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('AppState profile fields', () {
     test('default values match the spec', () {
       final state = AppState();
@@ -406,6 +410,216 @@ void main() {
       final state = AppState();
       state.setUserName('Alice');
       expect(state.convCardMsg, "Hey Alice, let's start earning");
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Daily goal
+  // ---------------------------------------------------------------------------
+
+  group('daily goal', () {
+    setUp(() {
+      // The daily-goal celebration path fires Haptics.celebrate, which is
+      // guarded by a static Set. Reset it between tests so assertions on
+      // the celebration branch stay independent of test ordering.
+      Haptics.debugResetCelebrateGuard();
+    });
+
+    test('dailyGoalStars defaults to 1500 (\$2.00)', () {
+      final state = AppState();
+      expect(state.dailyGoalStars, 1500);
+    });
+
+    test('dailyExtensionOffered defaults to false', () {
+      final state = AppState();
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('dailyGoalHit is false when earnedToday is below target', () {
+      final state = AppState();
+      state.earnedToday = 1499;
+      expect(state.dailyGoalHit, isFalse);
+    });
+
+    test('dailyGoalHit is true when earnedToday reaches target', () {
+      final state = AppState();
+      state.earnedToday = 1500;
+      expect(state.dailyGoalHit, isTrue);
+    });
+
+    test('pushDailyGoalToThree raises target to 2250 and marks offered', () {
+      final state = AppState();
+      state.earnedToday = 1500;
+      state.pushDailyGoalToThree();
+      expect(state.dailyGoalStars, 2250);
+      expect(state.dailyExtensionOffered, isTrue);
+    });
+
+    test('pushDailyGoalToThree is a no-op if already offered', () {
+      final state = AppState();
+      state.dailyExtensionOffered = true;
+      state.dailyGoalStars = 1500; // banked scenario
+      state.pushDailyGoalToThree();
+      expect(state.dailyGoalStars, 1500, reason: 'must not re-push');
+    });
+
+    test('bankDailyGoal marks offered but leaves target at 1500', () {
+      final state = AppState();
+      state.earnedToday = 1500;
+      state.bankDailyGoal();
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isTrue);
+    });
+
+    test('pushDailyGoalToThree notifies listeners', () {
+      final state = AppState();
+      int notifyCount = 0;
+      state.addListener(() => notifyCount++);
+      state.pushDailyGoalToThree();
+      expect(notifyCount, 1);
+    });
+
+    test('bankDailyGoal notifies listeners', () {
+      final state = AppState();
+      int notifyCount = 0;
+      state.addListener(() => notifyCount++);
+      state.bankDailyGoal();
+      expect(notifyCount, 1);
+    });
+
+    test('checkDailyReset resets earnedToday, target, and extension flag when date changes', () {
+      final state = AppState();
+      state.earnedToday = 2000;
+      state.dailyGoalStars = 2250;
+      state.dailyExtensionOffered = true;
+      // Force last reset date to yesterday.
+      state.debugSetDailyResetDate('2000-01-01');
+      state.checkDailyReset();
+      expect(state.earnedToday, 0);
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('checkDailyReset is a no-op when date has not changed', () {
+      final state = AppState();
+      state.checkDailyReset(); // sets last reset date to today
+      state.earnedToday = 500;
+      state.checkDailyReset();
+      expect(state.earnedToday, 500, reason: 'same-day call must not reset');
+    });
+
+    test('first checkDailyReset on a fresh state preserves same-session progress', () {
+      // Onboarding just ran, so earnedToday already has value. The very
+      // first time Home mounts and checkDailyReset() is called, it must
+      // only anchor today's date, never wipe counters that were built
+      // earlier in the same day.
+      final state = AppState();
+      state.earnedToday = 900;
+      state.checkDailyReset();
+      expect(state.earnedToday, 900);
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('reset() restores daily goal fields to defaults', () {
+      final state = AppState();
+      state.dailyGoalStars = 2250;
+      state.dailyExtensionOffered = true;
+      state.reset();
+      expect(state.dailyGoalStars, 1500);
+      expect(state.dailyExtensionOffered, isFalse);
+    });
+
+    test('completeTask does not crash when haptic fires on goal crossing', () {
+      // The celebration lives inside completeTask. We exercise the exact
+      // rising edge (crossing dailyGoalStars for the first time) to make
+      // sure the Haptics call compiles and does not throw under flutter
+      // test. Haptics.celebrate is per-run guarded, so repeats are safe.
+      final state = AppState();
+      // Load earnedToday right up against the threshold so the next
+      // task crosses it.
+      state.earnedToday = state.dailyGoalStars - 100;
+      // Pick a task whose reward is large enough to cross 1500.
+      state.completeTask('game_milestone'); // +600 stars
+      expect(state.dailyGoalHit, isTrue);
+    });
+
+    test('second goal crossing in the same day does not re-celebrate', () {
+      // Rising-edge guard: the first crossing must set _dailyGoalCelebrated,
+      // and a second crossing in the same day must leave it set without
+      // firing the celebration branch a second time. Assert on the guard
+      // getter directly instead of on dailyGoalHit, which only observes
+      // the current earnedToday value.
+      final state = AppState();
+      state.earnedToday = state.dailyGoalStars - 100;
+      state.completeTask('game_milestone'); // first crossing
+      expect(state.debugDailyGoalCelebrated, isTrue,
+          reason: 'first crossing must arm the guard');
+
+      // Drop back under the goal without resetting the guard, then cross
+      // again. The guard must remain armed and the second crossing must
+      // not throw or clear it.
+      state.earnedToday = state.dailyGoalStars - 10;
+      state.completeTask('daily_offer'); // second crossing
+      expect(state.debugDailyGoalCelebrated, isTrue,
+          reason: 'second crossing in the same day must leave the guard armed');
+      expect(state.dailyGoalHit, isTrue);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // In-progress games
+  // ---------------------------------------------------------------------------
+
+  group('in-progress games', () {
+    test('installedGames seed contains at least two games', () {
+      final state = AppState();
+      expect(state.installedGames.length, greaterThanOrEqualTo(2));
+    });
+
+    test('inProgressGames returns only games with remaining milestones', () {
+      final state = AppState();
+      final filtered = state.inProgressGames;
+      expect(filtered.every((g) => g.nextMilestoneReward > 0), isTrue);
+    });
+
+    test('inProgressGames is ordered by lastPlayedAt, most recent first', () {
+      // The test injects three out-of-order games so an accidentally
+      // ascending sort would surface as a failed assertion. The seeded
+      // pair alone is too short to catch direction flips.
+      final state = AppState();
+      final older = DateTime(2026, 4, 10, 8, 0);
+      final newest = DateTime(2026, 4, 13, 22, 0);
+      final middle = DateTime(2026, 4, 12, 15, 0);
+      state.installedGames = [
+        InstalledGame(
+          id: 'older',
+          name: 'Older',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: older,
+        ),
+        InstalledGame(
+          id: 'newest',
+          name: 'Newest',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: newest,
+        ),
+        InstalledGame(
+          id: 'middle',
+          name: 'Middle',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: middle,
+        ),
+      ];
+
+      final list = state.inProgressGames;
+      expect(list.map((g) => g.id).toList(), ['newest', 'middle', 'older']);
     });
   });
 }

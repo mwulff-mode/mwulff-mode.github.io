@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../theme/app_theme.dart';
+import '../services/haptics.dart';
+import '../models/installed_game.dart';
 
 class JourneyEntry {
   final String msg;
@@ -71,6 +74,25 @@ const goals = [
 const legendColor = Color(0xFFF59E0B);
 const legendTrackColor = Color(0xFFFEF3C7);
 
+List<InstalledGame> _freshInstalledGamesSeed() => [
+  InstalledGame(
+    id: 'candy_crush',
+    name: 'Candy Crush',
+    iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+    nextMilestoneLabel: 'Reach Level 50',
+    nextMilestoneReward: 2.00,
+    lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
+  ),
+  InstalledGame(
+    id: 'solitaire',
+    name: 'Solitaire',
+    iconPath: 'assets/app_icons/Solitaire_Classic.png',
+    nextMilestoneLabel: 'Win 75 games',
+    nextMilestoneReward: 2.50,
+    lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
+  ),
+];
+
 class AppState extends ChangeNotifier {
   String userName = '';
   int stars = 0;
@@ -86,6 +108,29 @@ class AppState extends ChangeNotifier {
   bool hasRedeemed = false;
   List<String> selectedPreferences = [];
   List<JourneyEntry> journeyLog = [];
+
+  // Daily goal (post-onboarding). earnedToday is reused as the progress
+  // counter; it resets at local midnight via checkDailyReset.
+  int dailyGoalStars = 1500; // $2.00
+  bool dailyExtensionOffered = false;
+
+  // In-progress games for the Post-Onboarding Home "Continue earning"
+  // section. Seeded for v1. Names and icon paths match the real catalog
+  // in `data/games.dart` so `gamesByName[game.name]` resolves and
+  // `Image.asset(game.iconPath)` does not fall back to placeholder art.
+  // Replaced by a real per-game progress model when sub-project 3
+  // (Tasks list screen) lands.
+  List<InstalledGame> installedGames = _freshInstalledGamesSeed();
+
+  List<InstalledGame> get inProgressGames {
+    final filtered =
+        installedGames.where((g) => g.hasRemainingMilestones).toList();
+    filtered.sort((a, b) => b.lastPlayedAt.compareTo(a.lastPlayedAt));
+    return filtered;
+  }
+
+  String _dailyResetDate = ''; // yyyy-MM-dd of last reset, empty until first check
+  bool _dailyGoalCelebrated = false; // rising-edge guard for the goal-hit celebration
 
   // Conversational card state
   String convCardMsg = '';
@@ -223,19 +268,84 @@ class AppState extends ChangeNotifier {
     completedTasks.add(task);
     lastCompletedTask = task;
     final prevStars = stars;
+    final prevEarnedToday = earnedToday;
     final earned = taskStars[task] ?? 0;
     stars += earned;
     earnedToday += earned;
     tasksCompleted++;
+
+    // Rising-edge celebration: fires once the first time the user crosses
+    // today's daily goal, regardless of which Home button they tap next.
+    // This matches the Home spec: the celebration belongs to the goal-hit
+    // transition, not to the extension prompt's Push/Bank actions.
+    // TODO sub-project 6: route through CelebrationsService instead of
+    // calling Haptics directly from state.
+    if (!_dailyGoalCelebrated &&
+        earnedToday >= dailyGoalStars &&
+        prevEarnedToday < dailyGoalStars) {
+      _dailyGoalCelebrated = true;
+      Haptics.celebrate(CelebrateMoments.goalReached);
+    }
+
     notifyListeners();
 
-    // Check if we crossed a goal threshold
+    // Check if we crossed a lifetime goal threshold
     if (!isLegend &&
         stars >= currentGoal.goalStars &&
         prevStars < currentGoal.goalStars) {
       return true;
     }
     return false;
+  }
+
+  bool get dailyGoalHit => earnedToday >= dailyGoalStars;
+
+  @visibleForTesting
+  bool get debugDailyGoalCelebrated => _dailyGoalCelebrated;
+
+  /// Extend today's goal from $2 to $3. No-op if the user has already
+  /// banked or pushed today.
+  void pushDailyGoalToThree() {
+    if (dailyExtensionOffered) return;
+    dailyGoalStars = 2250; // $3.00
+    dailyExtensionOffered = true;
+    notifyListeners();
+  }
+
+  /// Keep today's $2 goal and stop prompting for an extension.
+  void bankDailyGoal() {
+    if (dailyExtensionOffered) return;
+    dailyExtensionOffered = true;
+    notifyListeners();
+  }
+
+  /// Call once on Home mount and again when the app resumes. Resets the
+  /// daily counters when the local date has actually rolled over.
+  ///
+  /// The first call on a fresh AppState must be a no-op on the counters,
+  /// it only records today's date as the reset anchor. Otherwise same-day
+  /// progress that was just built up (e.g. from onboarding tasks earlier
+  /// in the same session) would be wiped the first time Home mounts.
+  void checkDailyReset() {
+    final now = DateTime.now();
+    final today =
+        '${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    if (_dailyResetDate == today) return;
+    final isFirstInit = _dailyResetDate.isEmpty;
+    _dailyResetDate = today;
+    if (isFirstInit) return;
+    earnedToday = 0;
+    dailyGoalStars = 1500;
+    dailyExtensionOffered = false;
+    _dailyGoalCelebrated = false;
+    notifyListeners();
+  }
+
+  /// Test-only helper so unit tests can force a date-rollover scenario
+  /// without mocking DateTime.now.
+  @visibleForTesting
+  void debugSetDailyResetDate(String isoDate) {
+    _dailyResetDate = isoDate;
   }
 
   /// Mock payout: deducts the first-goal threshold (1 500 stars = $2.00)
@@ -276,6 +386,11 @@ class AppState extends ChangeNotifier {
     completedTasks = <String>{};
     lastCompletedTask = null;
     hasRedeemed = false;
+    dailyGoalStars = 1500;
+    dailyExtensionOffered = false;
+    _dailyResetDate = '';
+    _dailyGoalCelebrated = false;
+    installedGames = _freshInstalledGamesSeed();
     selectedPreferences = <String>[];
     journeyLog = <JourneyEntry>[];
     convCardMsg = '';

@@ -1,3 +1,13 @@
+# Design System
+
+When building or modifying UI in `flutter_app/`, read `docs/design-system.md`
+before writing code. It defines the grid, spacing scale, typography, colors,
+and reusable components for the Flutter app. All new UI must use the
+semantic tokens and components defined there.
+
+If a pattern does not exist in the system, add it to the system before
+using it in a screen. This is non-negotiable.
+
 # Presenter
 
 Generate self-contained HTML presentations from concept documents.
