@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
 
@@ -43,7 +42,10 @@ void main() {
 
   group('AppRadius invariants', () {
     test('every value is in the allowed set', () {
-      final allowed = {0.0, 8.0, 12.0, 16.0, 20.0, 24.0, 9999.0};
+      // Exactly the rungs exposed by AppRadius. Any future addition
+      // outside this set should fail the test until it is added here
+      // deliberately.
+      final allowed = {8.0, 16.0, 20.0, 24.0, 9999.0};
       final entries = <String, double>{
         'chip': AppRadius.chip,
         'card': AppRadius.card,

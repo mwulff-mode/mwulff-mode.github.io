@@ -97,8 +97,10 @@ See `lib/theme/app_text.dart`. The canonical styles are:
 | `AppText.body` | 15 / 500 | Subcopy, descriptions, secondary text |
 | `AppText.caption` | 14 / 600 | Meta labels, pill labels, captions |
 
-`AppText.sectionTitle` and `AppText.sheetTitle` are deprecated forwarders
-that return `AppText.title`. Use `title` directly in new code.
+`AppText.sectionTitle` is a deprecated forwarder that returns
+`AppText.title` (both are 22/700). `AppText.sheetTitle` is still a real
+20/700 style until sub-project 2 migrates the "Choose your game" bottom
+sheet header onto `AppText.title`. Use `title` directly in new code.
 
 ### Color
 
