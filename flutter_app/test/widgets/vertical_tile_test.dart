@@ -62,7 +62,9 @@ void main() {
           disabled: true,
         ),
       ));
-      await tester.tap(find.text('Games'));
+      // warnIfMissed: false because the IgnorePointer inside the disabled
+      // tile is exactly what we are asserting. The tap is expected to miss.
+      await tester.tap(find.text('Games'), warnIfMissed: false);
       await tester.pumpAndSettle();
       expect(tapped, isFalse);
     });
