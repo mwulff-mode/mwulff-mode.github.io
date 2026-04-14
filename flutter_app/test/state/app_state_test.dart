@@ -430,9 +430,9 @@ void main() {
       expect(state.dailyGoalStars, 1500);
     });
 
-    test('dailyExtensionOffered defaults to false', () {
+    test('dailyGoalExtended defaults to false', () {
       final state = AppState();
-      expect(state.dailyExtensionOffered, isFalse);
+      expect(state.dailyGoalExtended, isFalse);
     });
 
     test('dailyGoalHit is false when earnedToday is below target', () {
@@ -447,57 +447,61 @@ void main() {
       expect(state.dailyGoalHit, isTrue);
     });
 
-    test('pushDailyGoalToThree raises target to 2250 and marks offered', () {
+    test('crossing the \$2 tier auto-extends the goal to \$5', () {
+      // The user climbs from just under $2 up to the threshold in a
+      // single task completion. completeTask fires the rising-edge
+      // celebration, then immediately flips the goal up to $5 so the
+      // ring "levels up" without prompting the user.
       final state = AppState();
-      state.earnedToday = 1500;
-      state.pushDailyGoalToThree();
-      expect(state.dailyGoalStars, 2250);
-      expect(state.dailyExtensionOffered, isTrue);
+      state.earnedToday = state.dailyGoalStars - 100; // 1400
+      state.completeTask('game_milestone'); // +600, crosses 1500
+      expect(state.dailyGoalStars, 3750, reason: '\$5 target in stars');
+      expect(state.dailyGoalExtended, isTrue);
     });
 
-    test('pushDailyGoalToThree is a no-op if already offered', () {
+    test('auto-extend leaves earnedToday as locked-in progress on the \$5 ring', () {
+      // The crossed $2 should register as progress on the $5 ring, not
+      // get wiped or double-counted. After crossing, dailyGoalProgress
+      // should be around 40% (1500/3750 after the reward is applied).
       final state = AppState();
-      state.dailyExtensionOffered = true;
-      state.dailyGoalStars = 1500; // banked scenario
-      state.pushDailyGoalToThree();
-      expect(state.dailyGoalStars, 1500, reason: 'must not re-push');
+      state.earnedToday = 1450;
+      state.completeTask('daily_offer'); // +350 → 1800
+      expect(state.earnedToday, 1800,
+          reason: 'auto-extend must not touch earnedToday');
+      expect(state.dailyGoalStars, 3750);
+      // 1800 / 3750 = 48%
+      expect(state.dailyGoalProgress, closeTo(48, 0.5));
     });
 
-    test('bankDailyGoal marks offered but leaves target at 1500', () {
+    test('auto-extend only fires once per day even if earnedToday is massaged', () {
+      // If the day's counters ever walk below and back over the starter
+      // target, the one-time guard must still prevent a second
+      // auto-extension. This guards against test-harness mutations and
+      // any future code paths that could roll earnedToday backward.
       final state = AppState();
-      state.earnedToday = 1500;
-      state.bankDailyGoal();
-      expect(state.dailyGoalStars, 1500);
-      expect(state.dailyExtensionOffered, isTrue);
+      state.earnedToday = 1400;
+      state.completeTask('game_milestone'); // crosses to 2000, extends to 3750
+      expect(state.dailyGoalStars, 3750);
+
+      // Hand-roll a second "cross $2" scenario. The goal must stay at $5.
+      state.dailyGoalStars = 1500;
+      state.earnedToday = 1400;
+      state.completeTask('daily_offer'); // +350 → 1750
+      expect(state.dailyGoalStars, 1500,
+          reason: 'once extended, never re-extends in the same day');
     });
 
-    test('pushDailyGoalToThree notifies listeners', () {
-      final state = AppState();
-      int notifyCount = 0;
-      state.addListener(() => notifyCount++);
-      state.pushDailyGoalToThree();
-      expect(notifyCount, 1);
-    });
-
-    test('bankDailyGoal notifies listeners', () {
-      final state = AppState();
-      int notifyCount = 0;
-      state.addListener(() => notifyCount++);
-      state.bankDailyGoal();
-      expect(notifyCount, 1);
-    });
-
-    test('checkDailyReset resets earnedToday, target, and extension flag when date changes', () {
+    test('checkDailyReset resets earnedToday, target, and extended flag when date changes', () {
       final state = AppState();
       state.earnedToday = 2000;
-      state.dailyGoalStars = 2250;
-      state.dailyExtensionOffered = true;
+      state.dailyGoalStars = 3750;
+      state.dailyGoalExtended = true;
       // Force last reset date to yesterday.
       state.debugSetDailyResetDate('2000-01-01');
       state.checkDailyReset();
       expect(state.earnedToday, 0);
       expect(state.dailyGoalStars, 1500);
-      expect(state.dailyExtensionOffered, isFalse);
+      expect(state.dailyGoalExtended, isFalse);
     });
 
     test('checkDailyReset is a no-op when date has not changed', () {
@@ -518,16 +522,16 @@ void main() {
       state.checkDailyReset();
       expect(state.earnedToday, 900);
       expect(state.dailyGoalStars, 1500);
-      expect(state.dailyExtensionOffered, isFalse);
+      expect(state.dailyGoalExtended, isFalse);
     });
 
     test('reset() restores daily goal fields to defaults', () {
       final state = AppState();
-      state.dailyGoalStars = 2250;
-      state.dailyExtensionOffered = true;
+      state.dailyGoalStars = 3750;
+      state.dailyGoalExtended = true;
       state.reset();
       expect(state.dailyGoalStars, 1500);
-      expect(state.dailyExtensionOffered, isFalse);
+      expect(state.dailyGoalExtended, isFalse);
     });
 
     test('completeTask does not crash when haptic fires on goal crossing', () {
@@ -535,35 +539,38 @@ void main() {
       // rising edge (crossing dailyGoalStars for the first time) to make
       // sure the Haptics call compiles and does not throw under flutter
       // test. Haptics.celebrate is per-run guarded, so repeats are safe.
+      // Assert on dailyGoalExtended rather than dailyGoalHit because the
+      // same crossing auto-extends the goal, so earnedToday is now below
+      // the new $5 threshold.
       final state = AppState();
-      // Load earnedToday right up against the threshold so the next
-      // task crosses it.
       state.earnedToday = state.dailyGoalStars - 100;
-      // Pick a task whose reward is large enough to cross 1500.
-      state.completeTask('game_milestone'); // +600 stars
-      expect(state.dailyGoalHit, isTrue);
+      state.completeTask('game_milestone'); // +600 stars, crosses 1500
+      expect(state.dailyGoalExtended, isTrue);
     });
 
-    test('second goal crossing in the same day does not re-celebrate', () {
-      // Rising-edge guard: the first crossing must set _dailyGoalCelebrated,
-      // and a second crossing in the same day must leave it set without
-      // firing the celebration branch a second time. Assert on the guard
-      // getter directly instead of on dailyGoalHit, which only observes
-      // the current earnedToday value.
+    test('crossing \$2 disarms the guard so the \$5 tier can celebrate again', () {
+      // First crossing arms the guard and then auto-extends the goal,
+      // which disarms the guard on purpose: the $5 tier is a fresh
+      // celebration opportunity, not a re-fire of the same one.
       final state = AppState();
-      state.earnedToday = state.dailyGoalStars - 100;
-      state.completeTask('game_milestone'); // first crossing
-      expect(state.debugDailyGoalCelebrated, isTrue,
-          reason: 'first crossing must arm the guard');
+      state.earnedToday = state.dailyGoalStars - 100; // 1400
+      state.completeTask('game_milestone'); // crosses 1500, extends to 3750
+      expect(state.dailyGoalStars, 3750);
+      expect(state.debugDailyGoalCelebrated, isFalse,
+          reason: 'auto-extend re-arms the guard for the \$5 tier');
+    });
 
-      // Drop back under the goal without resetting the guard, then cross
-      // again. The guard must remain armed and the second crossing must
-      // not throw or clear it.
-      state.earnedToday = state.dailyGoalStars - 10;
-      state.completeTask('daily_offer'); // second crossing
+    test('crossing the extended \$5 tier re-fires the celebration once', () {
+      final state = AppState();
+      // Load earnedToday a hair under $5 on the already-extended ring.
+      state.dailyGoalStars = 3750;
+      state.dailyGoalExtended = true;
+      state.earnedToday = 3700;
+      state.completeTask('daily_offer'); // +350 → 4050
       expect(state.debugDailyGoalCelebrated, isTrue,
-          reason: 'second crossing in the same day must leave the guard armed');
-      expect(state.dailyGoalHit, isTrue);
+          reason: 'hitting the \$5 tier must arm the guard once');
+      expect(state.dailyGoalStars, 3750,
+          reason: 'already-extended ring must not re-extend');
     });
   });
 
@@ -572,15 +579,40 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('in-progress games', () {
-    test('installedGames seed contains at least two games', () {
+    test('installedGames defaults to an empty list on a fresh AppState', () {
+      // A fresh AppState must ship empty so onboarding Game Detail never
+      // flips into "Continue playing" mode for a game the user hasn't
+      // actually installed yet. Population happens via
+      // installGameFromOnboarding when the user picks a game.
       final state = AppState();
-      expect(state.installedGames.length, greaterThanOrEqualTo(2));
+      expect(state.installedGames, isEmpty);
     });
 
     test('inProgressGames returns only games with remaining milestones', () {
       final state = AppState();
+      // Seed a mix of in-progress and fully-cleared games so the filter
+      // actually has something to reject. Default installedGames is
+      // empty, so the pre-fix version of this test trivially passed.
+      state.installedGames = [
+        InstalledGame(
+          id: 'in_progress',
+          name: 'In Progress',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'L1',
+          nextMilestoneReward: 1.00,
+          lastPlayedAt: DateTime(2026, 4, 13),
+        ),
+        InstalledGame(
+          id: 'cleared',
+          name: 'Cleared',
+          iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
+          nextMilestoneLabel: 'done',
+          nextMilestoneReward: 0,
+          lastPlayedAt: DateTime(2026, 4, 13),
+        ),
+      ];
       final filtered = state.inProgressGames;
-      expect(filtered.every((g) => g.nextMilestoneReward > 0), isTrue);
+      expect(filtered.map((g) => g.id).toList(), ['in_progress']);
     });
 
     test('inProgressGames is ordered by lastPlayedAt, most recent first', () {

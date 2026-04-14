@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post-Onboarding Sprint &mdash; EarnWise</title>
+  <style>
+    :root {
+      --ink: #171412;
+      --ink-light: #5c544d;
+      --ink-faint: #8d8379;
+      --surface: #f5efe8;
+      --surface-alt: #fbf7f2;
+      --surface-strong: #e8dfd3;
+      --surface-contrast: #fffdf9;
+      --border: rgba(23, 20, 18, 0.14);
+      --border-strong: rgba(23, 20, 18, 0.3);
+      --shadow-soft: 0 20px 46px rgba(23, 20, 18, 0.07);
+      --shadow-deep: 0 30px 72px rgba(23, 20, 18, 0.1);
+      --panel-bg: rgba(255, 253, 249, 0.76);
+      --panel-bg-strong: rgba(255, 253, 249, 0.86);
+      --panel-highlight: rgba(255, 255, 255, 0.4);
+      --glow: rgba(255, 255, 255, 0.72);
+      --glow-soft: rgba(255, 255, 255, 0.44);
+      --page-speckle: rgba(255, 255, 255, 0.14);
+      --page-texture: rgba(23, 20, 18, 0.012);
+      --pattern-ink: rgba(23, 20, 18, 0.05);
+      --active-fill: rgba(23, 20, 18, 0.04);
+      --selection-fill: rgba(23, 20, 18, 0.12);
+      --backdrop: rgba(16, 14, 12, 0.36);
+      --content-width: 760px;
+      --wide-width: 1180px;
+      --rail-width: 280px;
+      --section-gap: clamp(84px, 10vw, 136px);
+      --gutter: clamp(20px, 4vw, 40px);
+      --radius-sm: 16px;
+      --radius-md: 26px;
+      --radius-lg: 40px;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", ui-serif, serif;
+      --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SF Mono", "SFMono-Regular", ui-monospace, monospace;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html:not(.light) {
+        --ink: #f1ebe3;
+        --ink-light: #c4b9ad;
+        --ink-faint: #92867a;
+        --surface: #12100f;
+        --surface-alt: #181513;
+        --surface-strong: #221d1a;
+        --surface-contrast: #201b18;
+        --border: rgba(241, 235, 227, 0.12);
+        --border-strong: rgba(241, 235, 227, 0.24);
+        --shadow-soft: 0 20px 46px rgba(0, 0, 0, 0.32);
+        --shadow-deep: 0 30px 72px rgba(0, 0, 0, 0.42);
+        --panel-bg: rgba(32, 27, 24, 0.76);
+        --panel-bg-strong: rgba(32, 27, 24, 0.88);
+        --panel-highlight: rgba(255, 255, 255, 0.05);
+        --glow: rgba(255, 255, 255, 0.08);
+        --glow-soft: rgba(255, 255, 255, 0.03);
+        --page-speckle: rgba(255, 255, 255, 0.02);
+        --page-texture: rgba(241, 235, 227, 0.018);
+        --pattern-ink: rgba(241, 235, 227, 0.06);
+        --active-fill: rgba(241, 235, 227, 0.05);
+        --selection-fill: rgba(241, 235, 227, 0.18);
+        --backdrop: rgba(0, 0, 0, 0.52);
+        color-scheme: dark;
+      }
+    }
+
+    html.dark {
+      --ink: #f1ebe3;
+      --ink-light: #c4b9ad;
+      --ink-faint: #92867a;
+      --surface: #12100f;
+      --surface-alt: #181513;
+      --surface-strong: #221d1a;
+      --surface-contrast: #201b18;
+      --border: rgba(241, 235, 227, 0.12);
+      --border-strong: rgba(241, 235, 227, 0.24);
+      --shadow-soft: 0 20px 46px rgba(0, 0, 0, 0.32);
+      --shadow-deep: 0 30px 72px rgba(0, 0, 0, 0.42);
+      --panel-bg: rgba(32, 27, 24, 0.76);
+      --panel-bg-strong: rgba(32, 27, 24, 0.88);
+      --panel-highlight: rgba(255, 255, 255, 0.05);
+      --glow: rgba(255, 255, 255, 0.08);
+      --glow-soft: rgba(255, 255, 255, 0.03);
+      --page-speckle: rgba(255, 255, 255, 0.02);
+      --page-texture: rgba(241, 235, 227, 0.018);
+      --pattern-ink: rgba(241, 235, 227, 0.06);
+      --active-fill: rgba(241, 235, 227, 0.05);
+      --selection-fill: rgba(241, 235, 227, 0.18);
+      --backdrop: rgba(0, 0, 0, 0.52);
+      color-scheme: dark;
+    }
+
+    html.light {
+      color-scheme: light;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 17px;
+      scroll-behavior: smooth;
+      background: var(--surface);
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+      background:
+        radial-gradient(circle at top right, var(--glow), transparent 32%),
+        linear-gradient(180deg, var(--glow-soft), transparent 18%),
+        linear-gradient(180deg, var(--surface) 0%, var(--surface-strong) 46%, var(--surface-alt) 100%);
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 18%, var(--page-speckle), transparent 18%),
+        repeating-linear-gradient(
+          90deg,
+          var(--page-texture) 0,
+          var(--page-texture) 1px,
+          transparent 1px,
+          transparent 18px
+        );
+      opacity: 0.88;
+      z-index: -1;
+    }
+
+    ::selection {
+      background: var(--selection-fill);
+      color: var(--ink);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    strong {
+      font-weight: 650;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.93em;
+      background: var(--active-fill);
+      padding: 0.12rem 0.32rem;
+      border-radius: 0.35rem;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--serif);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    h1 {
+      font-size: clamp(4rem, 8.6vw, 7.1rem);
+    }
+
+    h2 {
+      font-size: clamp(2.4rem, 4.8vw, 4.2rem);
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+      margin-bottom: 16px;
+    }
+
+    h4 {
+      font-size: 1.12rem;
+      margin-bottom: 12px;
+    }
+
+    p {
+      max-width: 70ch;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      max-width: 70ch;
+      padding-left: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    li + li {
+      margin-top: 0.45rem;
+    }
+
+    .theme-toggle,
+    .toc__toggle {
+      border: 1px solid var(--border);
+      background: var(--panel-bg-strong);
+      color: var(--ink);
+      border-radius: 999px;
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .theme-toggle:hover,
+    .toc__toggle:hover {
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle:focus-visible,
+    .toc__toggle:focus-visible,
+    .toc__list a:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      z-index: 80;
+      padding: 11px 18px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .toc {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--rail-width);
+      padding: 28px 22px 28px 24px;
+      border-right: 1px solid var(--border);
+      background: var(--panel-bg);
+      backdrop-filter: blur(18px);
+      overflow-y: auto;
+      z-index: 60;
+    }
+
+    .toc__brand {
+      padding: 10px 12px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toc__kicker {
+      font-size: 0.66rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+    }
+
+    .toc__title {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      letter-spacing: -0.03em;
+    }
+
+    .toc__subtitle {
+      font-size: 0.88rem;
+      color: var(--ink-light);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .toc__toggle {
+      display: none;
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 81;
+      padding: 11px 16px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .toc__list {
+      list-style: none;
+      padding: 20px 0 0;
+      margin: 0;
+    }
+
+    .toc__list li + li {
+      margin-top: 4px;
+    }
+
+    .toc__list a {
+      display: block;
+      padding: 10px 10px 10px 14px;
+      border-left: 1px solid transparent;
+      color: var(--ink-light);
+      text-decoration: none;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), color 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+
+    .toc__list a:hover {
+      color: var(--ink);
+      transform: translateX(4px);
+    }
+
+    .toc__list a.active {
+      color: var(--ink);
+      border-left-color: var(--ink);
+      background: var(--active-fill);
+    }
+
+    .toc-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--backdrop);
+      z-index: 55;
+    }
+
+    .content {
+      counter-reset: section;
+      margin-left: var(--rail-width);
+      position: relative;
+    }
+
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding: 24px var(--gutter) clamp(82px, 9vw, 120px);
+      max-width: calc(var(--wide-width) + (var(--gutter) * 2));
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: var(--gutter);
+      right: var(--gutter);
+      bottom: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong) 12%, var(--border-strong) 88%, transparent);
+    }
+
+    .hero__grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(290px, 0.82fr);
+      gap: clamp(34px, 5vw, 74px);
+      align-items: end;
+    }
+
+    .hero__meta,
+    .section__eyebrow,
+    .stat-card__label,
+    .scope-card__meta,
+    .lane__meta,
+    .pill,
+    .risk-card__label,
+    .decision-card__label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .hero__meta {
+      color: var(--ink-faint);
+      margin-bottom: 22px;
+    }
+
+    .hero__title {
+      max-width: 10ch;
+      margin-bottom: 26px;
+    }
+
+    .hero__subtitle {
+      font-size: clamp(1.12rem, 2vw, 1.42rem);
+      line-height: 1.56;
+      color: var(--ink-light);
+      max-width: 40ch;
+      margin: 0;
+    }
+
+    .hero__aside,
+    .decision-card,
+    .stat-card,
+    .scope-card,
+    .lane,
+    .rule-card,
+    .risk-card,
+    .flow__step {
+      background: linear-gradient(180deg, var(--panel-highlight), rgba(255, 255, 255, 0)), var(--panel-bg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero__aside {
+      border-radius: var(--radius-lg);
+      padding: 30px 30px 28px;
+    }
+
+    .hero__aside-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 14px;
+    }
+
+    .hero__aside-copy {
+      color: var(--ink-light);
+      font-size: 0.98rem;
+      line-height: 1.68;
+      margin-bottom: 0;
+    }
+
+    .hero__facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 24px;
+      margin-top: 24px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero__fact dt {
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 6px;
+    }
+
+    .hero__fact dd {
+      font-family: var(--serif);
+      font-size: 1.54rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .section {
+      counter-increment: section;
+      max-width: var(--wide-width);
+      padding: var(--section-gap) var(--gutter);
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .section__intro {
+      max-width: var(--content-width);
+      margin-bottom: 42px;
+    }
+
+    .section__eyebrow {
+      color: var(--ink-faint);
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.7rem;
+      white-space: nowrap;
+      margin-bottom: 14px;
+    }
+
+    .section__eyebrow::before {
+      content: counter(section, decimal-leading-zero);
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .section__title {
+      margin-bottom: 20px;
+    }
+
+    .section__lede {
+      font-size: 1.16rem;
+      line-height: 1.72;
+      color: var(--ink-light);
+      margin-bottom: 0;
+    }
+
+    .callout {
+      max-width: var(--content-width);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 24px 28px 24px 32px;
+      margin: 42px 0 0;
+      position: relative;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .callout::before {
+      content: "Decision";
+      position: absolute;
+      top: 22px;
+      left: 24px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .callout::after {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--ink);
+      border-radius: 999px;
+    }
+
+    .callout p {
+      margin: 22px 0 0;
+      color: var(--ink-light);
+      font-size: 1.02rem;
+    }
+
+    .decision-grid,
+    .stats-grid,
+    .scope-grid,
+    .risks-grid,
+    .flow {
+      display: grid;
+      gap: 20px;
+    }
+
+    .decision-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 44px;
+    }
+
+    .decision-card {
+      border-radius: var(--radius-lg);
+      padding: 28px 28px 24px;
+      min-height: 100%;
+    }
+
+    .decision-card__label {
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+
+    .decision-card h3 {
+      margin-bottom: 14px;
+    }
+
+    .decision-card p {
+      color: var(--ink-light);
+      margin-bottom: 1rem;
+    }
+
+    .decision-card ul {
+      color: var(--ink-light);
+      margin-bottom: 0;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 36px;
+    }
+
+    .stat-card {
+      border-radius: var(--radius-md);
+      padding: 24px 24px 22px;
+      min-height: 208px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.24), transparent 56%);
+      pointer-events: none;
+    }
+
+    .stat-card__label {
+      color: var(--ink-faint);
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card__value {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 4vw, 3.4rem);
+      letter-spacing: -0.06em;
+      line-height: 0.92;
+      margin-top: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card__text {
+      margin-top: auto;
+      color: var(--ink-light);
+      position: relative;
+      z-index: 1;
+    }
+
+    .scope-grid {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .scope-card {
+      border-radius: var(--radius-md);
+      padding: 24px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+    }
+
+    .scope-card__index {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      background: var(--surface-contrast);
+    }
+
+    .scope-card__meta {
+      color: var(--ink-faint);
+      margin-bottom: 12px;
+    }
+
+    .scope-card h3 {
+      font-size: 1.34rem;
+      line-height: 1.06;
+      margin-bottom: 12px;
+    }
+
+    .scope-card p {
+      color: var(--ink-light);
+      font-size: 0.92rem;
+      line-height: 1.58;
+      margin-bottom: auto;
+    }
+
+    .scope-card__foot {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--ink-faint);
+      font-size: 0.8rem;
+    }
+
+    .runway {
+      display: grid;
+      gap: 22px;
+      margin-top: 12px;
+    }
+
+    .lane {
+      border-radius: var(--radius-lg);
+      padding: 24px 26px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lane::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.15), transparent 26%),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0,
+          transparent calc(33.333% - 1px),
+          var(--pattern-ink) calc(33.333% - 1px),
+          var(--pattern-ink) 33.333%
+        );
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .lane__header,
+    .lane__items {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lane__header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lane__meta {
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .lane__title {
+      font-family: var(--serif);
+      font-size: 1.85rem;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .lane__summary {
+      max-width: 38ch;
+      color: var(--ink-light);
+      font-size: 0.95rem;
+      text-align: right;
+      margin-bottom: 0;
+    }
+
+    .lane__items {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .lane__card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: rgba(255, 253, 249, 0.5);
+      padding: 18px 18px 16px;
+      min-height: 150px;
+    }
+
+    html.dark .lane__card {
+      background: rgba(32, 27, 24, 0.52);
+    }
+
+    .lane__card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .lane__card p {
+      color: var(--ink-light);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      margin-bottom: 0;
+    }
+
+    .lane__footer {
+      margin-top: 18px;
+      color: var(--ink-faint);
+      font-size: 0.82rem;
+    }
+
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 42px;
+    }
+
+    .rule-card {
+      border-radius: var(--radius-lg);
+      padding: 30px 30px 28px;
+      min-height: 100%;
+    }
+
+    .rule-card h3 {
+      margin-bottom: 14px;
+    }
+
+    .rule-card p,
+    .rule-card li {
+      color: var(--ink-light);
+    }
+
+    .rule-card__rule {
+      display: inline-block;
+      margin: 16px 0 18px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel-bg-strong);
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      line-height: 1;
+      letter-spacing: 0.14em;
+    }
+
+    .pill::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+
+    .pill--cut::before {
+      background: var(--ink-light);
+    }
+
+    .pill--defer::before {
+      background: var(--ink);
+    }
+
+    .risks-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 38px;
+    }
+
+    .risk-card {
+      border-radius: var(--radius-md);
+      padding: 22px 22px 20px;
+      min-height: 100%;
+    }
+
+    .risk-card__label {
+      color: var(--ink-faint);
+      margin-bottom: 10px;
+    }
+
+    .risk-card h4 {
+      font-size: 1.22rem;
+      margin-bottom: 12px;
+    }
+
+    .risk-card p {
+      color: var(--ink-light);
+      font-size: 0.92rem;
+      line-height: 1.58;
+      margin-bottom: 0;
+    }
+
+    .flow {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      position: relative;
+      margin-top: 44px;
+    }
+
+    .flow::before {
+      content: "";
+      position: absolute;
+      top: 53px;
+      left: 7%;
+      right: 7%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-strong) 14%, var(--border-strong) 86%, transparent);
+    }
+
+    .flow__step {
+      border-radius: var(--radius-md);
+      padding: 24px 22px 22px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .flow__index {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 1.22rem;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-contrast);
+      margin-bottom: 18px;
+    }
+
+    .flow__step p {
+      color: var(--ink-light);
+      font-size: 0.94rem;
+      line-height: 1.58;
+      margin-bottom: 0;
+    }
+
+    .section-note {
+      margin-top: 28px;
+      color: var(--ink-faint);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-width: 74ch;
+    }
+
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+        transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    [data-animate].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1280px) {
+      .scope-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .risks-grid,
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .toc {
+        transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+
+      .toc.open {
+        transform: translateX(0);
+      }
+
+      .toc__toggle {
+        display: inline-flex;
+      }
+
+      .toc-backdrop.visible {
+        display: block;
+      }
+
+      .content {
+        margin-left: 0;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 92px;
+      }
+
+      .hero__grid,
+      .decision-grid,
+      .policy-grid,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .lane__header {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .lane__summary {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 760px) {
+      html {
+        font-size: 16px;
+      }
+
+      .theme-toggle {
+        right: 16px;
+        top: 16px;
+      }
+
+      .hero__facts,
+      .scope-grid,
+      .lane__items,
+      .stats-grid,
+      .risks-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lane::before,
+      .flow::before {
+        display: none;
+      }
+
+      .section {
+        padding-top: clamp(72px, 12vw, 92px);
+        padding-bottom: clamp(72px, 12vw, 92px);
+      }
+
+      .scope-card,
+      .stat-card {
+        min-height: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      [data-animate] {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="toc__toggle" id="toc-toggle" aria-label="Toggle table of contents">Menu</button>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">Theme</button>
+
+  <nav class="toc" id="toc">
+    <div class="toc__brand">
+      <div class="toc__kicker">Presenter</div>
+      <div class="toc__title">Post-Onboarding Sprint</div>
+      <p class="toc__subtitle">A three-day breadth-first build to make the post-onboarding loop demonstrable end to end.</p>
+    </div>
+    <ul class="toc__list"></ul>
+  </nav>
+  <div class="toc-backdrop" id="toc-backdrop"></div>
+
+  <main class="content">
+    <header class="hero">
+      <div class="hero__grid">
+        <div>
+          <div class="hero__meta">EarnWise Sprint Design &middot; April 13, 2026</div>
+          <h1 class="hero__title">Post-Onboarding Sprint</h1>
+          <p class="hero__subtitle">Seven rough-fidelity features in three working days, with enough real state and routing to demonstrate the full loop by Thursday morning.</p>
+        </div>
+
+        <aside class="hero__aside" data-animate>
+          <div class="hero__aside-label">Decision Frame</div>
+          <p class="hero__aside-copy">This sprint is intentionally breadth-first. We are shipping visible screens before cross-cutting systems, then using one explicit rule to keep the retrofit day survivable.</p>
+          <dl class="hero__facts">
+            <div class="hero__fact">
+              <dt>Deadline</dt>
+              <dd>Thu 16</dd>
+            </div>
+            <div class="hero__fact">
+              <dt>Deliverables</dt>
+              <dd>7 items</dd>
+            </div>
+            <div class="hero__fact">
+              <dt>Net-New Screens</dt>
+              <dd>2 + 1 promoted</dd>
+            </div>
+            <div class="hero__fact">
+              <dt>System Day</dt>
+              <dd>Day 3</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </header>
+
+    <section class="section" id="bet">
+      <div class="section__intro">
+        <div class="section__eyebrow">The Bet</div>
+        <h2 class="section__title">Visible Progress First, Retrofit Risk Later</h2>
+        <p class="section__lede">The chosen sequence is not the safest one. It is the one most likely to make the product feel real fastest: polish the visible surfaces on Days 1 and 2, then layer Dark Mode and the celebrations primitive across them on Day 3.</p>
+      </div>
+
+      <div class="decision-grid">
+        <article class="decision-card" data-animate>
+          <div class="decision-card__label">Safer Alternative</div>
+          <h3>Front-load systems, reduce retrofit exposure</h3>
+          <p>A conservative sequence would lock down tokens and reusable primitives earlier, then add or polish screens once the foundation was stable.</p>
+          <ul>
+            <li>Lower risk of late regressions</li>
+            <li>Less chance of a retrofit scramble on Wednesday</li>
+            <li>Slower visible momentum during the sprint</li>
+          </ul>
+        </article>
+
+        <article class="decision-card" data-animate>
+          <div class="decision-card__label">Chosen Sequence</div>
+          <h3>Screens first, systems last</h3>
+          <p>The sprint is optimized for demonstrability. By the end of Day 2, the core post-onboarding journey should already feel traversable, even before the system pass lands.</p>
+          <ul>
+            <li>Fastest path to believable progress</li>
+            <li>Real screens create better retrofit targets</li>
+            <li>Requires discipline around tokens and scope</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card" data-animate>
+          <div class="stat-card__label">Scope</div>
+          <div class="stat-card__value">7</div>
+          <p class="stat-card__text">Two polish items, three new or promoted screens, and two cross-cutting systems.</p>
+        </article>
+        <article class="stat-card" data-animate>
+          <div class="stat-card__label">Runway</div>
+          <div class="stat-card__value">3 days</div>
+          <p class="stat-card__text">Monday and Tuesday create the visible path. Wednesday and Thursday morning close the loop.</p>
+        </article>
+        <article class="stat-card" data-animate>
+          <div class="stat-card__label">New State Risks</div>
+          <div class="stat-card__value">2</div>
+          <p class="stat-card__text">Transaction History and Streaks both depend on data shape decisions that are deferred into their own brainstorms.</p>
+        </article>
+        <article class="stat-card" data-animate>
+          <div class="stat-card__label">Survival Rule</div>
+          <div class="stat-card__value">1</div>
+          <p class="stat-card__text">No new hardcoded hex codes. Every new color goes through <code>AppColors</code>.</p>
+        </article>
+      </div>
+
+      <div class="callout" data-animate>
+        <p><strong>Breadth over depth</strong> is not shorthand for sloppiness here. The standard is lower polish, not fake completeness: every item must be reachable, render real state, and participate in a believable end-to-end demo.</p>
+      </div>
+    </section>
+
+    <section class="section" id="deliverables">
+      <div class="section__intro">
+        <div class="section__eyebrow">Scope</div>
+        <h2 class="section__title">The Seven Deliverables</h2>
+        <p class="section__lede">The list stays intentionally tight. Each item is discrete enough to spec and ship independently, but together they cover the entire post-onboarding loop the demo needs.</p>
+      </div>
+
+      <div class="scope-grid">
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">1</div>
+          <div class="scope-card__meta">Day 1 &middot; Small</div>
+          <h3>Home Polish</h3>
+          <p>Verify <code>_buildDailyTasks</code> against the design intent in <code>home_screen.dart</code> and tighten header, counter, and row spacing without introducing new architecture.</p>
+          <div class="scope-card__foot">Existing logic, existing surface.</div>
+        </article>
+
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">2</div>
+          <div class="scope-card__meta">Day 1 &middot; Small</div>
+          <h3>Wallet Polish</h3>
+          <p>Review locked, unlocked, and redeemed Wallet states in <code>wallet_screen.dart</code>, then tighten copy and spacing while leaving architecture untouched.</p>
+          <div class="scope-card__foot">Three states, one surface.</div>
+        </article>
+
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">3</div>
+          <div class="scope-card__meta">Day 1 &middot; Medium</div>
+          <h3>Game Catalog</h3>
+          <p>Promote the existing <code>_showGamePicker</code> bottom sheet into a real screen and route the Home &ldquo;play a game&rdquo; task into it.</p>
+          <div class="scope-card__foot">Promotion, not reinvention.</div>
+        </article>
+
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">4</div>
+          <div class="scope-card__meta">Day 2 &middot; Medium</div>
+          <h3>Transaction History</h3>
+          <p>Build a net-new chronological earnings screen, reachable from Wallet or Profile. Data source resolution happens inside the item-specific brainstorm.</p>
+          <div class="scope-card__foot">Likely <code>journeyLog</code> or a new ledger.</div>
+        </article>
+
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">5</div>
+          <div class="scope-card__meta">Day 2 &middot; Medium</div>
+          <h3>Streaks View</h3>
+          <p>Create a dedicated screen for current streak state, past streaks, and streak rules. The underlying data contract is deferred to its own brainstorm.</p>
+          <div class="scope-card__foot">Reached from the Home streak pill.</div>
+        </article>
+
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">6</div>
+          <div class="scope-card__meta">Day 3 &middot; Refactor</div>
+          <h3>Celebrations Primitive</h3>
+          <p>Unify payout celebration, goal-complete celebration, and <code>HapticsService</code> into one reusable primitive callable from Home, Wallet, and Streaks.</p>
+          <div class="scope-card__foot">Refactor with no new visuals.</div>
+        </article>
+
+        <article class="scope-card" data-animate>
+          <div class="scope-card__index">7</div>
+          <div class="scope-card__meta">Day 3 &middot; Medium</div>
+          <h3>Dark Mode</h3>
+          <p>Add dark variants to the token set in <code>app_theme.dart</code>, wire <code>ThemeMode</code> in <code>main.dart</code>, and expose a toggle in Profile.</p>
+          <div class="scope-card__foot">Token expansion plus retrofit sweep.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="sequence">
+      <div class="section__intro">
+        <div class="section__eyebrow">Sequence</div>
+        <h2 class="section__title">Three Days, One Runway</h2>
+        <p class="section__lede">The day-by-day plan deliberately matches the seven-item scope with no floating &ldquo;refinement&rdquo; bucket. The first two days produce surfaces. The third day makes them system-ready and shippable.</p>
+      </div>
+
+      <div class="runway">
+        <article class="lane" data-animate>
+          <div class="lane__header">
+            <div>
+              <div class="lane__meta">Day 1 &middot; Mon 2026-04-13</div>
+              <div class="lane__title">Existing Logic + One Promoted Screen</div>
+            </div>
+            <p class="lane__summary">Start where the value is most visible and the unknowns are lowest: tighten two live surfaces, then promote the game picker into a full route.</p>
+          </div>
+          <div class="lane__items">
+            <div class="lane__card">
+              <strong>Post-Onboarding Home polish</strong>
+              <p>Spacing, counter rhythm, and task row cleanup inside the current Home implementation.</p>
+            </div>
+            <div class="lane__card">
+              <strong>Post-Onboarding Wallet polish</strong>
+              <p>Locked, unlocked, and redeemed states made clearer without changing architecture.</p>
+            </div>
+            <div class="lane__card">
+              <strong>Game Catalog screen</strong>
+              <p>Bottom-sheet logic becomes a real screen and starts earning its place in the flow.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lane" data-animate>
+          <div class="lane__header">
+            <div>
+              <div class="lane__meta">Day 2 &middot; Tue 2026-04-14</div>
+              <div class="lane__title">Net-New Screens</div>
+            </div>
+            <p class="lane__summary">Use the middle day for the two screens that add the most narrative completeness but still need their own data-shape choices resolved locally.</p>
+          </div>
+          <div class="lane__items">
+            <div class="lane__card">
+              <strong>Transaction History</strong>
+              <p>Chronological earnings surface with data source chosen during its own design and plan cycle.</p>
+            </div>
+            <div class="lane__card">
+              <strong>Streaks View</strong>
+              <p>Current streak, past streaks, and persistence rules made explicit in a dedicated destination.</p>
+            </div>
+            <div class="lane__card">
+              <strong>Constraint</strong>
+              <p>Do not solve cross-cutting systems here. Keep the day focused on screen-level reachability and state.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="lane" data-animate>
+          <div class="lane__header">
+            <div>
+              <div class="lane__meta">Day 3 &middot; Wed 2026-04-15 to Thu 2026-04-16 AM</div>
+              <div class="lane__title">Cross-Cutters + Ship</div>
+            </div>
+            <p class="lane__summary">Once the screens exist, retrofit the system layers across them, then spend Thursday morning catching token escapes and the bugs the refactor reveals.</p>
+          </div>
+          <div class="lane__items">
+            <div class="lane__card">
+              <strong>Celebrations primitive</strong>
+              <p>Build and prove the reusable layer before migrating any existing caller to avoid payout regressions.</p>
+            </div>
+            <div class="lane__card">
+              <strong>Dark Mode</strong>
+              <p>Add token values, wire the mode, and run the retrofit sweep across earlier work.</p>
+            </div>
+            <div class="lane__card">
+              <strong>Thursday AM final pass</strong>
+              <p>Bug fixes, hardcoded color cleanup, and readiness work to get the demo over the line.</p>
+            </div>
+          </div>
+          <div class="lane__footer">The order matters: the system work is intentionally last, but only because earlier code is constrained to tokens from the start.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="cuts-deferrals">
+      <div class="section__intro">
+        <div class="section__eyebrow">Boundaries</div>
+        <h2 class="section__title">Cuts Are Global. Unknowns Stay Local.</h2>
+        <p class="section__lede">The sprint stays credible by cutting vague work entirely and by pushing unresolved implementation questions down into the sub-projects that actually own them.</p>
+      </div>
+
+      <div class="policy-grid">
+        <article class="rule-card" data-animate>
+          <h3>What left the sprint</h3>
+          <p>Anything with no crisp output got removed instead of becoming a hidden drain bucket.</p>
+          <div class="pill-row">
+            <span class="pill pill--cut">Refinements cut</span>
+            <span class="pill pill--cut">Game Details excluded</span>
+          </div>
+          <ul>
+            <li><strong>Refinements</strong> had no concrete list, so it was cut rather than treated as spare-capacity filler.</li>
+            <li><strong>Game Details Screen</strong> was removed because it already exists in Flutter and in the extracted Figma work.</li>
+          </ul>
+        </article>
+
+        <article class="rule-card" data-animate>
+          <h3>What gets decided later</h3>
+          <p>Data-shape and pattern choices only defer if they belong to a specific item and can be resolved inside that item&rsquo;s own brainstorm, spec, and plan.</p>
+          <div class="pill-row">
+            <span class="pill pill--defer">Transaction History source</span>
+            <span class="pill pill--defer">Streaks data model</span>
+            <span class="pill pill--defer">Polish redesign questions</span>
+          </div>
+          <ul>
+            <li><strong>Transaction History</strong> can derive from <code>journeyLog</code> or a new ledger, but the sprint doc does not pretend to settle that centrally.</li>
+            <li><strong>Streaks View</strong> owns its own state contract in the same way.</li>
+            <li><strong>Polish items</strong> stay in verify-and-tighten mode; redesign-scale discoveries are timeboxed or cut.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="guardrails">
+      <div class="section__intro">
+        <div class="section__eyebrow">Guardrails</div>
+        <h2 class="section__title">One Rule Keeps Day 3 From Becoming a Death March</h2>
+        <p class="section__lede">The retrofit day only works if the earlier work is done under constraint. The sprint inherits an existing project convention and treats it as a hard survival rule for the week.</p>
+      </div>
+
+      <div class="rule-card" data-animate>
+        <h3>The survival rule</h3>
+        <p>No new hardcoded hex codes enter the codebase during the sprint. Every color used in new work routes through token definitions in <code>flutter_app/lib/theme/app_theme.dart</code>.</p>
+        <div class="rule-card__rule">No new hardcoded hex codes. Every color in new code this week goes through <code>AppColors</code> tokens.</div>
+        <p>That turns Dark Mode from a repo-wide grep exercise into a token expansion job. It is also aligned with the existing convention established in commit <code>8cd5385</code>, so the sprint is enforcing discipline, not inventing a new rule under pressure.</p>
+      </div>
+
+      <div class="risks-grid">
+        <article class="risk-card" data-animate>
+          <div class="risk-card__label">Risk 1</div>
+          <h4>Retrofit panic</h4>
+          <p>Mitigation: enforce tokens on Days 1 and 2 so Day 3 only adds values rather than replacing literals.</p>
+        </article>
+        <article class="risk-card" data-animate>
+          <div class="risk-card__label">Risk 2</div>
+          <h4>Data-source ambiguity</h4>
+          <p>Mitigation: resolve Transaction History and Streaks data contracts during each screen&rsquo;s own brainstorm instead of faking certainty here.</p>
+        </article>
+        <article class="risk-card" data-animate>
+          <div class="risk-card__label">Risk 3</div>
+          <h4>Scope creep on polish</h4>
+          <p>Mitigation: keep Home and Wallet framed as verification and tightening work, not quiet redesign exercises.</p>
+        </article>
+        <article class="risk-card" data-animate>
+          <div class="risk-card__label">Risk 4</div>
+          <h4>Celebration regressions</h4>
+          <p>Mitigation: build and test the reusable primitive in isolation before migrating existing Wallet payout flow callers.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="cadence">
+      <div class="section__intro">
+        <div class="section__eyebrow">Cadence</div>
+        <h2 class="section__title">Seven Small Projects, One Repeated Loop</h2>
+        <p class="section__lede">The sprint is not one giant implementation ticket. Each item gets a contained brainstorm, spec, plan, and implementation pass, starting with Post-Onboarding Home polish.</p>
+      </div>
+
+      <div class="flow">
+        <article class="flow__step" data-animate>
+          <div class="flow__index">1</div>
+          <h3>Brainstorm</h3>
+          <p>Resolve only the question the item actually owns, usually around pattern choice rather than product definition.</p>
+        </article>
+        <article class="flow__step" data-animate>
+          <div class="flow__index">2</div>
+          <h3>Design Doc</h3>
+          <p>Write the item-specific spec into <code>docs/superpowers/specs/2026-04-13-&lt;name&gt;-design.md</code>.</p>
+        </article>
+        <article class="flow__step" data-animate>
+          <div class="flow__index">3</div>
+          <h3>Plan</h3>
+          <p>Create the paired implementation plan in <code>docs/superpowers/plans/2026-04-13-&lt;name&gt;.md</code>.</p>
+        </article>
+        <article class="flow__step" data-animate>
+          <div class="flow__index">4</div>
+          <h3>Implementation</h3>
+          <p>Ship the item, then move to the next one with the same loop instead of letting unresolved questions accumulate.</p>
+        </article>
+      </div>
+
+      <p class="section-note">The value of the sprint is not that every surface feels finished. It is that by Thursday, the post-onboarding story is no longer theoretical: it can be walked, tested, and reacted to as a complete loop.</p>
+    </section>
+  </main>
+
+  <script>
+    (function() {
+      const root = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+      const storedTheme = localStorage.getItem('presenter-theme');
+
+      function currentTheme() {
+        if (root.classList.contains('dark')) return 'dark';
+        if (root.classList.contains('light')) return 'light';
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyTheme(theme) {
+        root.classList.remove('light', 'dark');
+        if (theme) {
+          root.classList.add(theme);
+        }
+        themeToggle.textContent = currentTheme() === 'dark' ? 'Light' : 'Dark';
+      }
+
+      applyTheme(storedTheme);
+
+      themeToggle.addEventListener('click', function() {
+        const nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('presenter-theme', nextTheme);
+        applyTheme(nextTheme);
+      });
+
+      const toc = document.getElementById('toc');
+      const tocToggle = document.getElementById('toc-toggle');
+      const tocBackdrop = document.getElementById('toc-backdrop');
+      const tocList = toc.querySelector('.toc__list');
+      const sections = Array.from(document.querySelectorAll('main section[id]'));
+
+      sections.forEach(function(section) {
+        const heading = section.querySelector('h2');
+        if (!heading) return;
+        const item = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = '#' + section.id;
+        link.textContent = heading.textContent;
+        item.appendChild(link);
+        tocList.appendChild(item);
+      });
+
+      function closeToc() {
+        toc.classList.remove('open');
+        tocBackdrop.classList.remove('visible');
+      }
+
+      tocToggle.addEventListener('click', function() {
+        toc.classList.toggle('open');
+        tocBackdrop.classList.toggle('visible');
+      });
+
+      tocBackdrop.addEventListener('click', closeToc);
+
+      tocList.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', closeToc);
+      });
+
+      const tocLinks = Array.from(tocList.querySelectorAll('a'));
+
+      function updateActiveLink() {
+        const scrollY = window.scrollY + 120;
+        let currentId = sections[0] ? sections[0].id : '';
+
+        sections.forEach(function(section) {
+          if (section.offsetTop <= scrollY) {
+            currentId = section.id;
+          }
+        });
+
+        tocLinks.forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+        });
+      }
+
+      updateActiveLink();
+      window.addEventListener('scroll', updateActiveLink, { passive: true });
+      window.addEventListener('resize', updateActiveLink);
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const animated = document.querySelectorAll('[data-animate]');
+
+      if (prefersReducedMotion) {
+        animated.forEach(function(node) { node.classList.add('visible'); });
+      } else {
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+
+        animated.forEach(function(node) {
+          observer.observe(node);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

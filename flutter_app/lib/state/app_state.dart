@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import '../data/games.dart';
 import '../theme/app_theme.dart';
 import '../services/haptics.dart';
 import '../models/installed_game.dart';
@@ -74,25 +75,6 @@ const goals = [
 const legendColor = Color(0xFFF59E0B);
 const legendTrackColor = Color(0xFFFEF3C7);
 
-List<InstalledGame> _freshInstalledGamesSeed() => [
-  InstalledGame(
-    id: 'candy_crush',
-    name: 'Candy Crush',
-    iconPath: 'assets/app_icons/Candy_Crush_Saga.png',
-    nextMilestoneLabel: 'Reach Level 50',
-    nextMilestoneReward: 2.00,
-    lastPlayedAt: DateTime(2026, 4, 13, 9, 15),
-  ),
-  InstalledGame(
-    id: 'solitaire',
-    name: 'Solitaire',
-    iconPath: 'assets/app_icons/Solitaire_Classic.png',
-    nextMilestoneLabel: 'Win 75 games',
-    nextMilestoneReward: 2.50,
-    lastPlayedAt: DateTime(2026, 4, 12, 20, 40),
-  ),
-];
-
 class AppState extends ChangeNotifier {
   String userName = '';
   int stars = 0;
@@ -111,16 +93,20 @@ class AppState extends ChangeNotifier {
 
   // Daily goal (post-onboarding). earnedToday is reused as the progress
   // counter; it resets at local midnight via checkDailyReset.
+  // The ring auto-extends from $2 to $5 the first time the user crosses
+  // today's goal, so [dailyGoalStars] flips from 1500 to 3750 mid-session
+  // while [earnedToday] stays put (the crossed amount becomes locked-in
+  // progress on the bigger ring). [dailyGoalExtended] is the one-time
+  // guard that prevents a second auto-extension and resets at midnight.
   int dailyGoalStars = 1500; // $2.00
-  bool dailyExtensionOffered = false;
+  bool dailyGoalExtended = false;
 
   // In-progress games for the Post-Onboarding Home "Continue earning"
-  // section. Seeded for v1. Names and icon paths match the real catalog
-  // in `data/games.dart` so `gamesByName[game.name]` resolves and
-  // `Image.asset(game.iconPath)` does not fall back to placeholder art.
-  // Replaced by a real per-game progress model when sub-project 3
-  // (Tasks list screen) lands.
-  List<InstalledGame> installedGames = _freshInstalledGamesSeed();
+  // section. Populated when the user installs a game through the
+  // onboarding picker (see [installGameFromOnboarding]); stays empty
+  // before that so Game Detail never shows "Continue playing" for a
+  // game the user has not actually installed yet.
+  List<InstalledGame> installedGames = [];
 
   List<InstalledGame> get inProgressGames {
     final filtered =
@@ -167,6 +153,14 @@ class AppState extends ChangeNotifier {
   Color get ringColor => isLegend ? legendColor : currentGoal.ringColor;
   Color get trackColor => isLegend ? legendTrackColor : currentGoal.trackColor;
 
+  /// Ring color used by the post-onboarding Home ring. Flips to a warm
+  /// amber once today's goal has auto-extended past $2, so the "level up"
+  /// moment is visually distinct from the starting tier.
+  Color get dailyRingColor =>
+      dailyGoalExtended ? AppColors.accent : ringColor;
+  Color get dailyTrackColor =>
+      dailyGoalExtended ? AppColors.accentLight : trackColor;
+
   String get currentTimeFormatted {
     final now = TimeOfDay.now();
     final hour = now.hourOfPeriod == 0 ? 12 : now.hourOfPeriod;
@@ -199,6 +193,18 @@ class AppState extends ChangeNotifier {
     if (isLegend) return '∞';
     return '\$${starsToDollars(currentGoal.goalStars).toStringAsFixed(2)}';
   }
+
+  /// Today's daily goal target formatted as dollars ($2.00 default,
+  /// $3.00 after a Push). Used as the label inside the ring post-onboarding.
+  String formatDailyGoal() {
+    return '\$${starsToDollars(dailyGoalStars).toStringAsFixed(2)}';
+  }
+
+  /// Progress toward today's daily goal as a percentage 0..100. Used by
+  /// the ring post-onboarding, where the ring tracks the daily goal rather
+  /// than the lifetime goal.
+  double get dailyGoalProgress =>
+      ((earnedToday / dailyGoalStars) * 100).clamp(0, 100);
 
   static String formatNumber(int n) {
     if (n >= 1000) {
@@ -275,9 +281,12 @@ class AppState extends ChangeNotifier {
     tasksCompleted++;
 
     // Rising-edge celebration: fires once the first time the user crosses
-    // today's daily goal, regardless of which Home button they tap next.
-    // This matches the Home spec: the celebration belongs to the goal-hit
-    // transition, not to the extension prompt's Push/Bank actions.
+    // the active daily goal tier. When crossing the $2 starter tier, the
+    // goal auto-extends to $5 right after the haptic so the ring levels up
+    // to a bigger target without prompting the user. earnedToday stays
+    // put, so the crossed amount becomes locked-in progress on the new
+    // ring (1500/3750 = 40%). Re-arming _dailyGoalCelebrated lets the
+    // user earn a second celebration when they later reach $5.
     // TODO sub-project 6: route through CelebrationsService instead of
     // calling Haptics directly from state.
     if (!_dailyGoalCelebrated &&
@@ -285,6 +294,12 @@ class AppState extends ChangeNotifier {
         prevEarnedToday < dailyGoalStars) {
       _dailyGoalCelebrated = true;
       Haptics.celebrate(CelebrateMoments.goalReached);
+
+      if (!dailyGoalExtended && dailyGoalStars == 1500) {
+        dailyGoalStars = 3750; // $5.00
+        dailyGoalExtended = true;
+        _dailyGoalCelebrated = false;
+      }
     }
 
     notifyListeners();
@@ -303,19 +318,14 @@ class AppState extends ChangeNotifier {
   @visibleForTesting
   bool get debugDailyGoalCelebrated => _dailyGoalCelebrated;
 
-  /// Extend today's goal from $2 to $3. No-op if the user has already
-  /// banked or pushed today.
-  void pushDailyGoalToThree() {
-    if (dailyExtensionOffered) return;
-    dailyGoalStars = 2250; // $3.00
-    dailyExtensionOffered = true;
-    notifyListeners();
-  }
-
-  /// Keep today's $2 goal and stop prompting for an extension.
-  void bankDailyGoal() {
-    if (dailyExtensionOffered) return;
-    dailyExtensionOffered = true;
+  /// Replaces [installedGames] with a single entry derived from the
+  /// catalog [Game] the user picked during onboarding. Marks the install
+  /// step (milestone index 0) as completed so the Continue earning row
+  /// and the Game Detail milestone strip both reflect "you already
+  /// installed it, here's what's next".
+  void installGameFromOnboarding(Game catalog) {
+    final game = InstalledGame.fromCatalog(catalog);
+    installedGames = [game];
     notifyListeners();
   }
 
@@ -336,7 +346,7 @@ class AppState extends ChangeNotifier {
     if (isFirstInit) return;
     earnedToday = 0;
     dailyGoalStars = 1500;
-    dailyExtensionOffered = false;
+    dailyGoalExtended = false;
     _dailyGoalCelebrated = false;
     notifyListeners();
   }
@@ -387,10 +397,10 @@ class AppState extends ChangeNotifier {
     lastCompletedTask = null;
     hasRedeemed = false;
     dailyGoalStars = 1500;
-    dailyExtensionOffered = false;
+    dailyGoalExtended = false;
     _dailyResetDate = '';
     _dailyGoalCelebrated = false;
-    installedGames = _freshInstalledGamesSeed();
+    installedGames = [];
     selectedPreferences = <String>[];
     journeyLog = <JourneyEntry>[];
     convCardMsg = '';

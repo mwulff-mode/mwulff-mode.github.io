@@ -160,7 +160,7 @@ class _WalletScreenState extends State<WalletScreen> {
         else
           Text(
             remaining > 0
-                ? 'Earn \$${AppState.starsToDollars(remaining).toStringAsFixed(2)} more to unlock your first reward'
+                ? 'Cashouts start at \$2. Earn \$${AppState.starsToDollars(remaining).toStringAsFixed(2)} more to get there.'
                 : 'Reward redeemed',
             style: AppText.caption.copyWith(
                 color: AppColors.inkTertiary, fontWeight: FontWeight.w500),

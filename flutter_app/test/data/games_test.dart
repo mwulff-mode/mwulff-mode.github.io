@@ -8,14 +8,14 @@ void main() {
           {'Candy Crush', 'Solitaire', 'Word Search'});
     });
 
-    test('every game has 2 regular steps totaling \$1.00', () {
+    test('every game has 6 regular steps with positive rewards', () {
       for (final game in gamesByName.values) {
-        expect(game.regularSteps.length, 2,
-            reason: '${game.name} should have exactly 2 steps');
-        final total = game.regularSteps
-            .fold<double>(0.0, (sum, step) => sum + step.reward);
-        expect(total, closeTo(1.00, 0.001),
-            reason: '${game.name} steps should sum to \$1.00');
+        expect(game.regularSteps.length, 6,
+            reason: '${game.name} should have exactly 6 steps');
+        for (final step in game.regularSteps) {
+          expect(step.reward, greaterThan(0),
+              reason: '${game.name} step "${step.label}" should reward > 0');
+        }
       }
     });
 
@@ -27,9 +27,9 @@ void main() {
       }
     });
 
-    test('every game has a non-empty iconPath under assets/images/games/', () {
+    test('every game has a non-empty iconPath under assets/app_icons/', () {
       for (final game in gamesByName.values) {
-        expect(game.iconPath, startsWith('assets/images/games/'));
+        expect(game.iconPath, startsWith('assets/app_icons/'));
         expect(game.iconPath, endsWith('.png'));
       }
     });

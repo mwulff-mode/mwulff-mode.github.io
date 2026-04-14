@@ -1,32 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/data/games.dart';
 import 'package:earnwise_mvp/screens/game_detail_screen.dart';
+import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
 
 void main() {
   /// Helper that pushes [GameDetailScreen] onto a real Navigator so the
-  /// X button can pop it like in the real app.
+  /// X button can pop it like in the real app. The screen reads
+  /// [AppState.installedGames] to drive the "Reward Steps" strip, so the
+  /// pump wraps the whole tree in a real [ChangeNotifierProvider].
   Future<void> pumpDetail(
     WidgetTester tester, {
     required Game game,
     VoidCallback? onInstall,
+    AppState? state,
   }) async {
+    final appState = state ?? AppState();
     await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(
-          builder: (context) => Scaffold(
-            body: Center(
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => GameDetailScreen(
-                      game: game,
-                      onInstall: onInstall ?? () {},
+      ChangeNotifierProvider<AppState>.value(
+        value: appState,
+        child: MaterialApp(
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => GameDetailScreen(
+                        game: game,
+                        onInstall: onInstall ?? () {},
+                      ),
                     ),
                   ),
+                  child: const Text('open'),
                 ),
-                child: const Text('open'),
               ),
             ),
           ),
@@ -60,47 +69,46 @@ void main() {
       expect(find.text('4.7'), findsOneWidget);
     });
 
-    testWidgets('renders the max earning badge as \$1.00', (tester) async {
-      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('\$1.00'), findsWidgets);
-    });
-
-    testWidgets('renders the progress label "\$0.00 earned of \$1.00"',
+    testWidgets('renders the max earning badge as the summed total',
         (tester) async {
+      // Candy Crush steps sum to $27.00 (0.10 + 0.90 + 2.00 + 4.00 + 8.00
+      // + 12.00). The badge is a single widget, rendered by _EarningBadge.
       await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('\$0.00 earned of \$1.00'), findsOneWidget);
+      expect(find.text('\$27.00'), findsOneWidget);
     });
 
-    testWidgets('renders the HOW IT WORKS section', (tester) async {
+    testWidgets('renders the How It Works section', (tester) async {
       await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('HOW IT WORKS'), findsOneWidget);
+      expect(find.text('How It Works'), findsOneWidget);
       expect(
         find.text(gamesByName['Candy Crush']!.howItWorks),
         findsOneWidget,
       );
     });
 
-    testWidgets('renders the ABOUT section with the game name in the heading',
+    testWidgets('renders the About section with the game name in the heading',
         (tester) async {
       await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('ABOUT CANDY CRUSH'), findsOneWidget);
+      expect(find.text('About Candy Crush'), findsOneWidget);
       expect(find.text(gamesByName['Candy Crush']!.about), findsOneWidget);
     });
 
-    testWidgets('renders the DISCLAIMER section', (tester) async {
+    testWidgets('renders the Disclaimer section', (tester) async {
       await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('DISCLAIMER'), findsOneWidget);
+      expect(find.text('Disclaimer'), findsOneWidget);
       expect(
         find.text(gamesByName['Candy Crush']!.disclaimer),
         findsOneWidget,
       );
     });
 
-    testWidgets('renders the REGULAR STEPS heading with a 0/2 counter',
+    testWidgets('renders the Reward Steps heading with a 0/6 counter',
         (tester) async {
+      // Each catalog game now ships 6 reward steps, and no steps are
+      // completed on a fresh AppState.
       await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('REGULAR STEPS'), findsOneWidget);
-      expect(find.text('0 / 2'), findsOneWidget);
+      expect(find.text('Reward Steps'), findsOneWidget);
+      expect(find.text('0 / 6'), findsOneWidget);
     });
 
     testWidgets('renders both step labels and rewards', (tester) async {
@@ -111,19 +119,30 @@ void main() {
       expect(find.text('\$0.90'), findsOneWidget);
     });
 
-    testWidgets('first step shows UP NEXT, second step shows NOT STARTED',
+    testWidgets('first step shows UP NEXT, later steps show NOT STARTED',
         (tester) async {
+      // With nothing completed, step 0 is the only "up next" card and
+      // the remaining visible cards render the "not started" pill. The
+      // Reward Steps ListView lazily builds only the cards that fit in
+      // the horizontal viewport (about 3-4 at 800 px wide), so the
+      // assertion is framed around the presence of the pill rather
+      // than an exact count.
       await pumpDetail(tester, game: gamesByName['Candy Crush']!);
       expect(find.text('UP NEXT'), findsOneWidget);
-      expect(find.text('NOT STARTED'), findsOneWidget);
+      expect(find.text('NOT STARTED'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('Install Game button calls onInstall and pops the screen',
         (tester) async {
       int installCount = 0;
+      // AppState seeds Candy Crush as already installed, which would flip
+      // the CTA into "Continue playing" mode and skip onInstall. Clear
+      // installedGames so this test exercises the fresh-install path.
+      final state = AppState()..installedGames = [];
       await pumpDetail(
         tester,
         game: gamesByName['Candy Crush']!,
+        state: state,
         onInstall: () => installCount++,
       );
       expect(find.text('Candy Crush'), findsWidgets);

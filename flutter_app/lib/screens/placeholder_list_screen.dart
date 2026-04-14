@@ -6,8 +6,8 @@ import '../theme/app_theme.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/screen_scaffold.dart';
 
-/// Temporary destination used by the Post-Onboarding Home "Earn more"
-/// section cards until sub-project 3 (Earnable list component + three
+/// Temporary destination used by the Post-Onboarding Home "Earn More"
+/// section tiles until sub-project 3 (Earnable list component + three
 /// list screens) replaces it. Renders a title, a one-line "coming soon"
 /// message, and a Close button that pops the screen.
 class PlaceholderListScreen extends StatelessWidget {

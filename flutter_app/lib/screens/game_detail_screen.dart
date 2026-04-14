@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:provider/provider.dart';
 import '../data/games.dart';
+import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../widgets/animated_gradient_bg.dart';
@@ -30,6 +32,11 @@ class GameDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
     final heroHeight = _kHeroBandHeight + topPadding;
+    final installed = context
+        .watch<AppState>()
+        .installedGames
+        .any((g) => g.id == game.key);
+    final ctaLabel = installed ? 'Continue playing' : 'Install Game';
 
     return Scaffold(
       backgroundColor: AppColors.cream,
@@ -118,9 +125,11 @@ class GameDetailScreen extends StatelessWidget {
         child: PhysicalPress(
           key: const Key('game_detail_install'),
           onTap: () {
-            // Fire onInstall before pop so the caller's state update runs
-            // while this route is still mounted.
-            onInstall();
+            // Fresh-install path fires the caller's onInstall so AppState
+            // gets updated while this route is still mounted. Already-
+            // installed games skip the callback (they're already in
+            // AppState.installedGames) and just pop back.
+            if (!installed) onInstall();
             Navigator.of(context).pop();
           },
           backgroundColor: AppColors.primary,
@@ -128,7 +137,7 @@ class GameDetailScreen extends StatelessWidget {
           depth: 6,
           height: 68,
           haptic: HapticIntensity.confirm,
-          child: Text('Install Game', style: AppText.ctaLabel),
+          child: Text(ctaLabel, style: AppText.ctaLabel),
         ),
       ),
     );
@@ -393,41 +402,100 @@ class _DisclaimerSection extends StatelessWidget {
 enum _StepState { notStarted, upNext, completed }
 
 /// REGULAR STEPS section: heading with a counter trailing widget plus
-/// a horizontal scroll list of [_StepCard]s.
-class _RegularStepsSection extends StatelessWidget {
+/// a horizontal scroll list of [_StepCard]s. Reads per-game milestone
+/// progress from [AppState.installedGames] so a game the user already
+/// picked in onboarding shows its install step as completed and the next
+/// milestone as "up next".
+///
+/// On first layout the strip jumps so the first incomplete step sits in
+/// the left-most visible slot. Completed steps scroll off-screen to the
+/// left, matching the home "Continue earning" reading order.
+class _RegularStepsSection extends StatefulWidget {
   final Game game;
 
   const _RegularStepsSection({required this.game});
 
   @override
+  State<_RegularStepsSection> createState() => _RegularStepsSectionState();
+}
+
+class _RegularStepsSectionState extends State<_RegularStepsSection> {
+  final ScrollController _controller = ScrollController();
+  bool _didInitialScroll = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final game = widget.game;
+    final matches = context
+        .watch<AppState>()
+        .installedGames
+        .where((g) => g.id == game.key)
+        .toList();
+    final completed = matches.isEmpty
+        ? const <int>{}
+        : matches.first.completedMilestoneIndices;
+    final firstIncomplete = _firstIncompleteIndex(game, completed);
+
+    // Scroll past completed steps on first layout so the current "up next"
+    // card lands where the first step would normally sit.
+    if (!_didInitialScroll && firstIncomplete > 0) {
+      _didInitialScroll = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!_controller.hasClients) return;
+        final target =
+            firstIncomplete * (_kStepCardWidth + AppSpacing.sm);
+        final max = _controller.position.maxScrollExtent;
+        _controller.jumpTo(target.clamp(0, max).toDouble());
+      });
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeading(
           label: 'Reward Steps',
           trailing: Text(
-            '0 / ${game.regularSteps.length}',
+            '${completed.length} / ${game.regularSteps.length}',
             style: AppText.caption.copyWith(color: AppColors.inkTertiary),
           ),
         ),
         SizedBox(
           height: _kStepCardHeight,
           child: ListView.separated(
+            controller: _controller,
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.zero,
             itemCount: game.regularSteps.length,
             separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
             itemBuilder: (context, index) {
               final step = game.regularSteps[index];
-              final state =
-                  index == 0 ? _StepState.upNext : _StepState.notStarted;
+              final _StepState state;
+              if (completed.contains(index)) {
+                state = _StepState.completed;
+              } else if (index == firstIncomplete) {
+                state = _StepState.upNext;
+              } else {
+                state = _StepState.notStarted;
+              }
               return _StepCard(step: step, state: state);
             },
           ),
         ),
       ],
     );
+  }
+
+  static int _firstIncompleteIndex(Game game, Set<int> completed) {
+    for (var i = 0; i < game.regularSteps.length; i++) {
+      if (!completed.contains(i)) return i;
+    }
+    return game.regularSteps.length; // all done
   }
 }
 

@@ -40,14 +40,10 @@ void main() {
     });
 
     testWidgets('renders the email from AppState', (tester) async {
+      // Default AppState has an empty userName, so displayName falls back
+      // to 'Jane Doe' and state.email derives 'jane.doe@gmail.com'.
       await pumpProfile(tester);
-      expect(find.text('lisa@earnwise.demo'), findsWidgets);
-    });
-
-    testWidgets('renders the provider badge "via Google"', (tester) async {
-      await pumpProfile(tester);
-      expect(find.text('via'), findsOneWidget);
-      expect(find.text('Google'), findsOneWidget);
+      expect(find.text('jane.doe@gmail.com'), findsOneWidget);
     });
 
     testWidgets('renders the PERSONAL INFO section heading', (tester) async {
@@ -87,8 +83,9 @@ void main() {
         (tester) async {
       await pumpProfile(tester);
       expect(find.text('Connected Account'), findsOneWidget);
-      // Email now appears twice: once in the hero and once in the account row.
-      expect(find.text('lisa@earnwise.demo'), findsNWidgets(2));
+      // The hero no longer renders the email, so it appears once in
+      // the connected account row only.
+      expect(find.text('jane.doe@gmail.com'), findsOneWidget);
     });
 
     testWidgets('renders the Sign Out button', (tester) async {
@@ -118,9 +115,11 @@ void main() {
       await tester.pump(
           const Duration(milliseconds: 1100)); // drain WelcomeScreen timers
 
-      // AppState is back to defaults.
-      expect(state.userName, 'Lisa');
-      expect(state.stars, 125);
+      // AppState is back to declaration defaults: empty name, zero stars,
+      // zero tasks. The welcome gift animation on the next onboarding
+      // run is what hands out the initial 125 stars.
+      expect(state.userName, '');
+      expect(state.stars, 0);
       expect(state.tasksCompleted, 0);
     });
 

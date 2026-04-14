@@ -15,7 +15,6 @@ import '../widgets/press_scale.dart';
 import '../widgets/bottom_sheet_shell.dart';
 import '../widgets/animated_counter.dart';
 import '../widgets/breathing.dart';
-import '../widgets/daily_goal_card.dart';
 import '../widgets/reward_glow.dart';
 import '../widgets/fade_route.dart';
 import 'game_detail_screen.dart';
@@ -316,7 +315,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.of(context).push(
         slideUpRoute(GameDetailScreen(
           game: game,
-          onInstall: () => _completeTask('game_install'),
+          onInstall: () {
+            // Replace the seeded installedGames list so the
+            // post-onboarding Continue earning section reflects the
+            // game the user actually picked. Then credit the
+            // onboarding task stars.
+            context.read<AppState>().installGameFromOnboarding(game);
+            _completeTask('game_install');
+          },
         )),
       );
     });
@@ -589,18 +595,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildBalanceRow(AppState state) {
-    final isSolidFill = state.goalProgress >= 100 || state.isLegend;
-    final ringColor = state.ringColor;
+  Widget _buildBalanceRow(AppState state, {bool daily = false}) {
+    // In onboarding the ring tracks the lifetime goal; post-onboarding it
+    // tracks today's daily goal. Both use the same ring widget, different
+    // data sources. The daily ring also uses a tier-aware color so the
+    // auto-extended $5 goal visibly "levels up" from the $2 starter color.
+    final ringProgress = daily ? state.dailyGoalProgress : state.goalProgress;
+    final centerLabel = daily ? state.formatDailyGoal() : state.formatGoal();
+    final ringColor = daily ? state.dailyRingColor : state.ringColor;
+    final ringTrackColor = daily ? state.dailyTrackColor : state.trackColor;
+    final isSolidFill = ringProgress >= 100 || state.isLegend;
 
-    // Rising-edge detector: trigger ring glow when goalProgress crosses 100.
-    final currentProgress = state.goalProgress;
-    if (_lastGoalProgress < 100 && currentProgress >= 100) {
+    // Rising-edge detector: trigger ring glow when progress crosses 100.
+    if (_lastGoalProgress < 100 && ringProgress >= 100) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _ringGlow.play();
       });
     }
-    _lastGoalProgress = currentProgress;
+    _lastGoalProgress = ringProgress;
 
     return LayoutBuilder(builder: (context, constraints) {
       // Ring takes 52% of content width; each stat takes the remaining 24%.
@@ -633,7 +645,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           clipBehavior: Clip.none,
           children: [
             TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: state.goalProgress),
+              tween: Tween(begin: 0, end: ringProgress),
               duration: AppDurations.hero,
               curve: AppCurves.warmOut,
               builder: (context, value, _) {
@@ -642,7 +654,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   painter: _GoalRingPainter(
                     percentage: value,
                     fillColor: ringColor,
-                    trackColor: state.trackColor,
+                    trackColor: ringTrackColor,
                   ),
                 );
               },
@@ -666,7 +678,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      state.formatGoal(),
+                      centerLabel,
                       style: AppText.ringGoal,
                     ),
                     const SizedBox(height: 2),
@@ -684,6 +696,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
       );
 
+      // Both onboarding and post-onboarding render the same three-column
+      // layout: Balance on the left, ring in the middle, Today on the
+      // right. Post-onboarding the ring tracks the daily goal; onboarding
+      // tracks the lifetime goal. The Balance / Today stat bubbles stay
+      // put in both modes so the user always has running totals visible.
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -719,8 +736,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<Widget> _buildPostOnboardingBody(AppState state) {
     final inProgress = state.inProgressGames.take(3).toList();
     return [
-      const DailyGoalCard(),
-      const SizedBox(height: AppSpacing.lg),
+      _buildBalanceRow(state, daily: true),
+      const SizedBox(height: AppSpacing.xl),
       if (inProgress.isNotEmpty) ...[
         Text(
           'Continue earning',
@@ -734,41 +751,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         const SizedBox(height: AppSpacing.lg),
       ],
       Text(
-        'Earn more',
+        'Earn More',
         style: AppText.listItem.copyWith(fontWeight: FontWeight.w700),
       ),
-      const SizedBox(height: 14),
-      _buildSectionCard(
-        title: 'Surveys',
-        blurb: 'Share your opinion and earn \$0.50 to \$2.00 per survey.',
-        icon: PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
-        iconColor: AppColors.taskSurvey,
-        onTap: () => _openPlaceholderList(
-          'Surveys',
-          'Survey catalog coming soon.\nBuilt in sub-project 3.',
-        ),
-      ),
-      const SizedBox(height: 10),
-      _buildSectionCard(
-        title: 'Offers',
-        blurb: 'Complete an offer and earn up to \$10 each.',
-        icon: PhosphorIcons.tag(PhosphorIconsStyle.duotone),
-        iconColor: AppColors.taskOffers,
-        onTap: () => _openPlaceholderList(
-          'Offers',
-          'Offer catalog coming soon.\nBuilt in sub-project 3.',
-        ),
-      ),
-      const SizedBox(height: 10),
-      _buildSectionCard(
-        title: 'Tasks',
-        blurb: 'Play games and earn as you hit new milestones.',
-        icon: PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
-        iconColor: AppColors.taskGame,
-        onTap: () => _openPlaceholderList(
-          'Tasks',
-          'Game catalog coming soon.\nBuilt in sub-project 3.',
-        ),
+      const SizedBox(height: 12),
+      Row(
+        children: [
+          _earnTile(
+            'Offers',
+            'Save & earn',
+            PhosphorIcons.tag(PhosphorIconsStyle.duotone),
+            AppColors.taskOffers,
+            AppColors.taskOffersBg,
+            onTap: () => _openPlaceholderList(
+              'Offers',
+              'Offer catalog coming soon.\nBuilt in sub-project 3.',
+            ),
+          ),
+          const SizedBox(width: 12),
+          _earnTile(
+            'Receipts',
+            'Cashback',
+            PhosphorIcons.receipt(PhosphorIconsStyle.duotone),
+            AppColors.taskReceipts,
+            AppColors.taskReceiptsBg,
+            onTap: () => _openPlaceholderList(
+              'Receipts',
+              'Receipt cashback coming soon.\nBuilt in sub-project 3.',
+            ),
+          ),
+          const SizedBox(width: 12),
+          _earnTile(
+            'Games',
+            'Play & earn',
+            PhosphorIcons.gameController(PhosphorIconsStyle.duotone),
+            AppColors.taskGame,
+            AppColors.taskGameBg,
+            onTap: () => _openPlaceholderList(
+              'Games',
+              'Game catalog coming soon.\nBuilt in sub-project 3.',
+            ),
+          ),
+        ],
       ),
       const SizedBox(height: AppSpacing.lg),
     ];
@@ -825,58 +849,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             style: AppText.bodyStrong.copyWith(color: AppColors.primary),
           ),
           const SizedBox(width: AppSpacing.sm),
-          Icon(
-            PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
-            size: 18,
-            color: AppColors.inkTertiary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionCard({
-    required String title,
-    required String blurb,
-    required IconData icon,
-    required Color iconColor,
-    required VoidCallback onTap,
-  }) {
-    return AppCard(
-      onTap: onTap,
-      haptic: null,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, size: 24, color: iconColor),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppText.bodyStrong
-                      .copyWith(fontWeight: FontWeight.w700),
-                ),
-                // intentional 2px, tighter than AppSpacing.xs for title/blurb stack
-                const SizedBox(height: 2),
-                Text(
-                  blurb,
-                  style: AppText.caption
-                      .copyWith(color: AppColors.inkSecondary),
-                ),
-              ],
-            ),
-          ),
           Icon(
             PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
             size: 18,
@@ -1172,40 +1144,44 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _earnTile(
-      String title, String sub, IconData icon, Color color, Color bg) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2)),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: bg,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(icon, size: 24, color: color),
-            ),
-            const SizedBox(height: 12),
-            Text(title, style: AppText.bodyStrong),
-            const SizedBox(height: 2),
-            Text(sub,
-                style: AppText.caption.copyWith(fontWeight: FontWeight.w400)),
-          ],
-        ),
+      String title, String sub, IconData icon, Color color, Color bg,
+      {VoidCallback? onTap}) {
+    final tile = Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2)),
+        ],
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, size: 24, color: color),
+          ),
+          const SizedBox(height: 12),
+          Text(title, style: AppText.bodyStrong),
+          const SizedBox(height: 2),
+          Text(sub,
+              style: AppText.caption.copyWith(fontWeight: FontWeight.w400)),
+        ],
+      ),
+    );
+    return Expanded(
+      child: onTap == null
+          ? tile
+          : PressScale(onTap: onTap, haptic: null, child: tile),
     );
   }
 }

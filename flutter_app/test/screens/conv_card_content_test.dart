@@ -104,8 +104,9 @@ void main() {
   group('resolveConvCard - close to next goal', () {
     test('returns "just \$X more" when remaining stars are <= 1000', () {
       final state = _dailyState(goalIndex: 1);
-      // Goal 1 threshold is 5000. Set stars to 4500 => 500 remaining.
-      state.stars = 4500;
+      // goalIndex 1 threshold is 3750 stars. Set stars to 3250 => 500
+      // remaining, which is inside the <= 1000 "close to goal" window.
+      state.stars = 3250;
       final card = resolveConvCard(state);
       expect(card.message, contains('more to your next goal'));
       expect(card.message, contains('\$0.67')); // 500/750 = $0.667
@@ -113,7 +114,7 @@ void main() {
 
     test('does NOT return the close-to-goal message when remaining > 1000', () {
       final state = _dailyState(goalIndex: 1);
-      state.stars = 200; // very far from goal 1 (5000)
+      state.stars = 200; // very far from goal threshold of 3750 stars
       final card = resolveConvCard(state);
       expect(card.message, isNot(contains('more to your next goal')));
     });
