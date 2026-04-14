@@ -28,10 +28,7 @@ class StatBubble extends StatelessWidget {
         Icon(icon, size: 20, color: accentColor),
         const SizedBox(height: AppSpacing.tight),
         Text(value, style: AppText.statNumber),
-        Text(
-          label,
-          style: AppText.caption.copyWith(color: AppColors.inkTertiary),
-        ),
+        Text(label, style: AppText.caption),
       ],
     );
   }
