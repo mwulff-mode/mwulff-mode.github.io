@@ -68,19 +68,22 @@ class AppText {
         color: AppColors.ink,
       );
 
-  /// 22 / 700 · page / section titles
-  static TextStyle get sectionTitle => GoogleFonts.outfit(
+  /// 22 / 700 · page and section titles. The canonical heading style
+  /// for sections and bottom-sheet headers. Replaces the prior
+  /// `sectionTitle` / `sheetTitle` split.
+  static TextStyle get title => GoogleFonts.outfit(
         fontSize: 22,
         fontWeight: FontWeight.w700,
         color: AppColors.ink,
       );
 
-  /// 20 / 700 · bottom sheet titles
-  static TextStyle get sheetTitle => GoogleFonts.outfit(
-        fontSize: 20,
-        fontWeight: FontWeight.w700,
-        color: AppColors.ink,
-      );
+  @Deprecated('Use AppText.title instead. sectionTitle and sheetTitle '
+      'were consolidated, both are 22/700 now.')
+  static TextStyle get sectionTitle => title;
+
+  @Deprecated('Use AppText.title instead. sectionTitle and sheetTitle '
+      'were consolidated, both are 22/700 now.')
+  static TextStyle get sheetTitle => title;
 
   /// 20 / 800 · stat bubble number (earnings/tasks counters)
   static TextStyle get statNumber => GoogleFonts.outfit(
