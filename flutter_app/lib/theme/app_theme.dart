@@ -32,63 +32,153 @@ const double _rFull = 9999;
 
 // ---------------------------------------------------------------------------
 // AppColors
-//
-// TODO(design-system): this class is rewritten to semantic tokens in the
-// next task in the same sub-project. For now it ships unchanged.
 // ---------------------------------------------------------------------------
 
 class AppColors {
-  static const cream = Color(0xFFFAF8F5);
-  static const creamDeep = Color(0xFFF2EDE6);
-  static const creamWarm = Color(0xFFF8F3EC);
+  AppColors._();
 
-  // Primary: Teal
-  static const primary = Color(0xFF0D9488);
-  static const primaryLight = Color(0xFFCCFBF1);
-  static const primaryPale = Color(0xFFF0FDFA);
-  static const primaryDark = Color(0xFF0F766E);
+  // -------------------------------------------------------------------------
+  // Surface (backgrounds)
+  // -------------------------------------------------------------------------
 
-  // Accent: Warm gold
-  static const accent = Color(0xFFF59E0B);
-  static const accentLight = Color(0xFFFEF3C7);
-  static const secondary = Color(0xFF14B8A6);
-  static const secondaryLight = Color(0xFFCCFBF1);
+  static const Color surface = Color(0xFFFAF8F5);
+  static const Color surfaceRaised = Color(0xFFFFFFFF);
+  static const Color surfaceSelected = Color(0xFFF0FDFA);
+  static const Color surfaceSubtle = Color(0xFFF2EDE6);
 
-  // Task colors
-  static const taskVideo = Color(0xFFEC4899);
-  static const taskVideoBg = Color(0xFFFDF2F8);
-  static const taskSurvey = Color(0xFF6366F1);
-  static const taskSurveyBg = Color(0xFFEEF2FF);
-  static const taskGame = Color(0xFFF97316);
-  static const taskGameBg = Color(0xFFFFF7ED);
-  static const taskCheckin = Color(0xFF8B5CF6);
-  static const taskCheckinBg = Color(0xFFF5F3FF);
-  static const taskOffers = Color(0xFFF59E0B);
-  static const taskOffersBg = Color(0xFFFFFBEB);
-  static const taskReceipts = Color(0xFF10B981);
-  static const taskReceiptsBg = Color(0xFFECFDF5);
+  // -------------------------------------------------------------------------
+  // Ink (text, icons)
+  // -------------------------------------------------------------------------
 
-  // Progress
-  static const progress = Color(0xFF0D9488);
-  static const progressLight = Color(0xFFCCFBF1);
+  static const Color ink = Color(0xFF3B3230);
+  static const Color inkSecondary = Color(0xFF6B5E58);
+  static const Color inkTertiary = Color(0xFF8A7D76);
 
-  // Flame
-  static const flame = Color(0xFFFF6B35);
-  static const flameBg = Color(0xFFFFF4ED);
+  /// Reserved for future dark surfaces. Currently identical to surface.
+  static const Color inkInverse = Color(0xFFFAF8F5);
 
-  // Teal secondary
-  static const tealSecondary = Color(0xFF2BA08E);
-  static const tealRing = Color(0xFF00C6B2);
+  // -------------------------------------------------------------------------
+  // Brand (teal)
+  // -------------------------------------------------------------------------
 
-  // Ink
-  static const ink = Color(0xFF3B3230);
-  static const inkSecondary = Color(0xFF6B5E58);
-  static const inkTertiary = Color(0xFF8A7D76);
-  static const white = Color(0xFFFFFFFF);
-  static const gold = Color(0xFFD4A843);
+  static const Color brand = Color(0xFF0D9488);
+  static const Color brandSubtle = Color(0xFFF0FDFA);
+  static const Color brandStrong = Color(0xFF0F766E);
 
-  // Ring track
-  static const ringTrack = Color(0xFFE2E8F0);
+  // -------------------------------------------------------------------------
+  // Category tints, each category has a foreground and background.
+  // -------------------------------------------------------------------------
+
+  static const Color categoryGame = Color(0xFFF97316);
+  static const Color categoryGameBg = Color(0xFFFFF7ED);
+  static const Color categorySurvey = Color(0xFF6366F1);
+  static const Color categorySurveyBg = Color(0xFFEEF2FF);
+  static const Color categoryOffers = Color(0xFFF59E0B);
+  static const Color categoryOffersBg = Color(0xFFFFFBEB);
+  static const Color categoryReceipts = Color(0xFF10B981);
+  static const Color categoryReceiptsBg = Color(0xFFECFDF5);
+  static const Color categoryVideo = Color(0xFFEC4899);
+  static const Color categoryVideoBg = Color(0xFFFDF2F8);
+  static const Color categoryCheckin = Color(0xFF8B5CF6);
+  static const Color categoryCheckinBg = Color(0xFFF5F3FF);
+
+  // -------------------------------------------------------------------------
+  // Feedback
+  // -------------------------------------------------------------------------
+
+  /// Positive/success green. Same value as categoryReceipts but semantically
+  /// distinct: reach for this one for confirmation UI, not category tints.
+  static const Color success = Color(0xFF10B981);
+
+  static const Color flame = Color(0xFFFF6B35);
+  static const Color flameBg = Color(0xFFFFF4ED);
+
+  static const Color gold = Color(0xFFD4A843);
+
+  // -------------------------------------------------------------------------
+  // Accent (warm gold). Kept as-is: nine existing call sites use it as a
+  // gold highlight, not as the brand teal. Do not rename.
+  // -------------------------------------------------------------------------
+
+  static const Color accent = Color(0xFFF59E0B);
+  static const Color accentLight = Color(0xFFFEF3C7);
+
+  // -------------------------------------------------------------------------
+  // Ambient / utility colors retained as-is (not deprecated) because they
+  // do not have a clean semantic home yet. Per-screen migrations in
+  // sub-projects 2-5 will decide their fate.
+  // -------------------------------------------------------------------------
+
+  static const Color creamWarm = Color(0xFFF8F3EC);
+  static const Color primaryLight = Color(0xFFCCFBF1);
+  static const Color secondary = Color(0xFF14B8A6);
+  static const Color secondaryLight = Color(0xFFCCFBF1);
+  static const Color progress = Color(0xFF0D9488);
+  static const Color progressLight = Color(0xFFCCFBF1);
+  static const Color tealSecondary = Color(0xFF2BA08E);
+  static const Color tealRing = Color(0xFF00C6B2);
+  static const Color ringTrack = Color(0xFFE2E8F0);
+
+  // -------------------------------------------------------------------------
+  // Deprecated aliases, existing raw names that forward to semantic
+  // equivalents. Values unchanged, so existing screens do not shift.
+  // -------------------------------------------------------------------------
+
+  @Deprecated('Use AppColors.surface instead.')
+  static const Color cream = Color(0xFFFAF8F5);
+
+  @Deprecated('Use AppColors.surfaceSubtle instead.')
+  static const Color creamDeep = Color(0xFFF2EDE6);
+
+  @Deprecated('Use AppColors.surfaceRaised instead.')
+  static const Color white = Color(0xFFFFFFFF);
+
+  @Deprecated('Use AppColors.brand instead.')
+  static const Color primary = Color(0xFF0D9488);
+
+  @Deprecated('Use AppColors.brandSubtle (or AppColors.surfaceSelected for '
+      'selected-state backgrounds) instead.')
+  static const Color primaryPale = Color(0xFFF0FDFA);
+
+  @Deprecated('Use AppColors.brandStrong instead.')
+  static const Color primaryDark = Color(0xFF0F766E);
+
+  @Deprecated('Use AppColors.categoryVideo instead.')
+  static const Color taskVideo = Color(0xFFEC4899);
+
+  @Deprecated('Use AppColors.categoryVideoBg instead.')
+  static const Color taskVideoBg = Color(0xFFFDF2F8);
+
+  @Deprecated('Use AppColors.categorySurvey instead.')
+  static const Color taskSurvey = Color(0xFF6366F1);
+
+  @Deprecated('Use AppColors.categorySurveyBg instead.')
+  static const Color taskSurveyBg = Color(0xFFEEF2FF);
+
+  @Deprecated('Use AppColors.categoryGame instead.')
+  static const Color taskGame = Color(0xFFF97316);
+
+  @Deprecated('Use AppColors.categoryGameBg instead.')
+  static const Color taskGameBg = Color(0xFFFFF7ED);
+
+  @Deprecated('Use AppColors.categoryCheckin instead.')
+  static const Color taskCheckin = Color(0xFF8B5CF6);
+
+  @Deprecated('Use AppColors.categoryCheckinBg instead.')
+  static const Color taskCheckinBg = Color(0xFFF5F3FF);
+
+  @Deprecated('Use AppColors.categoryOffers instead.')
+  static const Color taskOffers = Color(0xFFF59E0B);
+
+  @Deprecated('Use AppColors.categoryOffersBg instead.')
+  static const Color taskOffersBg = Color(0xFFFFFBEB);
+
+  @Deprecated('Use AppColors.categoryReceipts (or AppColors.success for '
+      'feedback UI) instead.')
+  static const Color taskReceipts = Color(0xFF10B981);
+
+  @Deprecated('Use AppColors.categoryReceiptsBg instead.')
+  static const Color taskReceiptsBg = Color(0xFFECFDF5);
 }
 
 // ---------------------------------------------------------------------------
