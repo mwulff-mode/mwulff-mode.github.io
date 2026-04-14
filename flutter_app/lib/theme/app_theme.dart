@@ -22,9 +22,7 @@ const double _s32 = 32;
 const double _s40 = 40;
 const double _s48 = 48;
 
-const double _r0 = 0;
 const double _r8 = 8;
-const double _r12 = 12;
 const double _r16 = 16;
 const double _r20 = 20;
 const double _r24 = 24;

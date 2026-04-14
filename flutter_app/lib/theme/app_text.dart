@@ -77,13 +77,21 @@ class AppText {
         color: AppColors.ink,
       );
 
-  @Deprecated('Use AppText.title instead. sectionTitle and sheetTitle '
-      'were consolidated, both are 22/700 now.')
+  @Deprecated('Use AppText.title instead. sectionTitle is 22/700, '
+      'identical to the new title style.')
   static TextStyle get sectionTitle => title;
 
-  @Deprecated('Use AppText.title instead. sectionTitle and sheetTitle '
-      'were consolidated, both are 22/700 now.')
-  static TextStyle get sheetTitle => title;
+  /// 20 / 700 · legacy bottom sheet title. Kept as a real style (not a
+  /// forwarder to `title`) so the one existing call site in
+  /// `home_screen.dart` renders identically until sub-project 2 migrates
+  /// the "Choose your game" sheet onto `AppText.title` (22/700) on purpose.
+  @Deprecated('Use AppText.title instead. sheetTitle is 20/700 and will be '
+      'retired when the bottom sheet header is migrated in sub-project 2.')
+  static TextStyle get sheetTitle => GoogleFonts.outfit(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        color: AppColors.ink,
+      );
 
   /// 20 / 800 · stat bubble number (earnings/tasks counters)
   static TextStyle get statNumber => GoogleFonts.outfit(
