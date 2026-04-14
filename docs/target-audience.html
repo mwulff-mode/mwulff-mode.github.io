@@ -704,6 +704,96 @@
       line-height: 1.45;
     }
 
+    /* ---- Source Pills ---- */
+
+    .source-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.64rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      line-height: 1;
+      color: var(--ink-faint);
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px 9px 4px;
+      margin-left: 3px;
+      text-decoration: none;
+      white-space: nowrap;
+      vertical-align: baseline;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .source-pill:hover {
+      background: var(--active-fill);
+      color: var(--ink-light);
+      border-color: var(--border-strong);
+    }
+
+    .source-pill:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    @media print {
+      .source-pill::after {
+        content: " (" attr(href) ")";
+        font-size: 0.58rem;
+        color: var(--ink-faint);
+      }
+    }
+
+    /* ---- Tier Cards (for gamification) ---- */
+
+    .tier-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    .tier-card {
+      background: var(--panel-bg-strong);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .tier-card__label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .tier-card h4 {
+      font-family: var(--serif);
+      margin-bottom: 16px;
+    }
+
+    .tier-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tier-card li {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      padding: 8px 0;
+      color: var(--ink-light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tier-card li:last-child { border-bottom: none; }
+
+    .tier-card li strong { color: var(--ink); }
+
     /* ---- Tooltip ---- */
 
     .tooltip {
@@ -771,6 +861,7 @@
       .hero__title { max-width: 14ch; }
       .metrics { grid-template-columns: 1fr; }
       .flow { grid-template-columns: 1fr; }
+      .source-pill { font-size: 0.6rem; padding: 2px 7px 3px; }
     }
 
     /* ---- Reduced Motion ---- */
@@ -800,7 +891,7 @@
   <main class="content">
     <header class="hero">
       <div>
-        <p class="hero__meta">April 2026 &middot; EarnWise Team</p>
+        <p class="hero__meta">April 2026 &middot; Markus Wulff</p>
         <h1 class="hero__title">Our Audience</h1>
         <p class="hero__subtitle">
           Women 45+ in the US who want their time to be worth something. Financially cautious, routine-driven, skeptical of scams, and massively underserved by existing earn apps.
@@ -816,30 +907,101 @@
         <p class="section__eyebrow">Market</p>
         <h2 class="section__title">The Opportunity</h2>
         <p class="section__lede">
-          Current earn and reward apps are built for younger audiences. Women 45+ control household spending, trust word-of-mouth above all else, and are loyal once won. Nobody is building for them.
+          Current earn/reward apps are built for younger audiences. Women 45+ are massively underserved: 59% of adults 50+ say technology is not designed with their age group in mind. <a class="source-pill" href="https://www.aarp.org/pri/topics/technology/internet-media-devices/2024-technology-trends-older-adults/" target="_blank" rel="noopener">AARP 2024</a> They control household spending, trust word-of-mouth above all else, and are loyal once won. Nobody is building for them.
         </p>
       </div>
       <div class="metrics">
         <article class="metric-card" data-animate>
           <span class="metric-card__trend">Spending power</span>
           <span class="metric-card__value" data-count="15.2" data-prefix="$" data-suffix="T" data-decimals="1">$15.2T</span>
-          <span class="metric-card__label">Gen X women global consumer spending</span>
+          <span class="metric-card__label">Gen X global consumer spending <a class="source-pill" href="https://nielseniq.com/global/en/insights/report/2025/the-x-factor/" target="_blank" rel="noopener">NIQ 2025</a></span>
         </article>
         <article class="metric-card" data-animate>
           <span class="metric-card__trend">Influence</span>
           <span class="metric-card__value" data-count="80" data-suffix="%">80%</span>
-          <span class="metric-card__label">Household purchasing decisions influenced by women</span>
+          <span class="metric-card__label">Household purchasing decisions influenced by women <a class="source-pill" href="https://hbr.org/2009/09/the-female-economy" target="_blank" rel="noopener">HBR 2009</a></span>
         </article>
         <article class="metric-card" data-animate>
           <span class="metric-card__trend">Trust</span>
-          <span class="metric-card__value" data-count="83" data-suffix="%">83%</span>
-          <span class="metric-card__label">Trust friend and family recommendations above all else</span>
+          <span class="metric-card__value" data-count="88" data-suffix="%">88%</span>
+          <span class="metric-card__label">Trust word-of-mouth above all other advertising <a class="source-pill" href="https://www.nielsen.com/insights/2021/beyond-martech-building-trust-with-consumers-and-engaging-where-sentiment-is-high/" target="_blank" rel="noopener">Nielsen 2021</a></span>
         </article>
         <article class="metric-card" data-animate>
           <span class="metric-card__trend">Gap</span>
           <span class="metric-card__value" data-count="59" data-suffix="%">59%</span>
-          <span class="metric-card__label">Of adults 50+ say tech is not designed for their age group</span>
+          <span class="metric-card__label">Of adults 50+ say tech is not designed for them <a class="source-pill" href="https://www.aarp.org/pri/topics/technology/internet-media-devices/2024-technology-trends-older-adults/" target="_blank" rel="noopener">AARP 2024</a></span>
         </article>
+      </div>
+    </section>
+
+    <!-- Positioning Decision -->
+    <section class="section section--narrow" id="positioning">
+      <div class="section__intro">
+        <p class="section__eyebrow">Strategy</p>
+        <h2 class="section__title">Designed for Her, Welcoming to All</h2>
+        <p class="section__lede">
+          The team made a unanimous decision on March 4, 2026: our primary audience is women 45+, but the product is welcoming to everyone. This is a deliberate positioning choice, not a limitation.
+        </p>
+      </div>
+      <div data-animate>
+        <p>
+          The research is clear on why women 45+ are the center of gravity. They control 95% of household purchasing decisions in the 50+ bracket. <a class="source-pill" href="https://advertise.aarp.org/50-insights/ignoring-50-plus-women" target="_blank" rel="noopener">AARP</a> Women 50+ game daily at a higher rate than men (52% vs. 37%). <a class="source-pill" href="https://www.aarp.org/pri/topics/social-leisure/activities-interests/2023-gamers-50-plus/" target="_blank" rel="noopener">AARP 2023</a> They respond more strongly to collaborative and social gamification <a class="source-pill" href="https://www.tandfonline.com/doi/full/10.1080/10447318.2024.2446498" target="_blank" rel="noopener">Tondello 2024</a> and they drive word-of-mouth discovery within families and friend circles.
+        </p>
+        <p>
+          But earn apps are household tools, not gendered products. Our survey showed that the core needs, including reliable payouts, transparent earnings, and respectful design, are not exclusive to women. The same frustrations with confusing point systems and scammy interfaces apply across the board.
+        </p>
+      </div>
+
+      <div class="callout" data-animate>
+        <p>
+          <strong>Why we have male personas:</strong> Carlos and Tom represent real user archetypes from our survey data (91% of respondents were 45+, mixed gender). Carlos represents the "wife showed it to him" discovery path, which is a genuine acquisition channel. Tom represents the quiet optimizer who validates apps through research before downloading. Both test the product against different dealbreakers than Lisa and Diane, and designing for all four makes the product more robust. The personas are not about equal representation in marketing. They are about making sure we do not build blind spots into the product.
+        </p>
+      </div>
+
+      <div data-animate style="margin-top: 24px;">
+        <p>
+          <strong>What this means in practice:</strong> Lisa is the primary design filter. Every screen, every piece of copy, every notification gets tested against "Would Lisa understand this in one glance?" But Carlos should not be confused by the UI either, and Tom should not be repelled by the tone. The product speaks to her. It works for everyone.
+        </p>
+      </div>
+    </section>
+
+    <!-- Survey Validation -->
+    <section class="section" id="validation">
+      <div class="section__intro">
+        <p class="section__eyebrow">Evidence</p>
+        <h2 class="section__title">What the Research Tells Us</h2>
+        <p class="section__lede">
+          These insights are grounded in a Maze survey of 43 to 58 existing Mode Earn users (March 2026), cross-referenced with published research from AARP, Pew, the FTC, and academic sources. This is not speculation.
+        </p>
+      </div>
+
+      <div class="metrics">
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Survey validated</span>
+          <span class="metric-card__value" data-count="91" data-suffix="%">91%</span>
+          <span class="metric-card__label">Of survey respondents are 45+, confirming our target demographic</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Top priority</span>
+          <span class="metric-card__value" data-count="37" data-suffix="%">37%</span>
+          <span class="metric-card__label">"Pays out reliably" is the #1 thing users want in a rewards app</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Telling signal</span>
+          <span class="metric-card__value" data-count="0" data-suffix="%">0%</span>
+          <span class="metric-card__label">"Fun to use" received zero votes as a priority. Zero.</span>
+        </article>
+        <article class="metric-card" data-animate>
+          <span class="metric-card__trend">Churn risk</span>
+          <span class="metric-card__value" data-count="53" data-suffix="%">53%</span>
+          <span class="metric-card__label">Would quit if earnings feel too small to matter</span>
+        </article>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 40px;">
+        <p>
+          <strong>The single most important survey finding:</strong> Reliability (37%) + value (28%) = 65% of all user priorities. "Fun to use" scored literally 0%. This audience is pragmatic, not playful. They want to be respected, not entertained. This data point recalibrated our entire brand tone.
+        </p>
       </div>
     </section>
 
@@ -849,18 +1011,72 @@
         <p class="section__eyebrow">Mindset</p>
         <h2 class="section__title">Financial Reality</h2>
         <p class="section__lede">
-          This audience is financially cautious, not desperate. They feel the squeeze and want to ease it. They are not looking for a "side hustle." They want small, reliable ways to stretch the household budget.
+          This audience is financially cautious, not desperate. 65% of women rank finances as their top stressor. <a class="source-pill" href="https://www.prnewswire.com/news-releases/women-taking-the-financial-reins-annual-survey-reveals-determination-amid-challenges-302393919.html" target="_blank" rel="noopener">Laurel Road 2025</a> 62% of women 50 to 64 say their finances are falling short of expectations. <a class="source-pill" href="https://www.aarp.org/pri/topics/work-finances-retirement/financial-security-retirement/financial-stress-older-women.html" target="_blank" rel="noopener">AARP 2025</a> They are not looking for a "side hustle." They want small, reliable ways to stretch the household budget.
         </p>
       </div>
 
       <div class="chart-shell" data-animate>
-        <p class="chart-shell__title">What our earning sweet spot covers each month</p>
+        <p class="chart-shell__title">What our earning sweet spot ($30 to $75/month) covers</p>
         <div class="chart-container" id="expense-chart"></div>
       </div>
 
       <div class="callout" data-animate style="margin-top: 40px;">
         <p>
-          <strong>The "pennies problem":</strong> 53% of users would quit if earnings feel too small. Showing "$0.40 earned" in isolation invites hourly-wage math. The earnings are real; the framing is what makes them feel real. Always show cumulative, anchored to real expenses.
+          <strong>The "pennies problem":</strong> 53% of survey respondents would quit if earnings feel too small. Showing "$0.40 earned" in isolation invites hourly-wage math ($8/hr feels insulting). The earnings are real; the framing is what makes them feel real.
+        </p>
+      </div>
+
+      <div data-animate style="margin-top: 32px;">
+        <h3>How this translates to the product</h3>
+        <p>
+          <strong>Decision (March 23):</strong> Goal-based framing is the primary system. Expense anchoring ("that is half a tank of gas") was demoted to optional and user-controlled only, after Matt T flagged that referencing financial obligations adds stress rather than motivation. Behavioral research backs this up: expense anchoring triggers scarcity cues and avoidance (Mullainathan &amp; Shafir, 2013). Goal framing keeps the reference point at zero, so everything feels like a gain.
+        </p>
+      </div>
+
+      <div data-animate style="margin-top: 12px;">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Instead of</th>
+                <th>Show this</th>
+                <th>Why it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Balance: $12.40</td>
+                <td>Coffee fund: $12.40 / $25</td>
+                <td>Name the goal, not the balance. She chose the label</td>
+              </tr>
+              <tr>
+                <td>$47.50 this month</td>
+                <td>Grocery goal: $47.50 / $50</td>
+                <td>The shrinking gap ("$2.50 to go") pulls people forward</td>
+              </tr>
+              <tr>
+                <td>You earned $0.40</td>
+                <td>You earned $0.40 - $2.10 to your next goal</td>
+                <td>Reframes a small amount as progress, not a verdict</td>
+              </tr>
+              <tr>
+                <td>3 min for $0.40</td>
+                <td>Quick poll &middot; $0.40</td>
+                <td>Never put time next to cents. It invites hourly-wage math</td>
+              </tr>
+              <tr>
+                <td>Daily earnings: $1.25</td>
+                <td>Since joining, you have earned $187</td>
+                <td>Lead with the big number. The lifetime total only goes up</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 32px;">
+        <p>
+          <strong>Three product rules:</strong> (1) Name the goal, not the balance. Users choose their own labels. The shrinking gap is more motivating than the growing balance. (2) Lead with the big number. The cumulative lifetime total is always visible and only goes up. (3) Never put time next to cents. Show time only when it is a selling point ("30 sec &middot; $0.15" feels like free money). Full playbook in BRAND.md > Copy Guidelines > Showing Earnings.
         </p>
       </div>
     </section>
@@ -871,7 +1087,7 @@
         <p class="section__eyebrow">People</p>
         <h2 class="section__title">Who They Are</h2>
         <p class="section__lede">
-          Four personas grounded in survey data from 43+ respondents. They share a common thread: practical, routine-oriented, skeptical of hype, and looking for something that respects their time.
+          Four personas built from survey data, industry research, and team workshops. Lisa is the primary design filter. Diane, Carlos, and Tom test different edges of the product experience.
         </p>
       </div>
 
@@ -890,37 +1106,37 @@
             <p class="persona-card__detail"><strong>Apps she uses:</strong> Facebook, Amazon, PayPal, Pinterest, Candy Crush</p>
             <p class="persona-card__detail"><strong>Discovery:</strong> A friend texts "this app actually pays out"</p>
             <p class="persona-card__detail"><strong>Dealbreaker:</strong> Feels like it is wasting her time or hiding how earnings work</p>
-            <p class="persona-card__detail"><strong>Usage window:</strong> Morning coffee, quick tasks during lunch</p>
-            <p class="persona-card__detail"><strong>Task tolerance:</strong> 5 to 10 minutes, clear value exchange</p>
+            <p class="persona-card__detail"><strong>Design test:</strong> Can Lisa use this screen without instructions?</p>
+            <p class="persona-card__detail"><strong>Referral test:</strong> Would this make Lisa text a friend "you have to try this"?</p>
           </div>
         </div>
 
         <div class="persona-card" data-animate>
-          <p class="persona-card__kicker">Secondary</p>
+          <p class="persona-card__kicker">Secondary &middot; Retention edge case</p>
           <p class="persona-card__name">Diane</p>
           <p class="persona-card__tagline">The Semi-Retired Optimizer</p>
           <p class="persona-card__detail">
-            62, retired teacher, coastal Florida. Financially stable but cautious. She wants mental stimulation and a little extra for gifts and treats.
+            62, retired teacher, coastal Florida. Financially stable but cautious. She wants mental stimulation and a little extra for gifts and treats. She tests our accessibility edge: if the UI has too many taps or the earning feels pointless, she leaves.
           </p>
           <p class="persona-card__quote">"It's like my morning crossword, but I actually get something for it."</p>
         </div>
 
         <div class="persona-card" data-animate>
-          <p class="persona-card__kicker">Secondary</p>
+          <p class="persona-card__kicker">Secondary &middot; Simplicity stress test</p>
           <p class="persona-card__name">Carlos</p>
           <p class="persona-card__tagline">The Routine Earner</p>
           <p class="persona-card__detail">
-            58, warehouse supervisor, suburban Phoenix. Nearing retirement. He wants extra cash for weekend hobbies his budget does not cover.
+            58, warehouse supervisor, suburban Phoenix. Nearing retirement. His wife showed him the app. He represents the "family referral" acquisition path and tests our simplicity floor: if it takes more than 5 minutes to learn, he is gone.
           </p>
           <p class="persona-card__quote">"I do my three things in the morning and I'm done. Easy."</p>
         </div>
 
         <div class="persona-card" data-animate>
-          <p class="persona-card__kicker">Secondary</p>
+          <p class="persona-card__kicker">Secondary &middot; Trust and polish test</p>
           <p class="persona-card__name">Tom</p>
           <p class="persona-card__tagline">The Silent Optimizer</p>
           <p class="persona-card__detail">
-            52, IT manager, suburban Texas. Two kids in college. He optimizes the household budget quietly and wants something that just works.
+            52, IT manager, suburban Texas. Two kids in college. He googles "best cashback apps 2026 reddit" before downloading. He tests our credibility from the outside: gimmicky visuals, countdown timers, or aggressive notifications will lose him before he ever signs up.
           </p>
           <p class="persona-card__quote">"I don't tell people I use it. I just like that it works."</p>
         </div>
@@ -933,7 +1149,7 @@
         <p class="section__eyebrow">Patterns</p>
         <h2 class="section__title">How They Behave</h2>
         <p class="section__lede">
-          Short bursts during calm, routine moments. They earn during coffee, lunch, and wind-down. They get dopamine from earning, not spending.
+          Short bursts during calm, routine moments. They earn during coffee, lunch, and wind-down. They get dopamine from earning, not spending. This is not a coupon app or a shopping companion. We pay people for their time and attention.
         </p>
       </div>
 
@@ -974,7 +1190,7 @@
             <thead>
               <tr>
                 <th>Activity</th>
-                <th>Interest</th>
+                <th>Survey interest</th>
                 <th>Why it works</th>
               </tr>
             </thead>
@@ -987,7 +1203,7 @@
               <tr>
                 <td>Play games within app</td>
                 <td>79%</td>
-                <td>Familiar mechanics, brief satisfaction</td>
+                <td>Familiar mechanics, brief satisfaction (Candy Crush at 25% daily use)</td>
               </tr>
               <tr>
                 <td>Daily check-ins</td>
@@ -1004,9 +1220,56 @@
                 <td>60%</td>
                 <td>Rewards what she already does</td>
               </tr>
+              <tr>
+                <td>Try new apps or games</td>
+                <td>58%</td>
+                <td>Offerwall staple, works if tasks are simple</td>
+              </tr>
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div data-animate style="margin-top: 40px;">
+        <h3>Tasks that do not work</h3>
+        <div class="table-wrap" style="margin-top: 16px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Why it fails</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Competitive gameplay</td>
+                <td>She is not competing. She is earning. Leaderboards feel "disruptive" <a class="source-pill" href="https://link.springer.com/article/10.1007/s12528-025-09438-4" target="_blank" rel="noopener">Altmeyer 2025</a></td>
+              </tr>
+              <tr>
+                <td>Complex multi-step offers</td>
+                <td>Install + reach level 30 + spend $X. Too much effort, unclear payoff</td>
+              </tr>
+              <tr>
+                <td>Long surveys (15+ min)</td>
+                <td>Does not respect her time. Task tolerance is 5 to 10 minutes</td>
+              </tr>
+              <tr>
+                <td>Tasks requiring personal data upfront</td>
+                <td>Trust has not been earned yet. She needs to see value first</td>
+              </tr>
+              <tr>
+                <td>Shopping through the app</td>
+                <td>Scored just 19% in survey. This audience earns, they do not deal-hunt</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 32px;">
+        <p>
+          <strong>Offer curation matters:</strong> Not every offer belongs in this app. Include wellness, recipes, shopping/savings, age-appropriate games (puzzle, word, social casino), and finance/insurance. Exclude hardcore/male-skewing games (Raid, Call of Duty, shooters) and complex multi-step offers. Wrong-category offers destroy trust and brand coherence.
+        </p>
       </div>
     </section>
 
@@ -1016,7 +1279,7 @@
         <p class="section__eyebrow">Critical</p>
         <h2 class="section__title">Trust Is Everything</h2>
         <p class="section__lede">
-          Trust is the single biggest adoption barrier. This audience is highly aware of scams and will leave immediately if anything feels off. If the app feels suspicious in any way, she leaves and never comes back.
+          Trust is the single biggest adoption barrier. 81% of adults 50+ believe scams have reached "crisis" level. <a class="source-pill" href="https://www.aarp.org/money/scams-fraud/aarp-fraud-awareness-report-2024/" target="_blank" rel="noopener">AARP 2024</a> Fraud losses for adults 60+ increased fourfold from $600M to $2.4B between 2020 and 2024. <a class="source-pill" href="https://www.ftc.gov/system/files/ftc_gov/pdf/P144400-OlderAdultsReportDec2025.pdf" target="_blank" rel="noopener">FTC 2025</a> If the app feels suspicious in any way, she leaves and never comes back.
         </p>
       </div>
 
@@ -1042,14 +1305,14 @@
             <li>Confusing reward structures or point systems</li>
             <li>FOMO tactics ("Don't miss out!")</li>
             <li>Hidden terms or unclear privacy</li>
-            <li>Gimmicky, flashy, or youth-coded design</li>
+            <li>Spin wheels with hidden odds (pattern-match to #1 fraud category) <a class="source-pill" href="https://www.ftc.gov/reports/bringing-dark-patterns-light" target="_blank" rel="noopener">FTC 2022</a></li>
           </ul>
         </div>
       </div>
 
       <div class="callout" data-animate style="margin-top: 40px;">
         <p>
-          <strong>Proof it pays out</strong> is the #1 acquisition trigger at 35%. That is why the $1.00 first cashout is so important. It attacks the biggest barrier before marketing ever could.
+          <strong>"Proof it pays out"</strong> is the #1 acquisition trigger at 35% (survey). That is why the $1.00 first cashout is a launch-blocking requirement. It attacks the biggest barrier before marketing ever could. Second most important: offering activities she enjoys (22%), then sign-up bonus (20%).
         </p>
       </div>
     </section>
@@ -1060,16 +1323,22 @@
         <p class="section__eyebrow">Growth</p>
         <h2 class="section__title">How They Find Us</h2>
         <p class="section__lede">
-          Word-of-mouth is the #1 growth channel. 51% rely on friends and family for app decisions. She does not post referral codes publicly. She texts a friend: "this app actually pays out."
+          Cross-promotion from existing Mode apps is the #1 discovery channel at 40%. This is our biggest acquisition advantage. Facebook/social + ads form the second tier at 44% combined.
         </p>
       </div>
 
       <div class="chart-shell" data-animate>
-        <p class="chart-shell__title">Discovery channels</p>
+        <p class="chart-shell__title">Discovery channels (survey data, 55 respondents)</p>
         <div class="chart-container" id="discovery-chart"></div>
       </div>
 
       <div data-animate style="margin-top: 40px;">
+        <p>
+          <strong>A note on word-of-mouth:</strong> Friend/family referrals scored just 9% as a discovery channel in the survey, but 88% trust word-of-mouth above all other advertising. <a class="source-pill" href="https://www.nielsen.com/insights/2021/beyond-martech-building-trust-with-consumers-and-engaging-where-sentiment-is-high/" target="_blank" rel="noopener">Nielsen 2021</a> The explanation: word-of-mouth is the #1 trust mechanism but not the #1 discovery mechanism. Our users hear about the app through cross-promo and ads, then validate it through social proof. The referral program is a retention and validation tool, not the primary acquisition engine.
+        </p>
+      </div>
+
+      <div data-animate style="margin-top: 32px;">
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -1083,7 +1352,7 @@
               <tr>
                 <td>PayPal</td>
                 <td>69%</td>
-                <td>Must have at launch. 80% already use it regularly</td>
+                <td>Launch blocker. 80% already use it regularly</td>
               </tr>
               <tr>
                 <td>Gift cards (Amazon, Walmart)</td>
@@ -1093,7 +1362,7 @@
               <tr>
                 <td>Direct bank transfer</td>
                 <td>8%</td>
-                <td>Minority preference, but growing</td>
+                <td>Surprisingly low. 73% expect payout within 24 hours</td>
               </tr>
             </tbody>
           </table>
@@ -1101,13 +1370,13 @@
       </div>
     </section>
 
-    <!-- Brand Expectations -->
+    <!-- Brand & Tone -->
     <section class="section" id="brand">
       <div class="section__intro">
         <p class="section__eyebrow">Tone</p>
         <h2 class="section__title">Brand Expectations</h2>
         <p class="section__lede">
-          "Fun to use" scored 0% as a priority. This audience is pragmatic, not playful. They want to be respected, not entertained. Reliability and value make up 65% of their combined priorities.
+          The team converged on "warm professionalism" as the tone, like a trusted credit union, not a children's game. This was validated by the survey: users want to be respected, not entertained.
         </p>
       </div>
 
@@ -1140,8 +1409,302 @@
 
       <div class="callout" data-animate style="margin-top: 40px;">
         <p>
-          <strong>The emotional foundation:</strong> This audience feels invisible in much of their daily life. Few products are designed for them. Every interaction should reinforce that her time matters, her effort counts, and someone actually built this with her in mind.
+          <strong>The "Being Seen" insight:</strong> This audience feels invisible in much of their daily life. They are undervalued by employers, taken for granted by family, and overlooked by products built for younger demographics. Few things are designed for them. This creates a powerful brand opportunity: make her feel recognized, valued, and smart for what she does. Every interaction should reinforce that her time matters, her effort counts, and someone actually built this with her in mind. This is the emotional foundation of the product relationship.
         </p>
+      </div>
+    </section>
+
+    <!-- Gamification -->
+    <section class="section" id="gamification">
+      <div class="section__intro">
+        <p class="section__eyebrow">Product</p>
+        <h2 class="section__title">Gamification Rules</h2>
+        <p class="section__lede">
+          Gamification is not inherently wrong for this audience, but the wrong mechanics destroy trust instantly. Fetch Rewards (avg user age 47, 70% retention) proves gamification can work for our demographic. <a class="source-pill" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8437506/" target="_blank" rel="noopener">Kappen 2021</a> The question is which mechanics and how they are framed.
+        </p>
+      </div>
+
+      <div class="tier-grid">
+        <div class="tier-card" data-animate>
+          <div class="tier-card__label">Use confidently (strong evidence)</div>
+          <h4>Core Mechanics</h4>
+          <ul>
+            <li><strong>Progress bars and milestone tracking.</strong> Goal gradient effect: people accelerate as they near a goal. Show dollar progress ("$3.50 of $5.00"), not abstract filling bars</li>
+            <li><strong>Streaks with forgiveness.</strong> Daily check-in bonuses build routine. "Freeze" days prevent punishment anxiety. Duolingo model</li>
+            <li><strong>Weekly earning summaries.</strong> Tangible proof of value. Reinforces "this is worth my time"</li>
+            <li><strong>Earned reward multipliers.</strong> "2x this weekend because you hit your weekly goal." Deterministic, earned, never random</li>
+            <li><strong>Seasonal reward campaigns.</strong> Freshness without disruption to the core loop</li>
+            <li><strong>Referral rewards.</strong> Leverages the #1 growth channel (word-of-mouth). 88% trust friend/family recommendations <a class="source-pill" href="https://www.nielsen.com/insights/2021/beyond-martech-building-trust-with-consumers-and-engaging-where-sentiment-is-high/" target="_blank" rel="noopener">Nielsen 2021</a></li>
+          </ul>
+        </div>
+
+        <div class="tier-card" data-animate>
+          <div class="tier-card__label">Use carefully (trust-sensitive)</div>
+          <h4>Moderate Evidence</h4>
+          <ul>
+            <li><strong>Transparent chance mechanics (spin wheels, bonus draws).</strong> Only if all three conditions are met: odds are shown, minimum value is guaranteed, and it is framed as a bonus, never the core loop. Spin wheels pattern-match to the #1 fraud category for this demographic. <a class="source-pill" href="https://www.ftc.gov/system/files/ftc_gov/pdf/P144400-OlderAdultsReportDec2025.pdf" target="_blank" rel="noopener">FTC 2025</a></li>
+            <li><strong>Social and collaborative features.</strong> Women report greater social benefits from gamification. <a class="source-pill" href="https://www.tandfonline.com/doi/full/10.1080/10447318.2024.2446498" target="_blank" rel="noopener">Tondello 2024</a> Shared milestones ("Our community earned $50K this week") and referral celebrations work. Leaderboards and competitive rankings do not</li>
+          </ul>
+        </div>
+
+        <div class="tier-card" data-animate>
+          <div class="tier-card__label">Avoid (evidence against)</div>
+          <h4>Do Not Use</h4>
+          <ul>
+            <li><strong>Competitive leaderboards.</strong> Adults find them "disruptive or unprofessional" <a class="source-pill" href="https://link.springer.com/article/10.1007/s12528-025-09438-4" target="_blank" rel="noopener">Altmeyer 2025</a></li>
+            <li><strong>Complex badge and point systems.</strong> Seniors consider badges "meaningless" since they are abstract tokens with no real value</li>
+            <li><strong>Visual overload and excessive pop-ups.</strong> Adults 45+ are "sensitive to excessive visuals" which creates confusion and distrust</li>
+            <li><strong>FOMO-driven urgency.</strong> Countdown timers and "Don't miss out!" feel manipulative, off-brand</li>
+            <li><strong>Opaque chance mechanics.</strong> Spin wheels with hidden odds and "Sorry, try again!" trigger scam associations</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 40px;">
+        <p>
+          <strong>The model:</strong> Wordle (one-a-day ritual) + Duolingo (streaks with grace) + Ibotta (rewards existing behavior) + Fetch Rewards (gamification that works for our demo). Not Temu.
+        </p>
+      </div>
+    </section>
+
+    <!-- Notifications -->
+    <section class="section section--narrow" id="notifications">
+      <div class="section__intro">
+        <p class="section__eyebrow">Engagement</p>
+        <h2 class="section__title">Notification Strategy</h2>
+        <p class="section__lede">
+          Temu succeeds with this audience despite heavy gamification because their notifications are infrequent but always carry value: roughly once every 2 days, always with a concrete offer attached. The first order is essentially free, which proves value immediately.
+        </p>
+      </div>
+      <div data-animate>
+        <p>
+          <strong>Our rule:</strong> Only notify when there is real value to communicate. State the value, not the urgency. Getting this wrong gets the app deleted.
+        </p>
+      </div>
+
+      <div data-animate style="margin-top: 24px;">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Instead of</th>
+                <th>Send this</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>"Don't miss out! Your rewards are waiting!"</td>
+                <td>"You have 3 new surveys waiting. Estimated earnings: $1.50."</td>
+              </tr>
+              <tr>
+                <td>"Come back before they expire!"</td>
+                <td>"New tasks available. $0.75 to $2.00 estimated."</td>
+              </tr>
+              <tr>
+                <td>"You're missing out on earnings!"</td>
+                <td>"Your weekly summary: $8.50 earned this week."</td>
+              </tr>
+              <tr>
+                <td>Daily push at 9am, noon, and 6pm</td>
+                <td>One notification every 1 to 2 days, only with concrete value</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 32px;">
+        <p>
+          <strong>The pattern:</strong> State what is available, state the value, stop. No hype. No fake urgency. No countdown timers. 21% of survey respondents cited "too many notifications or pushy messages" as a reason to quit an app. For this audience, silence is better than noise.
+        </p>
+      </div>
+    </section>
+
+    <!-- App Store Language -->
+    <section class="section" id="app-store">
+      <div class="section__intro">
+        <p class="section__eyebrow">Constraint</p>
+        <h2 class="section__title">App Store Language</h2>
+        <p class="section__lede">
+          Apple and Google are increasingly hostile to "earning app" positioning. This constrains our store listing copy, metadata, screenshots, and any in-app language visible during review. This is not just branding preference. It is a store approval requirement.
+        </p>
+      </div>
+
+      <div class="comparison" data-animate>
+        <div class="comparison__panel">
+          <div class="comparison__label">Avoid in store-facing contexts</div>
+          <h4>Will get flagged or rejected</h4>
+          <ul>
+            <li>"Cash out" / "cashback"</li>
+            <li>"Earn money" / "earn cash"</li>
+            <li>"Make money"</li>
+            <li>"Get paid"</li>
+            <li>"Discovery" (in the offer/reward sense)</li>
+          </ul>
+        </div>
+        <div class="comparison__panel">
+          <div class="comparison__label">Use instead</div>
+          <h4>Store-safe language</h4>
+          <ul>
+            <li>"Save" / "rewards" / "your piggy bank"</li>
+            <li>"Your time, real value" / "small wins"</li>
+            <li>"Complete tasks" / "share your opinion"</li>
+            <li>"Scan receipts" / "daily rewards"</li>
+            <li>Activity-based descriptions over earning claims</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 40px;">
+        <p>
+          <strong>This is a launch blocker.</strong> The positioning pivot toward piggy bank and savings language is not just better branding. It is a store approval requirement, based on direct experience from partners launching iOS reward apps. Everyone writing store-facing copy needs to know these constraints.
+        </p>
+      </div>
+    </section>
+
+    <!-- Key Decisions -->
+    <section class="section" id="decisions">
+      <div class="section__intro">
+        <p class="section__eyebrow">Record</p>
+        <h2 class="section__title">Key Decisions</h2>
+        <p class="section__lede">
+          Decisions made so far, with sources and rationale. This is the reference point for anyone joining the project and wondering "why did we do it this way?"
+        </p>
+      </div>
+
+      <div data-animate>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Decision</th>
+                <th>Date</th>
+                <th>Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>"Designed for Her, Welcoming to All"</td>
+                <td>Mar 4</td>
+                <td>Unanimous team decision. Women 45+ are underserved, control spending, and drive referrals</td>
+              </tr>
+              <tr>
+                <td>Real dollars, never points</td>
+                <td>Mar 4</td>
+                <td>51% prefer dollar amounts; only 11% want points (survey Q8)</td>
+              </tr>
+              <tr>
+                <td>Brand values: Simplicity, Reliability, Valuable</td>
+                <td>Mar 4</td>
+                <td>Brand alignment workshop. Each value has a product test tied to a persona</td>
+              </tr>
+              <tr>
+                <td>Guardrails: Not Confusing, Not Spammy, Not Cold</td>
+                <td>Mar 4</td>
+                <td>If any of these three feel true, something is wrong. The "Lisa test"</td>
+              </tr>
+              <tr>
+                <td>Tone: encouraging, warm professional</td>
+                <td>Mar 4</td>
+                <td>Team 3-3 split resolved by user data. EarnWise clarity + Savi warmth</td>
+              </tr>
+              <tr>
+                <td>Goal-based framing (primary system)</td>
+                <td>Mar 23</td>
+                <td>Revised from expense anchoring after Matt T feedback ("adds stress") + behavioral research on scarcity cues</td>
+              </tr>
+              <tr>
+                <td>Earning target: $30 to $75/month</td>
+                <td>Mar 11</td>
+                <td>40% of survey want $25 to $50/mo. Validated against competitor data (Swagbucks, Visu Network)</td>
+              </tr>
+              <tr>
+                <td>PayPal at launch</td>
+                <td>Mar 26</td>
+                <td>69% prefer PayPal, 80% already use it. Launch blocker</td>
+              </tr>
+              <tr>
+                <td>$1.00 first cashout</td>
+                <td>Mar 26</td>
+                <td>"Proof it pays out" is #1 acquisition trigger at 35%. Attacks trust barrier directly</td>
+              </tr>
+              <tr>
+                <td>Offer curation: audience-appropriate only</td>
+                <td>Mar 5</td>
+                <td>No hardcore/male-skewing games (Raid, Call of Duty). Wrong audience, brand damage</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout" data-animate style="margin-top: 40px;">
+        <p>
+          <strong>Source documents:</strong> This presentation synthesizes TARGET_AUDIENCE.md, TARGET_AUDIENCE_SOURCED.md (with 26 cited sources), BRAND.md, the March 2026 user survey report (43 to 58 respondents via Maze), and the strategic synthesis combining team + user data. All are living documents in the repo.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sources -->
+    <section class="section section--narrow" id="sources">
+      <div class="section__intro">
+        <p class="section__eyebrow">References</p>
+        <h2 class="section__title">Sources</h2>
+        <p class="section__lede">
+          All claims in this document are backed by published research or validated survey data. Click any source to open the original.
+        </p>
+      </div>
+
+      <div data-animate>
+        <h3 style="margin-top: 8px;">Financial</h3>
+        <ol style="font-size: 0.9rem; line-height: 1.8;">
+          <li>Laurel Road / HarrisX, 8th Annual Women's Financial Survey (2025) <a class="source-pill" href="https://www.prnewswire.com/news-releases/women-taking-the-financial-reins-annual-survey-reveals-determination-amid-challenges-302393919.html" target="_blank" rel="noopener">Link</a></li>
+          <li>AARP, "She's the Difference" - Financial Stress Among Women 50-64 (Dec 2025) <a class="source-pill" href="https://www.aarp.org/pri/topics/work-finances-retirement/financial-security-retirement/financial-stress-older-women.html" target="_blank" rel="noopener">Link</a></li>
+          <li>AARP, "She's the Difference" - Financial Anxiety Among Women 50+ (Dec 2025) <a class="source-pill" href="https://www.aarp.org/pri/topics/work-finances-retirement/financial-security-retirement/shes-the-difference-financial-security/" target="_blank" rel="noopener">Link</a></li>
+          <li>Allianz Life, 2025 Women Money Power Study (Sep 2025) <a class="source-pill" href="https://www.allianzlife.com/about/newsroom/2025-Press-Releases/Gen-X-Nearing-Retirement-With-Worries" target="_blank" rel="noopener">Link</a></li>
+          <li>Federal Reserve Board, SHED - Economic Well-Being of U.S. Households (2024) <a class="source-pill" href="https://www.federalreserve.gov/publications/2024-economic-well-being-of-us-households-in-2023-expenses.htm" target="_blank" rel="noopener">Link</a></li>
+        </ol>
+
+        <h3 style="margin-top: 28px;">Technology &amp; Social Media</h3>
+        <ol start="6" style="font-size: 0.9rem; line-height: 1.8;">
+          <li>Pew Research Center, Americans' Use of Mobile Technology (Jan 2024) <a class="source-pill" href="https://www.pewresearch.org/internet/2024/01/31/americans-use-of-mobile-technology-and-home-broadband/" target="_blank" rel="noopener">Link</a></li>
+          <li>Pew Research Center, Americans' Social Media Use (2025) <a class="source-pill" href="https://www.pewresearch.org/internet/2025/11/20/americans-social-media-use-2025/" target="_blank" rel="noopener">Link</a></li>
+          <li>AARP, 2024 Technology Trends for Adults 50+ <a class="source-pill" href="https://www.aarp.org/pri/topics/technology/internet-media-devices/2024-technology-trends-older-adults/" target="_blank" rel="noopener">Link</a></li>
+          <li>Deloitte, Connected Consumer Survey (2023) <a class="source-pill" href="https://www.deloitte.com/us/en/insights/industry/telecommunications/connectivity-mobile-trends-survey/2023/connectivity-mobile-trends-survey-full-report.html" target="_blank" rel="noopener">Link</a></li>
+        </ol>
+
+        <h3 style="margin-top: 28px;">Gaming</h3>
+        <ol start="10" style="font-size: 0.9rem; line-height: 1.8;">
+          <li>AARP, "2023 Gamers 50+" (Apr 2023) <a class="source-pill" href="https://www.aarp.org/pri/topics/social-leisure/activities-interests/2023-gamers-50-plus/" target="_blank" rel="noopener">Link</a></li>
+          <li>AARP, Gaming Trends Among Older Americans (2020) <a class="source-pill" href="https://www.aarp.org/pri/topics/technology/internet-media-devices/2020-gaming-trends-older-americans/" target="_blank" rel="noopener">Link</a></li>
+          <li>Entertainment Software Association, Essential Facts (2025) <a class="source-pill" href="https://www.theesa.com/annual-esa-study-reveals-video-games-universal-appeal-across-generations/" target="_blank" rel="noopener">Link</a></li>
+        </ol>
+
+        <h3 style="margin-top: 28px;">Trust &amp; Security</h3>
+        <ol start="13" style="font-size: 0.9rem; line-height: 1.8;">
+          <li>AARP, Fraud Awareness Report (2024) <a class="source-pill" href="https://www.aarp.org/money/scams-fraud/aarp-fraud-awareness-report-2024/" target="_blank" rel="noopener">Link</a></li>
+          <li>FTC, "Protecting Older Consumers 2024-2025" (Dec 2025) <a class="source-pill" href="https://www.ftc.gov/system/files/ftc_gov/pdf/P144400-OlderAdultsReportDec2025.pdf" target="_blank" rel="noopener">Link</a></li>
+          <li>FTC, "Bringing Dark Patterns to Light" (Sep 2022) <a class="source-pill" href="https://www.ftc.gov/reports/bringing-dark-patterns-light" target="_blank" rel="noopener">Link</a></li>
+        </ol>
+
+        <h3 style="margin-top: 28px;">Design &amp; Gamification</h3>
+        <ol start="16" style="font-size: 0.9rem; line-height: 1.8;">
+          <li>Nielsen Norman Group, Usability for Senior Citizens <a class="source-pill" href="https://www.nngroup.com/articles/usability-for-senior-citizens/" target="_blank" rel="noopener">Link</a></li>
+          <li>Kappen et al., The Gerontologist (2021) <a class="source-pill" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8437506/" target="_blank" rel="noopener">Link</a></li>
+          <li>Altmeyer et al., J. Computing in Higher Education (2025) <a class="source-pill" href="https://link.springer.com/article/10.1007/s12528-025-09438-4" target="_blank" rel="noopener">Link</a></li>
+          <li>Tondello et al., Intl Journal of Human-Computer Interaction (2024) <a class="source-pill" href="https://www.tandfonline.com/doi/full/10.1080/10447318.2024.2446498" target="_blank" rel="noopener">Link</a></li>
+          <li>ACM CHI 2024 - Reducing complexity for older adults <a class="source-pill" href="https://dl.acm.org/doi/10.1145/3613904.3642796" target="_blank" rel="noopener">Link</a></li>
+        </ol>
+
+        <h3 style="margin-top: 28px;">Market Opportunity</h3>
+        <ol start="21" style="font-size: 0.9rem; line-height: 1.8;">
+          <li>NIQ / World Data Lab, "The X Factor" (Jul 2025) <a class="source-pill" href="https://nielseniq.com/global/en/insights/report/2025/the-x-factor/" target="_blank" rel="noopener">Link</a></li>
+          <li>Harvard Business Review, "The Female Economy" (Sep 2009) <a class="source-pill" href="https://hbr.org/2009/09/the-female-economy" target="_blank" rel="noopener">Link</a></li>
+          <li>AARP, "Ignoring 50+ Women" <a class="source-pill" href="https://advertise.aarp.org/50-insights/ignoring-50-plus-women" target="_blank" rel="noopener">Link</a></li>
+          <li>Nielsen, Global Trust in Advertising (2021) <a class="source-pill" href="https://www.nielsen.com/insights/2021/beyond-martech-building-trust-with-consumers-and-engaging-where-sentiment-is-high/" target="_blank" rel="noopener">Link</a></li>
+          <li>Bankrate, Credit Card Rewards Survey (Nov 2024) <a class="source-pill" href="https://www.bankrate.com/credit-cards/news/credit-card-rewards-survey/" target="_blank" rel="noopener">Link</a></li>
+          <li>AARP, 2023 Technology Trends for Adults 50+ <a class="source-pill" href="https://www.aarp.org/pri/topics/technology/internet-media-devices/2023-technology-trends-older-adults/" target="_blank" rel="noopener">Link</a></li>
+        </ol>
       </div>
     </section>
 
