@@ -368,6 +368,49 @@
       border-radius: 3px;
     }
 
+    /* ---- Radius & elevation tiles ---- */
+    .ds-tiles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px 18px;
+    }
+    .ds-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+    .ds-tile__shape {
+      width: 72px;
+      height: 72px;
+      background: var(--surface-contrast);
+      box-sizing: border-box;
+    }
+    .ds-tile__shape--outline {
+      border: 1.5px solid var(--ink);
+    }
+    .ds-tile__shape--shadow {
+      border: 1px solid var(--border);
+    }
+    .ds-tile__shape--empty {
+      background: transparent;
+      border: 1px dashed var(--border-strong);
+    }
+    .ds-tile__meta { text-align: center; }
+    .ds-tile__name {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .ds-tile__value {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      margin-top: 2px;
+    }
+
     /* ---- Typography specimen ---- */
     .type-grid {
       display: flex;
@@ -417,7 +460,48 @@
     .icon-tile__name {
       font-family: var(--mono);
       font-size: 0.7rem;
+      color: var(--ew-ink);
+    }
+    .icon-tile__context {
+      font-family: var(--sans);
+      font-size: 0.68rem;
       color: var(--ew-ink-tertiary);
+      margin-top: 4px;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    /* ---- Icon groups ---- */
+    .icon-group {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .icon-group:first-of-type {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+    .icon-group__header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 14px;
+    }
+    .icon-group__label {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 650;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ew-ink);
+    }
+    .icon-group__note {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--ew-ink-tertiary);
+      font-style: italic;
     }
 
     /* ---- Widget list ---- */
@@ -454,6 +538,43 @@
       max-width: 60ch;
     }
 
+    /* ---- New-widgets grid (sub-project 1 showcase) ---- */
+    .ds-newgrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px 36px;
+    }
+    .ds-newgrid__item {
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .ds-newgrid__name {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .ds-newgrid__path {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+    .ds-newgrid__desc {
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--ink-light);
+      max-width: 38ch;
+      margin: 0;
+    }
+    @media (max-width: 980px) {
+      .ds-newgrid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .ds-newgrid { grid-template-columns: 1fr; }
+    }
+
     /* ---- Showcase frame (phone-ish cream canvas) ---- */
     .canvas {
       background: var(--ew-cream);
@@ -481,7 +602,7 @@
     .ew-card {
       background: #fff;
       border: 1.5px solid var(--ew-cream-deep);
-      border-radius: 18px;
+      border-radius: 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
       padding: 20px;
       display: flex;
@@ -1086,12 +1207,14 @@
   <main class="content">
     <header class="hero">
       <div>
-        <p class="hero__meta">April 2026 &middot; EarnWise MVP</p>
+        <p class="hero__meta">April 2026 &middot; Sub-project 1 landed</p>
         <h1 class="hero__title">The EarnWise Design System</h1>
         <p class="hero__subtitle">
           One page to show every token, component, and interaction pattern
-          currently wired into the Flutter app, and to be honest about what
-          isn't yet.
+          currently wired into the Flutter app. As of sub-project 1 the
+          token layer is two-tier (primitives plus semantic names), and six
+          new shared widgets cover the patterns every screen will adopt in
+          sub-projects 2 through 6.
         </p>
       </div>
     </header>
@@ -1102,22 +1225,29 @@
         <p class="section__eyebrow">Overview</p>
         <h2 class="section__title">What's in, what's not</h2>
         <p class="section__lede">
-          EarnWise has a full <strong>token layer</strong> (color, spacing,
-          layout, typography, motion), a <strong>press &amp; haptic system</strong>
+          EarnWise now has a <strong>two-tier token layer</strong>: private
+          primitives (<span class="mono">_s4</span>, <span class="mono">_r16</span>)
+          feed semantic names (<span class="mono">AppSpacing.cardPad</span>,
+          <span class="mono">AppRadius.card</span>) that every screen should
+          reference. On top of the tokens sit the old movement primitives
           (<span class="mono">PressScale</span>, <span class="mono">PhysicalPress</span>,
-          <span class="mono">Haptics</span>), <strong>celebration primitives</strong>
-          (<span class="mono">RewardGlow</span>, <span class="mono">AnimatedCounter</span>,
-          <span class="mono">Breathing</span>), and <strong>shared widgets</strong>
-          for screen shells, routes, sheets, and toasts. The system is consolidated
-          and wired into every screen. What's left is mostly disciplined adoption
-          plus a few deferred pieces.
+          <span class="mono">RewardGlow</span>, <span class="mono">AnimatedCounter</span>,
+          <span class="mono">Breathing</span>, <span class="mono">Haptics</span>)
+          and, new in this sub-project, six shared widgets
+          (<span class="mono">Surface</span>, <span class="mono">CategoryIconSquare</span>,
+          <span class="mono">ListRow</span>, <span class="mono">VerticalTile</span>,
+          <span class="mono">SectionHeader</span>, <span class="mono">StatBubble</span>)
+          that capture the patterns repeated across every screen.
         </p>
       </div>
       <div data-animate>
         <div class="callout">
           <p class="callout__label">Source of truth</p>
           <p style="margin: 0;">
-            Everything documented here lives under
+            This page is the visual tour. The canonical reference that
+            screens and widgets must read before any UI work is
+            <span class="mono">docs/design-system.md</span>, pointed at from
+            <span class="mono">CLAUDE.md</span>. Code lives under
             <span class="mono">flutter_app/lib/theme/</span> and
             <span class="mono">flutter_app/lib/widgets/</span>. If a value
             isn't in those two folders, it isn't part of the system yet.
@@ -1132,35 +1262,44 @@
         <p class="section__eyebrow">Foundations</p>
         <h2 class="section__title">Color</h2>
         <p class="section__lede">
-          A warm cream surface, a single teal brand anchor, and six functional
-          task-category hues. Defined in <span class="mono">AppColors</span>
-          at <span class="mono">lib/theme/app_theme.dart</span>.
+          Every color is a named role, not a raw hex. Sub-project 1 split
+          <span class="mono">AppColors</span> into five semantic groups so
+          every consumer reads intent instead of hue. When dark mode lands
+          these names point at different primitives under
+          <span class="mono">Theme.of(context).brightness</span>. Defined in
+          <span class="mono">lib/theme/app_theme.dart</span>.
         </p>
       </div>
       <div class="plate" data-animate>
         <div class="swatch-row">
-          <div class="swatch-row__label">Surfaces &amp; Ink</div>
+          <div class="swatch-row__label">Surface &middot; backgrounds</div>
           <div class="swatches">
             <div class="swatch">
               <div class="swatch__chip" style="background:#FAF8F5"></div>
-              <div class="swatch__name">cream</div>
+              <div class="swatch__name">surface</div>
               <div class="swatch__hex">#FAF8F5</div>
             </div>
             <div class="swatch">
-              <div class="swatch__chip" style="background:#F2EDE6"></div>
-              <div class="swatch__name">creamDeep</div>
-              <div class="swatch__hex">#F2EDE6</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#F8F3EC"></div>
-              <div class="swatch__name">creamWarm</div>
-              <div class="swatch__hex">#F8F3EC</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#FFFFFF"></div>
-              <div class="swatch__name">white</div>
+              <div class="swatch__chip" style="background:#FFFFFF; border: 1px solid var(--border);"></div>
+              <div class="swatch__name">surfaceRaised</div>
               <div class="swatch__hex">#FFFFFF</div>
             </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F0FDFA"></div>
+              <div class="swatch__name">surfaceSelected</div>
+              <div class="swatch__hex">#F0FDFA</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F2EDE6"></div>
+              <div class="swatch__name">surfaceSubtle</div>
+              <div class="swatch__hex">#F2EDE6</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch-row">
+          <div class="swatch-row__label">Ink &middot; text &amp; icons</div>
+          <div class="swatches">
             <div class="swatch">
               <div class="swatch__chip" style="background:#3B3230"></div>
               <div class="swatch__name">ink</div>
@@ -1176,36 +1315,118 @@
               <div class="swatch__name">inkTertiary</div>
               <div class="swatch__hex">#8A7D76</div>
             </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FAF8F5"></div>
+              <div class="swatch__name">inkInverse</div>
+              <div class="swatch__hex">#FAF8F5</div>
+            </div>
           </div>
         </div>
 
         <div class="swatch-row">
-          <div class="swatch-row__label">Brand &amp; Accent</div>
+          <div class="swatch-row__label">Brand &middot; teal</div>
           <div class="swatches">
             <div class="swatch">
               <div class="swatch__chip" style="background:#0D9488"></div>
-              <div class="swatch__name">primary</div>
+              <div class="swatch__name">brand</div>
               <div class="swatch__hex">#0D9488</div>
             </div>
             <div class="swatch">
-              <div class="swatch__chip" style="background:#0F766E"></div>
-              <div class="swatch__name">primaryDark</div>
-              <div class="swatch__hex">#0F766E</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#CCFBF1"></div>
-              <div class="swatch__name">primaryLight</div>
-              <div class="swatch__hex">#CCFBF1</div>
-            </div>
-            <div class="swatch">
               <div class="swatch__chip" style="background:#F0FDFA"></div>
-              <div class="swatch__name">primaryPale</div>
+              <div class="swatch__name">brandSubtle</div>
               <div class="swatch__hex">#F0FDFA</div>
             </div>
             <div class="swatch">
+              <div class="swatch__chip" style="background:#0F766E"></div>
+              <div class="swatch__name">brandStrong</div>
+              <div class="swatch__hex">#0F766E</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch-row">
+          <div class="swatch-row__label">Category tints &middot; foreground &amp; background pairs</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F97316"></div>
+              <div class="swatch__name">categoryGame</div>
+              <div class="swatch__hex">#F97316</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FFF7ED"></div>
+              <div class="swatch__name">categoryGameBg</div>
+              <div class="swatch__hex">#FFF7ED</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#6366F1"></div>
+              <div class="swatch__name">categorySurvey</div>
+              <div class="swatch__hex">#6366F1</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#EEF2FF"></div>
+              <div class="swatch__name">categorySurveyBg</div>
+              <div class="swatch__hex">#EEF2FF</div>
+            </div>
+            <div class="swatch">
               <div class="swatch__chip" style="background:#F59E0B"></div>
-              <div class="swatch__name">accent</div>
+              <div class="swatch__name">categoryOffers</div>
               <div class="swatch__hex">#F59E0B</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FFFBEB"></div>
+              <div class="swatch__name">categoryOffersBg</div>
+              <div class="swatch__hex">#FFFBEB</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#10B981"></div>
+              <div class="swatch__name">categoryReceipts</div>
+              <div class="swatch__hex">#10B981</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#ECFDF5"></div>
+              <div class="swatch__name">categoryReceiptsBg</div>
+              <div class="swatch__hex">#ECFDF5</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#EC4899"></div>
+              <div class="swatch__name">categoryVideo</div>
+              <div class="swatch__hex">#EC4899</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FDF2F8"></div>
+              <div class="swatch__name">categoryVideoBg</div>
+              <div class="swatch__hex">#FDF2F8</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#8B5CF6"></div>
+              <div class="swatch__name">categoryCheckin</div>
+              <div class="swatch__hex">#8B5CF6</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#F5F3FF"></div>
+              <div class="swatch__name">categoryCheckinBg</div>
+              <div class="swatch__hex">#F5F3FF</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch-row">
+          <div class="swatch-row__label">Feedback &middot; state signals</div>
+          <div class="swatches">
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#10B981"></div>
+              <div class="swatch__name">success</div>
+              <div class="swatch__hex">#10B981</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FF6B35"></div>
+              <div class="swatch__name">flame</div>
+              <div class="swatch__hex">#FF6B35</div>
+            </div>
+            <div class="swatch">
+              <div class="swatch__chip" style="background:#FFF4ED"></div>
+              <div class="swatch__name">flameBg</div>
+              <div class="swatch__hex">#FFF4ED</div>
             </div>
             <div class="swatch">
               <div class="swatch__chip" style="background:#D4A843"></div>
@@ -1215,41 +1436,19 @@
           </div>
         </div>
 
-        <div class="swatch-row">
-          <div class="swatch-row__label">Task Categories</div>
-          <div class="swatches">
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#EC4899"></div>
-              <div class="swatch__name">taskVideo</div>
-              <div class="swatch__hex">#EC4899</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#6366F1"></div>
-              <div class="swatch__name">taskSurvey</div>
-              <div class="swatch__hex">#6366F1</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#F97316"></div>
-              <div class="swatch__name">taskGame</div>
-              <div class="swatch__hex">#F97316</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#8B5CF6"></div>
-              <div class="swatch__name">taskCheckin</div>
-              <div class="swatch__hex">#8B5CF6</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#F59E0B"></div>
-              <div class="swatch__name">taskOffers</div>
-              <div class="swatch__hex">#F59E0B</div>
-            </div>
-            <div class="swatch">
-              <div class="swatch__chip" style="background:#10B981"></div>
-              <div class="swatch__name">taskReceipts</div>
-              <div class="swatch__hex">#10B981</div>
-            </div>
-          </div>
-        </div>
+        <p style="margin-top: 26px; font-size: .88rem; color: var(--ink-light); max-width: 62ch;">
+          <strong>Deprecated aliases</strong> still compile.
+          <span class="mono">cream</span>, <span class="mono">creamDeep</span>,
+          <span class="mono">white</span>, <span class="mono">primary</span>,
+          <span class="mono">primaryPale</span>, <span class="mono">primaryDark</span>,
+          and <span class="mono">task*</span> forward to the semantic names
+          above so nothing shifts before screens migrate in sub-projects 2
+          through 6. New code uses the semantic names only.
+          <span class="mono">success</span> shares a value with
+          <span class="mono">categoryReceipts</span>; it's semantically
+          distinct, so reach for <span class="mono">success</span> for
+          confirmation UI and the category name for receipts tiles.
+        </p>
       </div>
     </section>
 
@@ -1257,20 +1456,27 @@
     <section class="section" id="spacing">
       <div class="section__intro">
         <p class="section__eyebrow">Foundations</p>
-        <h2 class="section__title">Spacing &amp; layout</h2>
+        <h2 class="section__title">Spacing, radius &amp; elevation</h2>
         <p class="section__lede">
-          A 5-step scale and two layout constants. Use these instead of raw
-          pixel values so rhythm stays consistent.
-          <span class="mono">AppSpacing</span> and
-          <span class="mono">AppLayout</span> in
+          Three token families on a 4 px baseline grid. Each name carries
+          the intent (<span class="mono">cardPad</span>,
+          <span class="mono">sectionGap</span>, <span class="mono">blockGap</span>),
+          not the pixel value. Private primitives (<span class="mono">_s4</span>,
+          <span class="mono">_r16</span>) feed the semantic tier, so the
+          single place to change a rung is the primitive. Defined in
           <span class="mono">lib/theme/app_theme.dart</span>.
         </p>
       </div>
       <div class="plate" data-animate>
         <div class="two-col--wide two-col">
           <div>
-            <p class="plate__label">AppSpacing</p>
+            <p class="plate__label">AppSpacing &middot; semantic scale</p>
             <div class="spacing-scale">
+              <div class="spacing-row">
+                <div class="spacing-row__name">tight</div>
+                <div class="spacing-row__value">2 px</div>
+                <div class="spacing-row__bar" style="width: 2px;"></div>
+              </div>
               <div class="spacing-row">
                 <div class="spacing-row__name">xs</div>
                 <div class="spacing-row__value">4 px</div>
@@ -1282,24 +1488,134 @@
                 <div class="spacing-row__bar" style="width: 8px;"></div>
               </div>
               <div class="spacing-row">
-                <div class="spacing-row__name">md</div>
+                <div class="spacing-row__name">inner</div>
+                <div class="spacing-row__value">12 px</div>
+                <div class="spacing-row__bar" style="width: 12px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">rowGap</div>
+                <div class="spacing-row__value">12 px</div>
+                <div class="spacing-row__bar" style="width: 12px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">cardPad</div>
                 <div class="spacing-row__value">16 px</div>
                 <div class="spacing-row__bar" style="width: 16px;"></div>
               </div>
               <div class="spacing-row">
-                <div class="spacing-row__name">lg</div>
+                <div class="spacing-row__name">titleGap</div>
+                <div class="spacing-row__value">20 px</div>
+                <div class="spacing-row__bar" style="width: 20px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">sectionGap</div>
                 <div class="spacing-row__value">24 px</div>
                 <div class="spacing-row__bar" style="width: 24px;"></div>
               </div>
               <div class="spacing-row">
-                <div class="spacing-row__name">xl</div>
+                <div class="spacing-row__name">pageGutter</div>
+                <div class="spacing-row__value">24 px</div>
+                <div class="spacing-row__bar" style="width: 24px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">blockGap</div>
                 <div class="spacing-row__value">32 px</div>
                 <div class="spacing-row__bar" style="width: 32px;"></div>
               </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">heroGap</div>
+                <div class="spacing-row__value">40 px</div>
+                <div class="spacing-row__bar" style="width: 40px;"></div>
+              </div>
+              <div class="spacing-row">
+                <div class="spacing-row__name">pageTop</div>
+                <div class="spacing-row__value">48 px</div>
+                <div class="spacing-row__bar" style="width: 48px;"></div>
+              </div>
             </div>
+            <p style="margin-top: 22px; font-size: .86rem; color: var(--ink-light); max-width: 48ch;">
+              <strong>Named exception:</strong>
+              <span class="mono">tight</span> (2 px) is the only sub-4
+              value, reserved for intra-component title to subtitle stacks.
+              The deprecated aliases <span class="mono">md</span>,
+              <span class="mono">lg</span>, and <span class="mono">xl</span>
+              still resolve to 16, 24, and 32 so existing screens don't
+              shift; new code lands on the semantic names.
+            </p>
           </div>
           <div>
-            <p class="plate__label">AppLayout</p>
+            <p class="plate__label">AppRadius &middot; corner scale</p>
+            <div class="ds-tiles">
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--outline" style="border-radius: 8px;"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">chip</div>
+                  <div class="ds-tile__value">8 px</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--outline" style="border-radius: 16px;"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">card</div>
+                  <div class="ds-tile__value">16 px</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--outline" style="border-radius: 20px;"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">feature</div>
+                  <div class="ds-tile__value">20 px</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--outline" style="border-radius: 24px;"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">modal</div>
+                  <div class="ds-tile__value">24 px</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--outline" style="border-radius: 9999px;"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">pill</div>
+                  <div class="ds-tile__value">9999 px</div>
+                </div>
+              </div>
+            </div>
+
+            <p class="plate__label" style="margin-top: 40px;">AppElevation &middot; shadow scale</p>
+            <div class="ds-tiles">
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--empty" style="border-radius: 16px;"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">none</div>
+                  <div class="ds-tile__value">no shadow</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--shadow" style="border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.04);"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">card</div>
+                  <div class="ds-tile__value">0 / 2 / 8 &middot; .04</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--shadow" style="border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.08);"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">raised</div>
+                  <div class="ds-tile__value">0 / 4 / 16 &middot; .08</div>
+                </div>
+              </div>
+              <div class="ds-tile">
+                <div class="ds-tile__shape ds-tile__shape--shadow" style="border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.12);"></div>
+                <div class="ds-tile__meta">
+                  <div class="ds-tile__name">modal</div>
+                  <div class="ds-tile__value">0 / 8 / 24 &middot; .12</div>
+                </div>
+              </div>
+            </div>
+
+            <p class="plate__label" style="margin-top: 40px;">AppLayout</p>
             <div class="spacing-scale">
               <div class="spacing-row">
                 <div class="spacing-row__name">gutter</div>
@@ -1312,12 +1628,12 @@
                 <div class="spacing-row__bar" style="width: 160px;"></div>
               </div>
             </div>
-            <p style="margin-top: 26px; font-size: .92rem; color: var(--ink-light); max-width: 42ch;">
-              <strong>gutter</strong> is the default horizontal screen padding
-              via <span class="mono">ScreenScaffold</span>.
-              <strong>maxContentWidth</strong> caps reading width on wide
-              viewports and is available but not yet enforced across all
-              screens.
+            <p style="margin-top: 22px; font-size: .86rem; color: var(--ink-light); max-width: 42ch;">
+              <span class="mono">AppElevation.card</span> matches the shadow
+              every card uses today, so migrating to it never changes a
+              pixel. <span class="mono">AppLayout.gutter</span> is the
+              default horizontal screen padding applied by
+              <span class="mono">ScreenScaffold</span>.
             </p>
           </div>
         </div>
@@ -1332,13 +1648,15 @@
         <p class="section__lede">
           The brand typeface is <strong>Outfit</strong>, wired through
           <span class="mono">AppTheme.theme.textTheme</span> via
-          <span class="mono">google_fonts</span>. The pairings below are
-          published as named styles in
-          <span class="mono">AppText</span>
+          <span class="mono">google_fonts</span>. Every pairing ships as a
+          named style in <span class="mono">AppText</span>
           (<span class="mono">lib/theme/app_text.dart</span>). Use
-          <span class="mono">AppText.sectionTitle</span>,
+          <span class="mono">AppText.title</span>,
           <span class="mono">AppText.body</span>, etc. instead of inlining
-          <span class="mono">GoogleFonts.outfit(...)</span>.
+          <span class="mono">GoogleFonts.outfit(...)</span>. Sub-project 1
+          consolidated the old <span class="mono">sectionTitle</span> /
+          <span class="mono">sheetTitle</span> split into a single canonical
+          heading at <strong>22 / 700</strong>.
         </p>
       </div>
       <div class="plate" data-animate>
@@ -1369,8 +1687,9 @@
           </div>
           <div class="type-row">
             <div class="type-row__meta">
-              <strong>Section title</strong>
+              <strong>Title &middot; canonical heading</strong>
               Outfit 700 · 22
+              <br>sections &amp; pages
             </div>
             <div class="type-row__sample" style="font-size: 22px; font-weight: 700;">My Journey</div>
           </div>
@@ -1378,6 +1697,7 @@
             <div class="type-row__meta">
               <strong>Sheet title</strong>
               Outfit 700 · 20
+              <br>deprecated until sub-project 2
             </div>
             <div class="type-row__sample" style="font-size: 20px; font-weight: 700;">Choose your game</div>
           </div>
@@ -1430,25 +1750,261 @@
         <h2 class="section__title">Iconography</h2>
         <p class="section__lede">
           A single library, <strong>Phosphor Icons</strong>, via
-          <span class="mono">phosphor_flutter</span>. Four weights available
-          (regular, bold, fill, duotone); we mix them by context.
+          <span class="mono">phosphor_flutter</span>. Four weights are available
+          (regular, bold, fill, duotone) and we pick the weight to match the
+          context. Every icon below is actually in use in the app today, grouped
+          by where it shows up.
         </p>
       </div>
       <div class="plate" data-animate>
-        <div class="icon-grid">
-          <div class="icon-tile"><i class="ph-bold ph-arrow-left"></i><div class="icon-tile__name">arrow-left</div></div>
-          <div class="icon-tile"><i class="ph-bold ph-x"></i><div class="icon-tile__name">x</div></div>
-          <div class="icon-tile"><i class="ph-fill ph-check-circle" style="color:var(--ew-primary)"></i><div class="icon-tile__name">check-circle</div></div>
-          <div class="icon-tile"><i class="ph ph-circle"></i><div class="icon-tile__name">circle</div></div>
-          <div class="icon-tile"><i class="ph ph-puzzle-piece" style="color:var(--ew-task-video)"></i><div class="icon-tile__name">puzzle-piece</div></div>
-          <div class="icon-tile"><i class="ph ph-text-aa" style="color:var(--ew-primary)"></i><div class="icon-tile__name">text-aa</div></div>
-          <div class="icon-tile"><i class="ph ph-cards" style="color:var(--ew-task-game)"></i><div class="icon-tile__name">cards</div></div>
-          <div class="icon-tile"><i class="ph ph-lightbulb" style="color:var(--ew-task-offers)"></i><div class="icon-tile__name">lightbulb</div></div>
-          <div class="icon-tile"><i class="ph-fill ph-flame" style="color:#FF6B35"></i><div class="icon-tile__name">flame</div></div>
-          <div class="icon-tile"><i class="ph-fill ph-star" style="color:var(--ew-accent)"></i><div class="icon-tile__name">star</div></div>
-          <div class="icon-tile"><i class="ph-duotone ph-play-circle" style="color:var(--ew-task-video)"></i><div class="icon-tile__name">play-circle</div></div>
-          <div class="icon-tile"><i class="ph-duotone ph-path" style="color:var(--ew-ink-tertiary)"></i><div class="icon-tile__name">path</div></div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Shell &amp; navigation</div>
+            <div class="icon-group__note">Bottom nav uses fill weight so the active tab reads as solid.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph-fill ph-house" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">house</div>
+              <div class="icon-tile__context">home_shell · home tab</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-fill ph-wallet" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">wallet</div>
+              <div class="icon-tile__context">home_shell · wallet tab</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-fill ph-user" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">user</div>
+              <div class="icon-tile__context">home_shell · profile tab</div>
+            </div>
+          </div>
         </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Controls &amp; chrome</div>
+            <div class="icon-group__note">Bold weight for pressable controls so hit targets feel crisp.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph-bold ph-arrow-left"></i>
+              <div class="icon-tile__name">arrow-left</div>
+              <div class="icon-tile__context">onboarding · back</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-bold ph-arrow-right"></i>
+              <div class="icon-tile__name">arrow-right</div>
+              <div class="icon-tile__context">wallet · forward action</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-bold ph-caret-right"></i>
+              <div class="icon-tile__name">caret-right</div>
+              <div class="icon-tile__context">ListRow · default chevron</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-bold ph-x"></i>
+              <div class="icon-tile__name">x</div>
+              <div class="icon-tile__context">game_detail, journey · close</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-bold ph-check"></i>
+              <div class="icon-tile__name">check</div>
+              <div class="icon-tile__context">wallet · confirm</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-pencil-simple-line"></i>
+              <div class="icon-tile__name">pencil-simple-line</div>
+              <div class="icon-tile__context">profile · edit</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-fill ph-gear" style="color:var(--ew-ink-secondary)"></i>
+              <div class="icon-tile__name">gear</div>
+              <div class="icon-tile__context">profile · settings</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Task categories</div>
+            <div class="icon-group__note">Duotone inside conversational task rows; tinted per category.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph-duotone ph-user-circle" style="color:var(--ew-task-survey)"></i>
+              <div class="icon-tile__name">user-circle</div>
+              <div class="icon-tile__context">home · profile task</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-clipboard-text" style="color:var(--ew-task-survey)"></i>
+              <div class="icon-tile__name">clipboard-text</div>
+              <div class="icon-tile__context">home · surveys</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-game-controller" style="color:var(--ew-task-game)"></i>
+              <div class="icon-tile__name">game-controller</div>
+              <div class="icon-tile__context">home · games</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-tag" style="color:var(--ew-task-offers)"></i>
+              <div class="icon-tile__name">tag</div>
+              <div class="icon-tile__context">home · offers</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-receipt" style="color:var(--ew-task-receipts)"></i>
+              <div class="icon-tile__name">receipt</div>
+              <div class="icon-tile__context">home · receipts</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-fill ph-play-circle" style="color:var(--ew-task-video)"></i>
+              <div class="icon-tile__name">play-circle</div>
+              <div class="icon-tile__context">home · continue playing</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Onboarding preferences</div>
+            <div class="icon-group__note">Regular weight inside the preference picker cards.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph ph-puzzle-piece" style="color:var(--ew-task-video)"></i>
+              <div class="icon-tile__name">puzzle-piece</div>
+              <div class="icon-tile__context">onboarding · games &amp; puzzles</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-text-aa" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">text-aa</div>
+              <div class="icon-tile__context">onboarding · surveys</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-cards" style="color:var(--ew-task-game)"></i>
+              <div class="icon-tile__name">cards</div>
+              <div class="icon-tile__context">onboarding · card games</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-lightbulb" style="color:var(--ew-task-offers)"></i>
+              <div class="icon-tile__name">lightbulb</div>
+              <div class="icon-tile__context">onboarding · trivia</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">State &amp; status</div>
+            <div class="icon-group__note">Fill for confirmed states, regular for empty states.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph-fill ph-check-circle" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">check-circle</div>
+              <div class="icon-tile__context">selected, completed</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-circle"></i>
+              <div class="icon-tile__name">circle</div>
+              <div class="icon-tile__context">unselected choice</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-lock-simple"></i>
+              <div class="icon-tile__name">lock-simple</div>
+              <div class="icon-tile__context">home · locked tier</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-lock-simple-open" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">lock-simple-open</div>
+              <div class="icon-tile__context">home · unlocked tier</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-lock"></i>
+              <div class="icon-tile__name">lock</div>
+              <div class="icon-tile__context">profile · private field</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-bold ph-clock"></i>
+              <div class="icon-tile__name">clock</div>
+              <div class="icon-tile__context">home · time remaining</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Celebration &amp; streaks</div>
+            <div class="icon-group__note">Fill weight so the streak counter carries real weight.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph-fill ph-flame" style="color:#FF6B35"></i>
+              <div class="icon-tile__name">flame</div>
+              <div class="icon-tile__context">home · streak counter</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Trust &amp; money</div>
+            <div class="icon-group__note">Fill weight so dollar signs and shields carry real weight.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph-fill ph-shield-check" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">shield-check</div>
+              <div class="icon-tile__context">home · trust carousel</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-fill ph-currency-dollar" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">currency-dollar</div>
+              <div class="icon-tile__context">home · trust carousel</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-fill ph-money" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">money</div>
+              <div class="icon-tile__context">home · balance glance</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-target" style="color:var(--ew-primary)"></i>
+              <div class="icon-tile__name">target</div>
+              <div class="icon-tile__context">home · daily goal</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph-duotone ph-lightning" style="color:var(--ew-accent)"></i>
+              <div class="icon-tile__name">lightning</div>
+              <div class="icon-tile__context">home · quick task</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="icon-group">
+          <div class="icon-group__header">
+            <div class="icon-group__label">Profile</div>
+            <div class="icon-group__note">Regular weight for quiet settings rows.</div>
+          </div>
+          <div class="icon-grid">
+            <div class="icon-tile">
+              <i class="ph ph-user"></i>
+              <div class="icon-tile__name">user</div>
+              <div class="icon-tile__context">profile · name row</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-calendar"></i>
+              <div class="icon-tile__name">calendar</div>
+              <div class="icon-tile__context">profile · joined date</div>
+            </div>
+            <div class="icon-tile">
+              <i class="ph ph-users-three"></i>
+              <div class="icon-tile__name">users-three</div>
+              <div class="icon-tile__context">profile · referrals</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1871,12 +2427,12 @@
           <div>
             <h3 style="font-family: var(--sans); font-size: 1.05rem; font-weight: 650; letter-spacing: 0; margin-bottom: 12px;">Recipe</h3>
             <ul class="mono" style="font-size: .78rem; line-height: 1.9; color: var(--ink-light); list-style: none; padding: 0;">
-              <li>background · <strong style="color:var(--ink)">white</strong></li>
-              <li>border · 1.5 creamDeep</li>
-              <li>radius · 18</li>
-              <li>shadow · 0 2 8 rgba(0,0,0,.04)</li>
-              <li>padding · lg</li>
-              <li>selected · bg primaryPale, border primary</li>
+              <li>background · <strong style="color:var(--ink)">surfaceRaised</strong></li>
+              <li>border · 1.5 surfaceSubtle</li>
+              <li>radius · <strong style="color:var(--ink)">AppRadius.card</strong> (16)</li>
+              <li>shadow · AppElevation.card</li>
+              <li>padding · 20 / 20 symmetric</li>
+              <li>selected · bg surfaceSelected, border brand</li>
             </ul>
             <p style="font-size: .88rem; color: var(--ink-light); margin-top: 18px; max-width: 40ch;">
               Used by the onboarding preference picker
@@ -1884,6 +2440,79 @@
               and the home game-picker sheet. Feature cards (task tiles, conv
               card, streak cards) intentionally stay inline. Their decoration
               varies too much to fit one widget.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- New in sub-project 1 -->
+      <div class="plate" data-animate>
+        <p class="plate__label">New in sub-project 1 &middot; six shared widgets</p>
+        <p style="font-size: .92rem; color: var(--ink-light); max-width: 64ch; margin: 0 0 28px;">
+          Sub-project 1 lifted the patterns every screen repeats into six
+          reusable widgets. Each one picks its radius, padding, and
+          elevation from the semantic tokens above, so adopting them across
+          sub-projects 2 through 6 never changes a pixel.
+        </p>
+        <div class="ds-newgrid">
+          <div class="ds-newgrid__item">
+            <div class="ds-newgrid__name">Surface</div>
+            <div class="ds-newgrid__path">lib/widgets/surface.dart</div>
+            <p class="ds-newgrid__desc">
+              The raised-card primitive every feature card is built on.
+              White background, <span class="mono">AppRadius.card</span>,
+              <span class="mono">AppElevation.card</span>, optional
+              <span class="mono">onTap</span> wires up
+              <span class="mono">PressScale</span> for free.
+            </p>
+          </div>
+          <div class="ds-newgrid__item">
+            <div class="ds-newgrid__name">CategoryIconSquare</div>
+            <div class="ds-newgrid__path">lib/widgets/category_icon_square.dart</div>
+            <p class="ds-newgrid__desc">
+              The colored rounded square that leads every category row.
+              Defaults to 48 / 24, radius <span class="mono">chip</span> (8).
+              Override <span class="mono">size: 44, iconSize: 22</span> for
+              <span class="mono">VerticalTile</span>.
+            </p>
+          </div>
+          <div class="ds-newgrid__item">
+            <div class="ds-newgrid__name">ListRow</div>
+            <div class="ds-newgrid__path">lib/widgets/list_row.dart</div>
+            <p class="ds-newgrid__desc">
+              Horizontal list item: leading icon, title, optional subtitle,
+              trailing (default caret-right chevron). Wraps a
+              <span class="mono">Surface</span>, so don't nest one inside
+              another. Supports <span class="mono">disabled</span>.
+            </p>
+          </div>
+          <div class="ds-newgrid__item">
+            <div class="ds-newgrid__name">VerticalTile</div>
+            <div class="ds-newgrid__path">lib/widgets/vertical_tile.dart</div>
+            <p class="ds-newgrid__desc">
+              Icon-on-top tile used as the unit of the tile-trio pattern
+              (three tiles in a row, <span class="mono">Expanded</span>
+              at every call site). Radius
+              <span class="mono">feature</span> (20).
+            </p>
+          </div>
+          <div class="ds-newgrid__item">
+            <div class="ds-newgrid__name">SectionHeader</div>
+            <div class="ds-newgrid__path">lib/widgets/section_header.dart</div>
+            <p class="ds-newgrid__desc">
+              Title row at the top of a section, optional subtitle, optional
+              trailing action (e.g., <em>See all</em>). Owns nothing below
+              itself, the caller decides the gap. One action per header.
+            </p>
+          </div>
+          <div class="ds-newgrid__item">
+            <div class="ds-newgrid__name">StatBubble</div>
+            <div class="ds-newgrid__path">lib/widgets/stat_bubble.dart</div>
+            <p class="ds-newgrid__desc">
+              Chrome-less stat indicator: accent icon, pre-formatted value,
+              one-word caption. Used for Balance and Today bubbles flanking
+              the ring on home. Override <span class="mono">accentColor</span>
+              for non-earnings stats.
             </p>
           </div>
         </div>
@@ -1999,17 +2628,118 @@
         <div class="widget-list">
           <div class="widget-row">
             <div>
+              <div class="widget-row__name">AppColors / AppSpacing / AppRadius / AppElevation</div>
+              <div class="widget-row__path">lib/theme/app_theme.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              The token layer. <span class="mono">AppColors</span> groups
+              by role (surface, ink, brand, category, feedback).
+              <span class="mono">AppSpacing</span> is the 12-rung semantic
+              scale. <span class="mono">AppRadius</span> carries
+              <span class="mono">chip</span> (8), <span class="mono">card</span>
+              (16), <span class="mono">feature</span> (20),
+              <span class="mono">modal</span> (24), <span class="mono">pill</span>.
+              <span class="mono">AppElevation</span> ships
+              <span class="mono">none</span> / <span class="mono">card</span>
+              / <span class="mono">raised</span> / <span class="mono">modal</span>
+              as ready-to-use <span class="mono">List&lt;BoxShadow&gt;</span>.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
               <div class="widget-row__name">AppText</div>
               <div class="widget-row__path">lib/theme/app_text.dart</div>
             </div>
             <div class="widget-row__desc">
-              10 named text styles:
-              <span class="mono">display</span>, <span class="mono">brandMark</span>,
-              <span class="mono">prompt</span>, <span class="mono">sectionTitle</span>,
-              <span class="mono">sheetTitle</span>, <span class="mono">ctaLabel</span>,
+              14 named text styles:
+              <span class="mono">heroAmount</span>, <span class="mono">display</span>,
+              <span class="mono">brandMark</span>, <span class="mono">ringGoal</span>,
+              <span class="mono">gameTitle</span>, <span class="mono">slideTitle</span>,
+              <span class="mono">prompt</span>,
+              <strong><span class="mono">title</span></strong> (canonical 22/700 heading),
+              <span class="mono">statNumber</span>, <span class="mono">ctaLabel</span>,
               <span class="mono">listItem</span>, <span class="mono">bodyStrong</span>,
               <span class="mono">body</span>, <span class="mono">caption</span>.
-              Use <span class="mono">.copyWith()</span> for color or weight tweaks.
+              <span class="mono">sectionTitle</span> forwards to
+              <span class="mono">title</span>;
+              <span class="mono">sheetTitle</span> stays a real 20/700 style
+              until sub-project 2 migrates the bottom-sheet header.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">Surface</div>
+              <div class="widget-row__path">lib/widgets/surface.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Raised-card primitive: surfaceRaised bg,
+              <span class="mono">AppRadius.card</span> (16),
+              <span class="mono">AppElevation.card</span>, default padding
+              <span class="mono">cardPad</span>. Every new feature card
+              should compose from this. Wire <span class="mono">onTap</span>
+              to get <span class="mono">PressScale</span> feedback for free.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">CategoryIconSquare</div>
+              <div class="widget-row__path">lib/widgets/category_icon_square.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Colored rounded square that leads every category row. Pair
+              <span class="mono">foreground</span> + <span class="mono">background</span>
+              from the same <span class="mono">category*</span> family. 48x48
+              by default, 44x44 for <span class="mono">VerticalTile</span>.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">ListRow</div>
+              <div class="widget-row__path">lib/widgets/list_row.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Horizontal list item: leading icon, title, optional subtitle,
+              trailing (default caret-right chevron). Already a
+              <span class="mono">Surface</span> under the hood, so don't
+              wrap it in another one. Supports
+              <span class="mono">disabled: true</span>.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">VerticalTile</div>
+              <div class="widget-row__path">lib/widgets/vertical_tile.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Icon-on-top tile used in the tile-trio pattern. Wrap each in
+              <span class="mono">Expanded</span>, separate with
+              <span class="mono">SizedBox(width: rowGap)</span>. Radius
+              <span class="mono">AppRadius.feature</span> (20). Three per
+              row, never four.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">SectionHeader</div>
+              <div class="widget-row__path">lib/widgets/section_header.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Title row at the top of a section, optional subtitle, optional
+              trailing action. Owns no bottom margin, the caller picks the
+              gap. Titles 1-3 words, one action per header.
+            </div>
+          </div>
+          <div class="widget-row">
+            <div>
+              <div class="widget-row__name">StatBubble</div>
+              <div class="widget-row__path">lib/widgets/stat_bubble.dart</div>
+            </div>
+            <div class="widget-row__desc">
+              Chrome-less stat indicator: accent icon, pre-formatted value,
+              one-word caption. The widget is currency-agnostic: format the
+              value at the call site. Override <span class="mono">accentColor</span>
+              for non-earnings stats (e.g., <span class="mono">flame</span>
+              for streak).
             </div>
           </div>
           <div class="widget-row">
@@ -2034,13 +2764,19 @@
               <div class="widget-row__path">lib/widgets/app_card.dart</div>
             </div>
             <div class="widget-row__desc">
-              The repeating choice-card surface (white, 18r, creamDeep border,
-              soft shadow). Supports <span class="mono">selected</span> state
-              (primary fill + border) and optional <span class="mono">onTap</span>,
-              <span class="mono">padding</span>, <span class="mono">constraints</span>.
-              When <span class="mono">onTap</span> is non-null the card
-              automatically wraps in <span class="mono">PressScale</span>;
+              The selectable choice-card surface: <span class="mono">surfaceRaised</span>
+              background, <span class="mono">AppRadius.card</span> (16),
+              <span class="mono">surfaceSubtle</span> 1.5 border, soft shadow.
+              Supports <span class="mono">selected</span> state
+              (<span class="mono">surfaceSelected</span> fill,
+              <span class="mono">brand</span> border) and optional
+              <span class="mono">onTap</span>, <span class="mono">padding</span>,
+              <span class="mono">constraints</span>. When
+              <span class="mono">onTap</span> is non-null the card wraps in
+              <span class="mono">PressScale</span>;
               <span class="mono">haptic</span> defaults to none (chrome rule).
+              For non-selectable cards, reach for <span class="mono">Surface</span>
+              instead.
             </div>
           </div>
           <div class="widget-row">
@@ -2273,7 +3009,7 @@
         <p class="section__eyebrow">Known drift</p>
         <h2 class="section__title">Drift register</h2>
         <p class="section__lede">
-          Originally four items. Three are now closed; one remains deferred
+          Six items tracked. Five are now closed; one remains deferred
           until there's a real use case.
         </p>
       </div>
@@ -2302,9 +3038,12 @@
               <span class="gap-card__pill">Closed</span>
             </div>
             <div class="gap-card__body">
-              Resolved by <span class="mono">AppCard</span> for the choice-card
-              pattern. Feature cards (task tiles, conv card, streak)
-              intentionally remain inline. They vary too much.
+              Resolved in two passes. <span class="mono">AppCard</span>
+              covers the selectable choice-card pattern; sub-project 1
+              added <span class="mono">Surface</span> as the raised-card
+              primitive every new feature card composes from. Inline
+              <span class="mono">Container(decoration: ...)</span> in
+              screens is now drift, migrated in sub-projects 2 through 6.
             </div>
           </div>
           <div class="gap-card gap-card--resolved">
@@ -2314,15 +3053,52 @@
               <span class="gap-card__pill">Closed</span>
             </div>
             <div class="gap-card__body">
-              Resolved by <span class="mono">AppText</span> (10 named getters).
-              ~40 inline <span class="mono">GoogleFonts.outfit()</span> calls
-              migrated. The 6 remaining outliers in
-              <span class="mono">home_screen.dart</span> are display-scale
-              one-offs (28 / 56 / 64) intentionally left inline.
+              Resolved by <span class="mono">AppText</span> (14 named
+              getters after sub-project 1). Sub-project 1 added
+              <span class="mono">title</span> (22/700) as the canonical
+              heading and deprecated <span class="mono">sectionTitle</span>
+              as a forwarder. <span class="mono">sheetTitle</span> is
+              scheduled for migration in sub-project 2.
+            </div>
+          </div>
+          <div class="gap-card gap-card--resolved">
+            <div class="gap-card__num">04</div>
+            <div class="gap-card__title">
+              Raw pixel values in screens
+              <span class="gap-card__pill">Closed</span>
+            </div>
+            <div class="gap-card__body">
+              Sub-project 1 shipped the two-tier token layer:
+              <span class="mono">AppSpacing</span>,
+              <span class="mono">AppRadius</span>, and
+              <span class="mono">AppElevation</span> all expose semantic
+              names backed by private primitives. Raw
+              <span class="mono">SizedBox(height: N)</span> and
+              <span class="mono">EdgeInsets.all(N)</span> in screens is now
+              drift, migrated in sub-projects 2 through 6.
+            </div>
+          </div>
+          <div class="gap-card gap-card--resolved">
+            <div class="gap-card__num">05</div>
+            <div class="gap-card__title">
+              No shared composition widgets
+              <span class="gap-card__pill">Closed</span>
+            </div>
+            <div class="gap-card__body">
+              Sub-project 1 added six reusable widgets for patterns every
+              screen repeats: <span class="mono">Surface</span>,
+              <span class="mono">CategoryIconSquare</span>,
+              <span class="mono">ListRow</span>,
+              <span class="mono">VerticalTile</span>,
+              <span class="mono">SectionHeader</span>, and
+              <span class="mono">StatBubble</span>. Sub-projects 2 through
+              6 replace per-screen helpers (<span class="mono">_taskCard</span>,
+              <span class="mono">_earnTile</span>, <span class="mono">_buildContinueCard</span>)
+              with these primitives.
             </div>
           </div>
           <div class="gap-card">
-            <div class="gap-card__num">04</div>
+            <div class="gap-card__num">06</div>
             <div class="gap-card__title">
               No adaptive dialog
               <span class="gap-card__pill" style="background: var(--ink-faint);">Deferred</span>
