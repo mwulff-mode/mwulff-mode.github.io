@@ -157,13 +157,15 @@ Colors move from raw names to semantic roles. The existing raw names stay as `@d
 | `AppColors.inkTertiary` | (#8A7D76) |
 | `AppColors.inkInverse` | `cream` (reserved for future dark surfaces) |
 
-**Accent / Brand:**
+**Brand:**
 
 | Semantic | Today's primitive |
 |----------|-------------------|
-| `AppColors.accent` | `primary` / teal (#0D9488) |
-| `AppColors.accentSubtle` | `primaryPale` (#F0FDFA) |
-| `AppColors.accentStrong` | `primaryDark` (#0F766E) |
+| `AppColors.brand` | `primary` / teal (#0D9488) |
+| `AppColors.brandSubtle` | `primaryPale` (#F0FDFA) |
+| `AppColors.brandStrong` | `primaryDark` (#0F766E) |
+
+(The new semantic is named `brand`, not `accent`. The existing `AppColors.accent` is the warm gold `#F59E0B` used in nine places across five files, ``reward_glow.dart``, `games.dart`, `app_state.dart`, `home_screen.dart`, `conv_card_content.dart`. Re-using the name `accent` would have silently repainted those call sites teal. `AppColors.accent` stays as-is, pointing to warm gold, and is not deprecated.)
 
 **Category tints (task categories):**
 
@@ -381,7 +383,7 @@ class StatBubble extends StatelessWidget {
     required this.icon,
     required this.value,
     required this.label,
-    this.accentColor = AppColors.accent,
+    this.accentColor = AppColors.brand,
   });
 }
 ```
