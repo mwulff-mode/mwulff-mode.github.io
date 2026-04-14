@@ -55,7 +55,9 @@ void main() {
           disabled: true,
         ),
       ));
-      await tester.tap(find.text('Disabled row'));
+      // warnIfMissed: false because the IgnorePointer inside the disabled
+      // row is exactly what we are asserting. The tap is expected to miss.
+      await tester.tap(find.text('Disabled row'), warnIfMissed: false);
       await tester.pumpAndSettle();
       expect(tapped, isFalse);
     });
