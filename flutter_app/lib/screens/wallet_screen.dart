@@ -281,6 +281,8 @@ class _WalletScreenState extends State<WalletScreen> {
         PrimaryButton(
           label: 'Finish onboarding tasks',
           onTap: widget.onNavigateHome,
+          outlined: true,
+          trailingIcon: PhosphorIcons.arrowRight(PhosphorIconsStyle.bold),
         ),
       ],
     );
