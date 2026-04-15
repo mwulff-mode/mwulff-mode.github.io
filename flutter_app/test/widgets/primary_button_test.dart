@@ -100,4 +100,44 @@ void main() {
     await tester.pumpAndSettle();
     // No exception thrown. Animation completes cleanly.
   });
+
+  testWidgets(
+      'outlined variant renders transparent fill + accent border', (tester) async {
+    await tester.pumpWidget(
+      wrapWithTheme(
+        kCreamTheme,
+        PrimaryButton(
+          label: 'Finish onboarding tasks',
+          onTap: () {},
+          outlined: true,
+        ),
+      ),
+    );
+    final d = _decorationOf(tester);
+    expect(d.color, Colors.transparent);
+    // Border is painted in the base cta.background color (the accent),
+    // so the outlined pill inherits the same hue that a filled one would.
+    final border = d.border as Border;
+    expect(border.top.color, kCreamTheme.cta.background);
+    expect(border.top.width, 1.5);
+  });
+
+  testWidgets('trailingIcon renders after the label with the accent color',
+      (tester) async {
+    const trailing = Icons.arrow_forward;
+    await tester.pumpWidget(
+      wrapWithTheme(
+        kCreamTheme,
+        PrimaryButton(
+          label: 'Finish onboarding tasks',
+          onTap: () {},
+          outlined: true,
+          trailingIcon: trailing,
+        ),
+      ),
+    );
+    // Icon is painted in the accent color (cta.background for outlined).
+    final iconWidget = tester.widget<Icon>(find.byIcon(trailing));
+    expect(iconWidget.color, kCreamTheme.cta.background);
+  });
 }
