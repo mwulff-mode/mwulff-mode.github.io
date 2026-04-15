@@ -30,6 +30,7 @@ void main() {
     expect(d.color, kPlumTheme.palette.surfaceRaised);
     final border = d.border as Border;
     expect(border.top.color, kPlumTheme.palette.hairline);
+    expect(border.top.width, 1.5);
   });
 
   testWidgets('Plum AppCard selected uses surfaceSelected + brand border',

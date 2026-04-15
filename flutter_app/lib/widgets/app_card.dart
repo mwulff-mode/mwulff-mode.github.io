@@ -4,7 +4,9 @@ import '../theme/motion.dart';
 import 'press_scale.dart';
 
 /// The repeating "choice card" surface used for list items and selectable
-/// rows: white background, AppRadius.card (16) radius, cream-deep 1.5 border, subtle shadow.
+/// rows: `palette.surfaceRaised` background, `radii.card` radius,
+/// `palette.hairline` 1.5-pt border, and `elevation.card` shadow. Every slot
+/// is resolved from the active `EarnWiseTheme` at build time.
 ///
 /// Supports a `selected` state (primary-pale fill, primary border) for use
 /// in multi-select lists like the onboarding preference picker.
