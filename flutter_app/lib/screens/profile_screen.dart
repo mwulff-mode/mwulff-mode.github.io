@@ -231,10 +231,10 @@ class _SectionHeading extends StatelessWidget {
 }
 
 /// Outer card wrapping three _InfoRow children with thin dividers.
-/// Replicates the AppCard visual recipe inline (white, 18 radius,
-/// cream-deep border, soft shadow) because the profile info card is
-/// a fixed three-row layout that does not need the AppCard widget's
-/// tap-target behavior.
+/// Replicates the AppCard visual recipe inline (surfaceRaised,
+/// radii.card, hairline border, elevation.card) because the profile
+/// info card is a fixed three-row layout that does not need the
+/// AppCard widget's tap-target behavior.
 class _InfoCard extends StatelessWidget {
   final AppState state;
 
@@ -257,13 +257,13 @@ class _InfoCard extends StatelessWidget {
             label: 'Full Name',
             value: state.displayName,
           ),
-          _RowDivider(),
+          const _RowDivider(),
           _InfoRow(
             icon: PhosphorIcons.calendar(PhosphorIconsStyle.regular),
             label: 'Age Range',
             value: state.ageRange,
           ),
-          _RowDivider(),
+          const _RowDivider(),
           _InfoRow(
             icon: PhosphorIcons.usersThree(PhosphorIconsStyle.regular),
             label: 'Gender',
@@ -354,9 +354,9 @@ class _RowDivider extends StatelessWidget {
 }
 
 /// Outer card for the connected account row. Same AppCard visual
-/// recipe as _InfoCard (white, 18 radius, cream-deep border, soft
-/// shadow) but holds only one row because there is only one connected
-/// account in v1.
+/// recipe as _InfoCard (surfaceRaised, radii.card, hairline border,
+/// elevation.card) but holds only one row because there is only one
+/// connected account in v1.
 class _AccountCard extends StatelessWidget {
   final AppState state;
 
