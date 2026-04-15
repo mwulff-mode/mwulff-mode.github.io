@@ -16,19 +16,15 @@ import '../widgets/screen_scaffold.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  static const _rowSubtitles = {
-    'Cream': 'Warm and soft. The original.',
-    'Plum': 'Bold violet, white surface.',
-    'Bumble': 'Honey yellow with black accents.',
-    'Clue': 'Calm gray with deep teal.',
-  };
-
-  static const _rowNames = {
-    0: 'Cream',
-    1: 'Plum',
-    2: 'Bumble',
-    3: 'Clue',
-  };
+  /// Row labels in the same order as `kEarnWiseThemes`. A parallel list
+  /// of named records keeps the name + subtitle together without needing
+  /// a `name` field on `EarnWiseTheme` itself.
+  static const List<({String name, String subtitle})> _rowLabels = [
+    (name: 'Cream', subtitle: 'Warm and soft. The original.'),
+    (name: 'Plum', subtitle: 'Bold violet, white surface.'),
+    (name: 'Bumble', subtitle: 'Honey yellow with black accents.'),
+    (name: 'Clue', subtitle: 'Calm gray with deep teal.'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +51,8 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sectionGap),
                 for (var i = 0; i < kEarnWiseThemes.length; i++) ...[
                   _ThemeRow(
-                    name: _rowNames[i]!,
-                    subtitle: _rowSubtitles[_rowNames[i]!]!,
+                    name: _rowLabels[i].name,
+                    subtitle: _rowLabels[i].subtitle,
                     theme: kEarnWiseThemes[i],
                     selected: state.currentTheme == kEarnWiseThemes[i],
                   ),
@@ -119,26 +115,22 @@ class _ThemeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active = context.theme;
-    final radius = active.radii.card;
+    final t = context.theme;
     final fill =
-        selected ? active.palette.surfaceSelected : active.palette.surfaceRaised;
+        selected ? t.palette.surfaceSelected : t.palette.surfaceRaised;
     final borderColor =
-        selected ? active.palette.brand : active.palette.hairline;
+        selected ? t.palette.brand : t.palette.hairline;
 
     return PressScale(
       haptic: HapticIntensity.confirm,
       onTap: () => context.read<AppState>().setTheme(theme),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.cardPad,
-          vertical: AppSpacing.cardPad,
-        ),
+        padding: const EdgeInsets.all(AppSpacing.cardPad),
         decoration: BoxDecoration(
           color: fill,
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(t.radii.card),
           border: Border.all(color: borderColor, width: 1.5),
-          boxShadow: active.elevation.card,
+          boxShadow: t.elevation.card,
         ),
         child: Row(
           children: [
@@ -154,13 +146,13 @@ class _ThemeRow extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: AppText.listItem.copyWith(color: active.palette.ink),
+                    style: AppText.listItem.copyWith(color: t.palette.ink),
                   ),
                   const SizedBox(height: AppSpacing.tight),
                   Text(
                     subtitle,
                     style: AppText.body
-                        .copyWith(color: active.palette.inkSecondary),
+                        .copyWith(color: t.palette.inkSecondary),
                   ),
                 ],
               ),
