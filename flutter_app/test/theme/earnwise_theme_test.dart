@@ -4,7 +4,9 @@ import 'package:earnwise_mvp/theme/app_color_palette.dart';
 import 'package:earnwise_mvp/theme/app_radius_scale.dart';
 import 'package:earnwise_mvp/theme/app_elevation_profile.dart';
 import 'package:earnwise_mvp/theme/app_cta_tokens.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
 import 'package:earnwise_mvp/theme/earnwise_theme.dart';
+import 'package:earnwise_mvp/theme/theme_catalog.dart';
 
 void main() {
   group('AppColorPalette', () {
@@ -149,6 +151,47 @@ void main() {
       );
       // Instant swap is deliberate; animated lerp is deferred.
       expect(identical(base.lerp(other, 0.5), base), isTrue);
+    });
+  });
+
+  group('kCreamTheme compatibility with static AppColors/AppRadius/AppElevation',
+      () {
+    test('palette equals the static AppColors semantic fields', () {
+      final p = kCreamTheme.palette;
+      expect(p.surface, AppColors.surface);
+      expect(p.surfaceRaised, AppColors.surfaceRaised);
+      expect(p.surfaceSubtle, AppColors.surfaceSubtle);
+      expect(p.surfaceSelected, AppColors.surfaceSelected);
+      expect(p.ink, AppColors.ink);
+      expect(p.inkSecondary, AppColors.inkSecondary);
+      expect(p.inkTertiary, AppColors.inkTertiary);
+      expect(p.brand, AppColors.brand);
+      expect(p.brandStrong, AppColors.brandStrong);
+      expect(p.brandSubtle, AppColors.brandSubtle);
+    });
+
+    test('radii equal the static AppRadius fields (excluding new `button`)',
+        () {
+      final r = kCreamTheme.radii;
+      expect(r.chip, AppRadius.chip);
+      expect(r.card, AppRadius.card);
+      expect(r.feature, AppRadius.feature);
+      expect(r.modal, AppRadius.modal);
+      // `button` is new; it matches the existing card radius for Cream.
+      expect(r.button, AppRadius.card);
+    });
+
+    test('elevation equals the static AppElevation lists', () {
+      final e = kCreamTheme.elevation;
+      expect(e.none, AppElevation.none);
+      expect(e.card, AppElevation.card);
+      expect(e.raised, AppElevation.raised);
+      expect(e.modal, AppElevation.modal);
+    });
+
+    test('cta uses brand background and white foreground', () {
+      expect(kCreamTheme.cta.background, AppColors.brand);
+      expect(kCreamTheme.cta.foreground, Colors.white);
     });
   });
 }
