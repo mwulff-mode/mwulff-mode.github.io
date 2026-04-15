@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/screens/profile_screen.dart';
+import 'package:earnwise_mvp/screens/settings_screen.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
 import 'package:earnwise_mvp/theme/theme_catalog.dart';
@@ -146,6 +147,17 @@ void main() {
       // The Sign Out button is no longer in the tree because the profile
       // screen was popped (and the WelcomeScreen is now on top).
       expect(find.text('Sign Out'), findsNothing);
+    });
+
+    testWidgets('tapping the gear icon pushes SettingsScreen',
+        (tester) async {
+      await pumpProfile(tester);
+      expect(find.byType(SettingsScreen), findsNothing);
+
+      await tester.tap(find.byKey(const Key('profile_gear')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SettingsScreen), findsOneWidget);
     });
   });
 }

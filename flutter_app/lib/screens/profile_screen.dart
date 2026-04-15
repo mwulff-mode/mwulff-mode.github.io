@@ -9,6 +9,7 @@ import '../theme/earnwise_theme.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/press_scale.dart';
 import '../widgets/primary_button.dart';
+import 'settings_screen.dart';
 import 'welcome_screen.dart';
 
 /// Bottom padding reserved inside the scroll view so the last element
@@ -53,7 +54,10 @@ class ProfileScreen extends StatelessWidget {
                         child: Text('Profile', style: AppText.sectionTitle),
                       ),
                       PressScale(
-                        onTap: () {},
+                        key: const Key('profile_gear'),
+                        onTap: () => Navigator.of(context).push(
+                          fadeRoute(const SettingsScreen()),
+                        ),
                         child: Container(
                           width: 40,
                           height: 40,
