@@ -153,13 +153,20 @@ class AppState extends ChangeNotifier {
   Color get ringColor => isLegend ? legendColor : currentGoal.ringColor;
   Color get trackColor => isLegend ? legendTrackColor : currentGoal.trackColor;
 
-  /// Ring color used by the post-onboarding Home ring. Flips to a warm
-  /// amber once today's goal has auto-extended past $2, so the "level up"
-  /// moment is visually distinct from the starting tier.
+  /// Ring color used by the post-onboarding Home ring. Flips to a cool
+  /// violet once today's goal has auto-extended past $2, so the "level up"
+  /// moment is visually distinct from the starting teal tier.
   Color get dailyRingColor =>
-      dailyGoalExtended ? AppColors.accent : ringColor;
+      dailyGoalExtended ? AppColors.categoryCheckin : ringColor;
   Color get dailyTrackColor =>
-      dailyGoalExtended ? AppColors.accentLight : trackColor;
+      dailyGoalExtended ? AppColors.categoryCheckinBg : trackColor;
+
+  /// Progress-arc color overlaid on the daily ring disc. Matches the
+  /// lighter-variant treatment of the starter teal tier: brand teal disc
+  /// plus brighter [AppColors.tealRing] arc, so after the level-up flip
+  /// the violet disc gets its own brighter [AppColors.violetRing] arc.
+  Color get dailyArcColor =>
+      dailyGoalExtended ? AppColors.violetRing : AppColors.tealRing;
 
   String get currentTimeFormatted {
     final now = TimeOfDay.now();
@@ -280,6 +287,14 @@ class AppState extends ChangeNotifier {
     earnedToday += earned;
     tasksCompleted++;
 
+    // Onboarding "Reach first milestone" task → mark the just-installed
+    // game's first post-install milestone (index 1) as completed, so the
+    // Game Detail screen's earnings summary and Reward Steps strip match
+    // what the user was just credited for in starter tasks.
+    if (task == 'game_milestone') {
+      _advanceInstalledGameToFirstMilestone();
+    }
+
     // Rising-edge celebration: fires once the first time the user crosses
     // the active daily goal tier. When crossing the $2 starter tier, the
     // goal auto-extends to $5 right after the haptic so the ring levels up
@@ -327,6 +342,32 @@ class AppState extends ChangeNotifier {
     final game = InstalledGame.fromCatalog(catalog);
     installedGames = [game];
     notifyListeners();
+  }
+
+  /// Adds milestone index 1 (the first real milestone after install) to
+  /// the onboarding-installed game's completed set. No-op when no game is
+  /// installed yet or when the catalog lookup fails. Called from
+  /// [completeTask] when the onboarding "Reach first milestone" task
+  /// fires, so the Game Detail earnings summary, the Reward Steps strip,
+  /// and the Continue earning card all advance past Level 15 (or the
+  /// equivalent first real milestone on the picked game) in lockstep.
+  void _advanceInstalledGameToFirstMilestone() {
+    if (installedGames.isEmpty) return;
+    final current = installedGames.first;
+    final catalog = gamesByName[current.name];
+    if (catalog == null) return;
+    if (catalog.regularSteps.length < 2) return;
+    if (current.completedMilestoneIndices.contains(1)) return;
+    final nextCompleted =
+        Set<int>.from(current.completedMilestoneIndices)..add(1);
+    installedGames = [
+      InstalledGame.fromCatalog(
+        catalog,
+        completed: nextCompleted,
+        lastPlayedAt: current.lastPlayedAt,
+      ),
+      ...installedGames.skip(1),
+    ];
   }
 
   /// Call once on Home mount and again when the app resumes. Resets the

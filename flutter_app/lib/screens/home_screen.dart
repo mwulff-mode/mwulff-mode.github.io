@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               showAppToast(
                 context,
                 title: 'Earn More is unlocked!',
-                subtitle: 'Offers, Receipts and Games are now available',
+                subtitle: 'Offers, Surveys and Games are now available',
                 icon: PhosphorIcons.lockSimpleOpen(PhosphorIconsStyle.duotone),
                 iconColor: AppColors.primary,
                 iconBackground: AppColors.primaryPale,
@@ -260,26 +260,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               textAlign: TextAlign.center,
               style: AppText.body
                   .copyWith(fontWeight: FontWeight.w400, height: 1.5),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.taskGameBg,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(PhosphorIcons.clock(PhosphorIconsStyle.bold),
-                      size: 16, color: AppColors.taskGame),
-                  const SizedBox(width: 6),
-                  Text(
-                    'About 1 hour total · play at your own pace',
-                    style: AppText.caption.copyWith(color: AppColors.taskGame),
-                  ),
-                ],
-              ),
             ),
             const SizedBox(height: 20),
             _gameOption(
@@ -604,6 +584,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final centerLabel = daily ? state.formatDailyGoal() : state.formatGoal();
     final ringColor = daily ? state.dailyRingColor : state.ringColor;
     final ringTrackColor = daily ? state.dailyTrackColor : state.trackColor;
+    final ringArcColor = daily ? state.dailyArcColor : AppColors.tealRing;
     final isSolidFill = ringProgress >= 100 || state.isLegend;
 
     // Rising-edge detector: trigger ring glow when progress crosses 100.
@@ -655,6 +636,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     percentage: value,
                     fillColor: ringColor,
                     trackColor: ringTrackColor,
+                    arcColor: ringArcColor,
                   ),
                 );
               },
@@ -770,14 +752,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           const SizedBox(width: 12),
           _earnTile(
-            'Receipts',
-            'Cashback',
-            PhosphorIcons.receipt(PhosphorIconsStyle.duotone),
-            AppColors.taskReceipts,
-            AppColors.taskReceiptsBg,
+            'Surveys',
+            'Share & earn',
+            PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
+            AppColors.taskSurvey,
+            AppColors.taskSurveyBg,
             onTap: () => _openPlaceholderList(
-              'Receipts',
-              'Receipt cashback coming soon.\nBuilt in sub-project 3.',
+              'Surveys',
+              'Survey catalog coming soon.\nBuilt in sub-project 3.',
             ),
           ),
           const SizedBox(width: 12),
@@ -1124,11 +1106,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   AppColors.taskOffersBg),
               const SizedBox(width: 12),
               _earnTile(
-                  'Receipts',
-                  'Cashback',
-                  PhosphorIcons.receipt(PhosphorIconsStyle.duotone),
-                  AppColors.taskReceipts,
-                  AppColors.taskReceiptsBg),
+                  'Surveys',
+                  'Share & earn',
+                  PhosphorIcons.clipboardText(PhosphorIconsStyle.duotone),
+                  AppColors.taskSurvey,
+                  AppColors.taskSurveyBg),
               const SizedBox(width: 12),
               _earnTile(
                   'Games',
@@ -1662,11 +1644,13 @@ class _GoalRingPainter extends CustomPainter {
   final double percentage;
   final Color fillColor;
   final Color trackColor;
+  final Color arcColor;
 
   _GoalRingPainter({
     required this.percentage,
     required this.fillColor,
     required this.trackColor,
+    required this.arcColor,
   });
 
   @override
@@ -1684,7 +1668,7 @@ class _GoalRingPainter extends CustomPainter {
 
     // Progress arc - thick, on top of everything
     final arcPaint = Paint()
-      ..color = AppColors.tealRing
+      ..color = arcColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke
       ..strokeCap = StrokeCap.round;
@@ -1705,6 +1689,7 @@ class _GoalRingPainter extends CustomPainter {
   bool shouldRepaint(_GoalRingPainter old) =>
       old.percentage != percentage ||
       old.fillColor != fillColor ||
-      old.trackColor != trackColor;
+      old.trackColor != trackColor ||
+      old.arcColor != arcColor;
 }
 

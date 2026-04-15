@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
@@ -78,6 +79,8 @@ class GameDetailScreen extends StatelessWidget {
                 children: [
                   _TitleRow(game: game),
                   const SizedBox(height: AppSpacing.lg),
+                  _EarningsSummary(game: game),
+                  const SizedBox(height: AppSpacing.xl),
                   _HowItWorksSection(game: game),
                   const SizedBox(height: AppSpacing.xl),
                   _RegularStepsSection(game: game),
@@ -144,9 +147,10 @@ class GameDetailScreen extends StatelessWidget {
   }
 }
 
-/// Game name on the left, max-earning badge on the right. A second line
-/// shows the rating (Phosphor star plus number) and the category, separated
-/// by a centered dot.
+/// Game name on top, followed by a second line that shows the rating
+/// (Phosphor star plus number) and the category, separated by a centered
+/// dot. The earnings summary lives in its own card below, so the title row
+/// is intentionally quiet.
 class _TitleRow extends StatelessWidget {
   final Game game;
 
@@ -157,18 +161,9 @@ class _TitleRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                game.name,
-                style: AppText.gameTitle,
-              ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            _EarningBadge(amount: game.maxEarning),
-          ],
+        Text(
+          game.name,
+          style: AppText.gameTitle,
         ),
         const SizedBox(height: AppSpacing.xs),
         Row(
@@ -200,62 +195,99 @@ class _TitleRow extends StatelessWidget {
   }
 }
 
-/// Pill-shaped earning badge. Primary-pale background, primary text,
-/// shows a dollar amount.
-class _EarningBadge extends StatelessWidget {
-  final double amount;
+/// Earnings summary card. Shows a plain-English sentence with the dollars
+/// already earned and the total reward available, plus a progress bar that
+/// visualizes how far the user has come. Reads completed milestones for
+/// this game out of [AppState] so the earned total stays in sync with the
+/// Reward Steps strip below.
+class _EarningsSummary extends StatelessWidget {
+  final Game game;
 
-  const _EarningBadge({required this.amount});
+  const _EarningsSummary({required this.game});
 
   @override
   Widget build(BuildContext context) {
+    final matches = context
+        .watch<AppState>()
+        .installedGames
+        .where((g) => g.id == game.key)
+        .toList();
+    final completed =
+        matches.isEmpty ? const <int>{} : matches.first.completedMilestoneIndices;
+    final earned = _earnedAmount(game, completed);
+    final total = game.maxEarning;
+    final progress = total > 0 ? (earned / total).clamp(0.0, 1.0) : 0.0;
+
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.cardPad),
       decoration: BoxDecoration(
-        color: AppColors.primaryPale,
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-            color: AppColors.primary.withValues(alpha: 0.2), width: 1.5),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppRadius.feature),
+        border: Border.all(color: AppColors.creamDeep, width: 1.5),
+        boxShadow: AppElevation.card,
       ),
-      child: Text(
-        '\$${amount.toStringAsFixed(2)}',
-        style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(
+            TextSpan(
+              style: AppText.bodyStrong.copyWith(height: 1.4),
+              children: [
+                const TextSpan(text: "You've earned "),
+                TextSpan(
+                  text: '\$${earned.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const TextSpan(text: ' of a possible '),
+                TextSpan(
+                  text: '\$${total.toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                const TextSpan(text: '.'),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.inner),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Stack(
+                children: [
+                  Container(
+                    height: 8,
+                    width: constraints.maxWidth,
+                    decoration: BoxDecoration(
+                      color: AppColors.creamDeep,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  Container(
+                    height: 8,
+                    width: constraints.maxWidth * progress,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
-}
 
-/// Top progress bar. Cream-deep track, primary fill, label row above.
-/// `earned` is hardcoded to $0.00 in v1 because no steps complete in-session.
-/// `total` is the maximum dollars earnable across all regular steps for
-/// the current game.
-class _TopProgressBar extends StatelessWidget {
-  final double total;
-
-  const _TopProgressBar({required this.total});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '\$0.00 earned of \$${total.toStringAsFixed(2)}',
-          style: AppText.caption.copyWith(color: AppColors.inkSecondary),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Container(
-          height: 8,
-          decoration: BoxDecoration(
-            color: AppColors.creamDeep,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          // Foreground fill is rendered as a 0-width container in v1.
-          child: const SizedBox.shrink(),
-        ),
-      ],
-    );
+  static double _earnedAmount(Game game, Set<int> completed) {
+    var total = 0.0;
+    for (final index in completed) {
+      if (index >= 0 && index < game.regularSteps.length) {
+        total += game.regularSteps[index].reward;
+      }
+    }
+    return total;
   }
 }
 
@@ -407,9 +439,10 @@ enum _StepState { notStarted, upNext, completed }
 /// picked in onboarding shows its install step as completed and the next
 /// milestone as "up next".
 ///
-/// On first layout the strip jumps so the first incomplete step sits in
-/// the left-most visible slot. Completed steps scroll off-screen to the
-/// left, matching the home "Continue earning" reading order.
+/// On first layout the strip jumps so the "up next" card is comfortably
+/// visible, while the most recent completed card still peeks in from the
+/// left edge. Users can always scroll back to see every completed step,
+/// including on Chrome/desktop where mouse drag is enabled explicitly.
 class _RegularStepsSection extends StatefulWidget {
   final Game game;
 
@@ -442,14 +475,18 @@ class _RegularStepsSectionState extends State<_RegularStepsSection> {
         : matches.first.completedMilestoneIndices;
     final firstIncomplete = _firstIncompleteIndex(game, completed);
 
-    // Scroll past completed steps on first layout so the current "up next"
-    // card lands where the first step would normally sit.
+    // Nudge the strip so the "up next" card is clearly in view on first
+    // layout while leaving a chunk of the most recent completed card
+    // peeking from the left edge. Users can still scroll back to any of
+    // the finished steps.
     if (!_didInitialScroll && firstIncomplete > 0) {
       _didInitialScroll = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!_controller.hasClients) return;
-        final target =
-            firstIncomplete * (_kStepCardWidth + AppSpacing.sm);
+        const stride = _kStepCardWidth + AppSpacing.sm;
+        // Leave roughly half of the previous (completed) card peeking in.
+        const peek = stride * 0.5;
+        final target = firstIncomplete * stride - peek;
         final max = _controller.position.maxScrollExtent;
         _controller.jumpTo(target.clamp(0, max).toDouble());
       });
@@ -467,24 +504,38 @@ class _RegularStepsSectionState extends State<_RegularStepsSection> {
         ),
         SizedBox(
           height: _kStepCardHeight,
-          child: ListView.separated(
-            controller: _controller,
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.zero,
-            itemCount: game.regularSteps.length,
-            separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
-            itemBuilder: (context, index) {
-              final step = game.regularSteps[index];
-              final _StepState state;
-              if (completed.contains(index)) {
-                state = _StepState.completed;
-              } else if (index == firstIncomplete) {
-                state = _StepState.upNext;
-              } else {
-                state = _StepState.notStarted;
-              }
-              return _StepCard(step: step, state: state);
-            },
+          child: ScrollConfiguration(
+            // Enable mouse drag on desktop/web so the strip is always
+            // scrollable regardless of input device. Touch, trackpad, and
+            // stylus stay enabled too.
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: const {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.trackpad,
+                PointerDeviceKind.stylus,
+              },
+            ),
+            child: ListView.separated(
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: game.regularSteps.length,
+              separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
+              itemBuilder: (context, index) {
+                final step = game.regularSteps[index];
+                final _StepState state;
+                if (completed.contains(index)) {
+                  state = _StepState.completed;
+                } else if (index == firstIncomplete) {
+                  state = _StepState.upNext;
+                } else {
+                  state = _StepState.notStarted;
+                }
+                return _StepCard(step: step, state: state);
+              },
+            ),
           ),
         ),
       ],

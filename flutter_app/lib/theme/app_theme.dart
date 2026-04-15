@@ -115,6 +115,7 @@ class AppColors {
   static const Color progressLight = Color(0xFFCCFBF1);
   static const Color tealSecondary = Color(0xFF2BA08E);
   static const Color tealRing = Color(0xFF00C6B2);
+  static const Color violetRing = Color(0xFFA78BFA);
   static const Color ringTrack = Color(0xFFE2E8F0);
 
   // -------------------------------------------------------------------------

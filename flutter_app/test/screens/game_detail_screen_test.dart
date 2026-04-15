@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/data/games.dart';
+import 'package:earnwise_mvp/models/installed_game.dart';
 import 'package:earnwise_mvp/screens/game_detail_screen.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
@@ -69,12 +70,52 @@ void main() {
       expect(find.text('4.7'), findsOneWidget);
     });
 
-    testWidgets('renders the max earning badge as the summed total',
+    testWidgets(
+        'earnings summary shows the total reward and fresh earned amount',
         (tester) async {
       // Candy Crush steps sum to $27.00 (0.10 + 0.90 + 2.00 + 4.00 + 8.00
-      // + 12.00). The badge is a single widget, rendered by _EarningBadge.
-      await pumpDetail(tester, game: gamesByName['Candy Crush']!);
-      expect(find.text('\$27.00'), findsOneWidget);
+      // + 12.00). On a fresh AppState nothing is completed for Candy Crush,
+      // so the earned amount reads $0.00. Both dollar amounts render inside
+      // a single Text.rich sentence, so the finders pass findRichText.
+      final state = AppState()..installedGames = [];
+      await pumpDetail(
+        tester,
+        game: gamesByName['Candy Crush']!,
+        state: state,
+      );
+      expect(
+        find.textContaining('\$27.00', findRichText: true),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('\$0.00', findRichText: true),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining("You've earned", findRichText: true),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets(
+        'earnings summary adds up rewards for completed milestones',
+        (tester) async {
+      // Marking the first two Candy Crush steps completed means the user
+      // has earned $0.10 + $0.90 = $1.00 out of $27.00.
+      final catalog = gamesByName['Candy Crush']!;
+      final state = AppState()
+        ..installedGames = [
+          InstalledGame.fromCatalog(catalog, completed: const {0, 1}),
+        ];
+      await pumpDetail(tester, game: catalog, state: state);
+      expect(
+        find.textContaining('\$1.00', findRichText: true),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('\$27.00', findRichText: true),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders the How It Works section', (tester) async {

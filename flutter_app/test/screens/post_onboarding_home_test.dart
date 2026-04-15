@@ -108,11 +108,11 @@ void main() {
       // Post-onboarding mirrors the onboarding tile trio so the "unlock
       // all modes" promise resolves to the same three categories.
       expect(find.text('Offers'), findsOneWidget);
-      expect(find.text('Receipts'), findsOneWidget);
+      expect(find.text('Surveys'), findsOneWidget);
       expect(find.text('Games'), findsOneWidget);
       // Subtitle assertions guard against future copy regressions.
       expect(find.text('Save & earn'), findsOneWidget);
-      expect(find.text('Cashback'), findsOneWidget);
+      expect(find.text('Share & earn'), findsOneWidget);
       expect(find.text('Play & earn'), findsOneWidget);
     });
 
