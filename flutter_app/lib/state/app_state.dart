@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../data/games.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
+import '../theme/theme_catalog.dart';
 import '../services/haptics.dart';
 import '../models/installed_game.dart';
 
@@ -90,6 +92,19 @@ class AppState extends ChangeNotifier {
   bool hasRedeemed = false;
   List<String> selectedPreferences = [];
   List<JourneyEntry> journeyLog = [];
+
+  /// Active theme. Session-only; reset by [reset]. Default is Cream so a
+  /// fresh install / sign-out always lands in the original identity.
+  EarnWiseTheme currentTheme = kCreamTheme;
+
+  /// Swaps the active theme and rebuilds the app through the `Consumer`
+  /// in `main.dart`. No-op when the requested theme is already active, to
+  /// avoid a needless `notifyListeners()` traversal.
+  void setTheme(EarnWiseTheme theme) {
+    if (currentTheme == theme) return;
+    currentTheme = theme;
+    notifyListeners();
+  }
 
   // Daily goal (post-onboarding). earnedToday is reused as the progress
   // counter; it resets at local midnight via checkDailyReset.
@@ -451,6 +466,7 @@ class AppState extends ChangeNotifier {
     authProvider = 'Google';
     ageRange = '26-35';
     gender = 'Female';
+    currentTheme = kCreamTheme;
     notifyListeners();
   }
 }
