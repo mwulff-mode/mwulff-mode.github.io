@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import 'surface.dart';
 
 /// Horizontal list item: leading icon, title with optional subtitle, and
@@ -27,11 +28,12 @@ class ListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     final effectiveTrailing = trailing ??
         Icon(
           PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
           size: 16,
-          color: AppColors.inkTertiary,
+          color: t.palette.inkTertiary,
         );
 
     final content = Row(
@@ -48,7 +50,7 @@ class ListRow extends StatelessWidget {
                 title,
                 style: AppText.bodyStrong.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.ink,
+                  color: t.palette.ink,
                 ),
               ),
               if (subtitle != null) ...[
@@ -56,7 +58,7 @@ class ListRow extends StatelessWidget {
                 Text(
                   subtitle!,
                   style: AppText.caption.copyWith(
-                    color: AppColors.inkSecondary,
+                    color: t.palette.inkSecondary,
                   ),
                 ),
               ],
