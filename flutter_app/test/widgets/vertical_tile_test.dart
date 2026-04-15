@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/theme/theme_catalog.dart';
 import 'package:earnwise_mvp/widgets/category_icon_square.dart';
 import 'package:earnwise_mvp/widgets/vertical_tile.dart';
+import 'theme_test_harness.dart';
 
-Widget _wrap(Widget child) => MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: SizedBox(width: 120, child: child),
-        ),
-      ),
+Widget _wrap(Widget child) => wrapWithTheme(
+      kCreamTheme,
+      SizedBox(width: 120, child: child),
     );
 
 CategoryIconSquare _leading() => CategoryIconSquare(
