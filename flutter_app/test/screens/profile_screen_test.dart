@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/screens/profile_screen.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/theme/theme_catalog.dart';
 
 /// Pumps [ProfileScreen] inside a minimal Provider + MaterialApp harness.
 /// Optionally accepts a pre-built [AppState] so tests can set userName
@@ -14,8 +16,9 @@ Future<void> pumpProfile(
   await tester.pumpWidget(
     ChangeNotifierProvider<AppState>.value(
       value: state ?? AppState(),
-      child: const MaterialApp(
-        home: Scaffold(body: ProfileScreen()),
+      child: MaterialApp(
+        theme: AppTheme.buildMaterialTheme(kCreamTheme),
+        home: const Scaffold(body: ProfileScreen()),
       ),
     ),
   );
