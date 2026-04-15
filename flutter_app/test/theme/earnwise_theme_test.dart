@@ -194,4 +194,38 @@ void main() {
       expect(kCreamTheme.cta.foreground, Colors.white);
     });
   });
+
+  group('non-Cream themes', () {
+    test('Plum palette uses violet brand and white surface', () {
+      expect(kPlumTheme.palette.brand, const Color(0xFF5F2EE5));
+      expect(kPlumTheme.palette.surface, const Color(0xFFFFFFFF));
+      expect(kPlumTheme.radii.button, AppRadiusScale.pill);
+      expect(kPlumTheme.elevation.card, isEmpty);
+    });
+
+    test('Bumble forces brand ≠ CTA (yellow brand, black CTA)', () {
+      expect(kBumbleTheme.palette.brand, const Color(0xFFFEDA01));
+      expect(kBumbleTheme.cta.background, kBumbleTheme.palette.ink);
+      expect(kBumbleTheme.cta.foreground, const Color(0xFFFFFFFF));
+      expect(kBumbleTheme.radii.button, AppRadiusScale.pill);
+      expect(kBumbleTheme.elevation.card, isEmpty);
+    });
+
+    test('Clue uses cool gray surface with deep teal brand', () {
+      expect(kClueTheme.palette.surface, const Color(0xFFECECEC));
+      expect(kClueTheme.palette.brand, const Color(0xFF0E7889));
+      expect(kClueTheme.radii.card, 22);
+      expect(kClueTheme.elevation.card, isEmpty);
+    });
+  });
+
+  group('kEarnWiseThemes catalog', () {
+    test('contains four themes in the order Cream, Plum, Bumble, Clue', () {
+      expect(kEarnWiseThemes, hasLength(4));
+      expect(kEarnWiseThemes[0], kCreamTheme);
+      expect(kEarnWiseThemes[1], kPlumTheme);
+      expect(kEarnWiseThemes[2], kBumbleTheme);
+      expect(kEarnWiseThemes[3], kClueTheme);
+    });
+  });
 }
