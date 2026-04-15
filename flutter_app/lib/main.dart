@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
+import 'theme/theme_catalog.dart';
 import 'state/app_state.dart';
 import 'screens/splash_screen.dart';
 
@@ -25,7 +26,7 @@ class EarnWiseApp extends StatelessWidget {
       create: (_) => AppState(),
       child: MaterialApp(
         title: 'EarnWise',
-        theme: AppTheme.theme,
+        theme: AppTheme.buildMaterialTheme(kCreamTheme),
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),
       ),
