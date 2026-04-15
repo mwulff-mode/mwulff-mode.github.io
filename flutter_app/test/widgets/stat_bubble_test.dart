@@ -22,7 +22,7 @@ void main() {
       expect(find.text('Balance'), findsOneWidget);
     });
 
-    testWidgets('defaults the accent color to AppColors.brand',
+    testWidgets('defaults accent color to the theme brand color',
         (tester) async {
       await tester.pumpWidget(_wrap(
         StatBubble(

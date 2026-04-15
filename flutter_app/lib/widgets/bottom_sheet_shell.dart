@@ -3,7 +3,7 @@ import '../theme/app_theme.dart';
 import '../theme/earnwise_theme.dart';
 
 /// Standard bottom-sheet shell used across the app:
-/// cream background, rounded top, grab handle, safe-area bottom inset.
+/// raised-surface background, rounded top, grab handle, safe-area bottom inset.
 ///
 /// Prefer calling [showAppBottomSheet] over `showModalBottomSheet` directly so
 /// every sheet picks up this shell automatically.
