@@ -45,6 +45,18 @@ class EarnWiseTheme extends ThemeExtension<EarnWiseTheme> {
   @override
   EarnWiseTheme lerp(covariant ThemeExtension<EarnWiseTheme>? other, double t) =>
       this;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EarnWiseTheme &&
+          other.palette == palette &&
+          other.radii == radii &&
+          other.elevation == elevation &&
+          other.cta == cta);
+
+  @override
+  int get hashCode => Object.hash(palette, radii, elevation, cta);
 }
 
 /// Ergonomic `Theme.of(context).extension<EarnWiseTheme>()!` shortcut.

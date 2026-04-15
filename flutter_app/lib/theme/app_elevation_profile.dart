@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Elevation knob for a theme. Each list is assignable directly to
@@ -17,4 +18,21 @@ class AppElevationProfile {
     required this.raised,
     required this.modal,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppElevationProfile &&
+          listEquals(other.none, none) &&
+          listEquals(other.card, card) &&
+          listEquals(other.raised, raised) &&
+          listEquals(other.modal, modal));
+
+  @override
+  int get hashCode => Object.hash(
+        Object.hashAll(none),
+        Object.hashAll(card),
+        Object.hashAll(raised),
+        Object.hashAll(modal),
+      );
 }

@@ -228,4 +228,29 @@ void main() {
       expect(kEarnWiseThemes[3], kClueTheme);
     });
   });
+
+  group('EarnWiseTheme value equality', () {
+    test('operator == is value-based across all four slots', () {
+      final a = EarnWiseTheme(
+        palette: kPlumTheme.palette,
+        radii: kPlumTheme.radii,
+        elevation: kPlumTheme.elevation,
+        cta: kPlumTheme.cta,
+      );
+      final b = EarnWiseTheme(
+        palette: kPlumTheme.palette,
+        radii: kPlumTheme.radii,
+        elevation: kPlumTheme.elevation,
+        cta: kPlumTheme.cta,
+      );
+      expect(identical(a, b), isFalse);
+      expect(a == b, isTrue);
+      expect(a.hashCode, b.hashCode);
+    });
+
+    test('operator == distinguishes themes with different slots', () {
+      expect(kPlumTheme == kBumbleTheme, isFalse);
+      expect(kCreamTheme == kClueTheme, isFalse);
+    });
+  });
 }

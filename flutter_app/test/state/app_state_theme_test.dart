@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
+import 'package:earnwise_mvp/theme/earnwise_theme.dart';
 import 'package:earnwise_mvp/theme/theme_catalog.dart';
 
 void main() {
@@ -38,6 +39,24 @@ void main() {
       state.reset();
 
       expect(state.currentTheme, kCreamTheme);
+    });
+
+    test('setTheme no-ops on a value-equal but distinct theme instance', () {
+      final state = AppState();
+      state.setTheme(kPlumTheme);
+      var notified = 0;
+      state.addListener(() => notified++);
+
+      final replica = EarnWiseTheme(
+        palette: kPlumTheme.palette,
+        radii: kPlumTheme.radii,
+        elevation: kPlumTheme.elevation,
+        cta: kPlumTheme.cta,
+      );
+      state.setTheme(replica);
+
+      expect(identical(replica, kPlumTheme), isFalse);
+      expect(notified, 0);
     });
   });
 }
