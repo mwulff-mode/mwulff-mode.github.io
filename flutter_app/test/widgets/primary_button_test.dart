@@ -24,7 +24,7 @@ void main() {
       ),
     );
     final d = _decorationOf(tester);
-    expect(d.color, kCreamTheme.palette.brand);
+    expect(d.color, kCreamTheme.cta.background);
     expect(
       (d.borderRadius as BorderRadius).topLeft.x,
       kCreamTheme.radii.button,
@@ -40,7 +40,7 @@ void main() {
       ),
     );
     final d = _decorationOf(tester);
-    expect(d.color, kPlumTheme.palette.brand);
+    expect(d.color, kPlumTheme.cta.background);
     expect(
       (d.borderRadius as BorderRadius).topLeft.x,
       kPlumTheme.radii.button,
@@ -62,7 +62,6 @@ void main() {
 
   testWidgets('destructive=true overrides theme with Sign Out red',
       (tester) async {
-    const signOutRed = Color(0xFFDC2626);
     await tester.pumpWidget(
       wrapWithTheme(
         kBumbleTheme,
@@ -74,7 +73,7 @@ void main() {
       ),
     );
     final d = _decorationOf(tester);
-    expect(d.color, signOutRed);
+    expect(d.color, kDestructiveRed);
   });
 
   testWidgets('onTap fires when tapped', (tester) async {
@@ -88,5 +87,17 @@ void main() {
     await tester.tap(find.byType(PrimaryButton));
     await tester.pumpAndSettle();
     expect(taps, 1);
+  });
+
+  testWidgets('onTap=null does not throw when tapped', (tester) async {
+    await tester.pumpWidget(
+      wrapWithTheme(
+        kCreamTheme,
+        const PrimaryButton(label: 'Loading', onTap: null),
+      ),
+    );
+    await tester.tap(find.byType(PrimaryButton));
+    await tester.pumpAndSettle();
+    // No exception thrown. Animation completes cleanly.
   });
 }
