@@ -7,6 +7,7 @@ import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/press_scale.dart';
+import '../widgets/primary_button.dart';
 import 'welcome_screen.dart';
 
 /// Bottom padding reserved inside the scroll view so the last element
@@ -422,17 +423,19 @@ class _AccountRow extends StatelessWidget {
   }
 }
 
-/// Red-outlined pill button. Full width. Tap calls AppState.reset()
+/// Destructive pill button. Full width. Tap calls AppState.reset()
 /// and then pushes the welcome screen onto a cleared navigation stack.
-/// Wrapped in [PressScale] with [HapticIntensity.warning] so the
-/// destructive action feels different from a normal confirm CTA.
+/// Uses the destructive variant of PrimaryButton so the haptic feedback
+/// and color treatment both signal a destructive action.
 class _SignOutButton extends StatelessWidget {
   const _SignOutButton();
 
   @override
   Widget build(BuildContext context) {
-    return PressScale(
+    return PrimaryButton(
       key: const Key('profile_sign_out'),
+      label: 'Sign Out',
+      destructive: true,
       haptic: HapticIntensity.warning,
       onTap: () {
         context.read<AppState>().reset();
@@ -441,26 +444,6 @@ class _SignOutButton extends StatelessWidget {
           (route) => false,
         );
       },
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: _kSignOutRed, width: 1.5),
-        ),
-        child: Center(
-          child: Text(
-            'Sign Out',
-            style: AppText.ctaLabel.copyWith(color: _kSignOutRed),
-          ),
-        ),
-      ),
     );
   }
 }
-
-/// Red used by the Sign Out button. Not in AppColors because Sign Out
-/// is the only red surface in the app today; if a second red element
-/// ever ships, promote this to AppColors.
-const Color _kSignOutRed = Color(0xFFDC2626);

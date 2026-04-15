@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/screens/home_shell.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/theme/theme_catalog.dart';
 import 'package:earnwise_mvp/widgets/press_scale.dart';
 
 /// Pumps [HomeShell] inside a Provider + MaterialApp harness.
@@ -18,7 +20,10 @@ Future<void> pumpShell(WidgetTester tester) async {
   await tester.pumpWidget(
     ChangeNotifierProvider<AppState>.value(
       value: state,
-      child: const MaterialApp(home: HomeShell()),
+      child: MaterialApp(
+        theme: AppTheme.buildMaterialTheme(kCreamTheme),
+        home: const HomeShell(),
+      ),
     ),
   );
   await tester.pump(); // one frame to build the tree

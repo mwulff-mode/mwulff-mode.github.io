@@ -8,6 +8,7 @@ import '../theme/app_theme.dart';
 import '../theme/motion.dart';
 import '../services/haptics.dart';
 import '../widgets/press_scale.dart';
+import '../widgets/primary_button.dart';
 import '../widgets/bottom_sheet_shell.dart';
 
 /// First payout threshold in stars. Completing all onboarding tasks
@@ -277,28 +278,9 @@ class _WalletScreenState extends State<WalletScreen> {
               color: AppColors.inkTertiary, fontWeight: FontWeight.w400),
         ),
         const SizedBox(height: AppSpacing.md),
-        PressScale(
+        PrimaryButton(
+          label: 'Finish onboarding tasks',
           onTap: widget.onNavigateHome,
-          haptic: HapticIntensity.confirm,
-          child: Container(
-            width: double.infinity,
-            height: 60,
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: AppColors.primary, width: 1.5),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Finish onboarding tasks',
-                    style: AppText.ctaLabel.copyWith(color: AppColors.primary)),
-                const SizedBox(width: 6),
-                Icon(PhosphorIcons.arrowRight(PhosphorIconsStyle.bold),
-                    size: 20, color: AppColors.primary),
-              ],
-            ),
-          ),
         ),
       ],
     );
