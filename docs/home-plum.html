@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EarnWise — Home (Plum theme)</title>
+
+  <!-- Inter is the closest Google Font to Plum's custom sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Phosphor icons -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+  <style>
+    /* -------------------------------------------------------------------- */
+    /* Plum-inspired tokens                                                 */
+    /* -------------------------------------------------------------------- */
+    :root {
+      /* Surfaces — pure white canvas, no cream */
+      --surface: #ffffff;
+      --surface-raised: #ffffff;
+      --surface-subtle: #f5f5f7;
+      --hairline: #e7e9ec;
+
+      /* Ink — very dark cool navy */
+      --ink: #0f1b2d;
+      --ink-secondary: #6b7a8a;
+      --ink-tertiary: #9aa3af;
+
+      /* Brand — vibrant saturated Plum purple */
+      --brand: #5c2df5;
+      --brand-subtle: #f1e9ff;
+      --brand-soft: #ede3ff;
+
+      /* Cyan — Plum's signature progress accent (Bills paid bar, etc.) */
+      --cyan: #1bedd8;
+
+      /* Category foregrounds (kept for task differentiation, but paired
+         with a uniform pale-purple backdrop so the family reads Plum) */
+      --category-game: #f97316;
+      --category-survey: #6b5cff; /* shifted closer to Plum purple */
+      --category-offers: #f59e0b;
+
+      --flame: #ff6b35;
+      --gutter: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-synthesis: none;
+      font-feature-settings: "ss01", "cv11"; /* prettier digits */
+      background: #121419;
+    }
+
+    /* Tabular lining figures for every money/number the screen shows. */
+    .num, .stat-value, .ring-amount, .streak span {
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .stage {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow:
+        0 40px 80px rgba(15, 27, 45, 0.18),
+        0 12px 32px rgba(15, 27, 45, 0.08);
+      isolation: isolate;
+      background: var(--surface);
+    }
+
+    /* Pure white surface — no gradient. */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: var(--surface);
+      z-index: 0;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 0;
+      color: var(--ink);
+      pointer-events: none;
+    }
+    .status-time {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .status-icons {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .signal span {
+      width: 3px;
+      background: currentColor;
+      border-radius: 999px;
+      opacity: 0.92;
+    }
+    .signal span:nth-child(1) { height: 5px; }
+    .signal span:nth-child(2) { height: 7px; }
+    .signal span:nth-child(3) { height: 9px; }
+    .signal span:nth-child(4) { height: 11px; }
+    .wifi {
+      position: relative;
+      width: 15px;
+      height: 11px;
+    }
+    .wifi::before,
+    .wifi::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 2px solid currentColor;
+      border-color: currentColor transparent transparent transparent;
+      border-radius: 50%;
+    }
+    .wifi::before { top: 0; width: 15px; height: 15px; }
+    .wifi::after { top: 3px; width: 9px; height: 9px; }
+    .battery {
+      position: relative;
+      width: 24px;
+      height: 12px;
+      border: 1.8px solid currentColor;
+      border-radius: 4px;
+    }
+    .battery::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: -3.5px;
+      width: 2px;
+      height: 5px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+    .battery::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      width: 16px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    .scroll {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 76px var(--gutter) 120px;
+      z-index: 1;
+      scrollbar-width: none;
+    }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* ---------------------------------------------------------------- */
+    /* Greeting row                                                     */
+    /* ---------------------------------------------------------------- */
+    .greeting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .greeting h1 {
+      font-size: 22px;
+      font-weight: 800;        /* Plum headings are heavy */
+      letter-spacing: -0.4px;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+
+    /* Streak pill — borderless, sits flat on the canvas. */
+    .streak {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      color: var(--ink-tertiary);
+    }
+    .streak i { font-size: 20px; line-height: 1; }
+    .streak span { font-size: 16px; font-weight: 700; }
+
+    /* ---------------------------------------------------------------- */
+    /* Balance row                                                      */
+    /* ---------------------------------------------------------------- */
+    .balance-row {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stat {
+      flex: 1;
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Outlined circles — same hairline treatment as the cards. */
+    .stat-bubble {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid var(--hairline);
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+    }
+    .stat-bubble i { font-size: 26px; line-height: 1; }
+
+    .stat-value {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--ink);
+    }
+    .stat-label {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* Ring: purple disc + cyan arc (matches Plum's Bills-paid cyan). */
+    .ring {
+      width: 164px;
+      height: 164px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    /* Plum's Spend-Tracker ring is hollow — dark text on the canvas, not on
+       a filled disc. Caption sits above the number (matches Plum's
+       "Total spending / £1,406.16 / Since 1 May" vertical rhythm). */
+    .ring-text {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      text-align: center;
+    }
+    .ring-caption {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--ink-secondary);
+    }
+    .ring-amount {
+      margin-top: 2px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Sections                                                         */
+    /* ---------------------------------------------------------------- */
+    .section { margin-top: 32px; }
+    .balance-row + .section { margin-top: 40px; }
+    .section + .section { margin-top: 24px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 18px;
+      font-weight: 800;          /* Plum section titles are heavy */
+      letter-spacing: -0.3px;
+      color: var(--ink);
+    }
+    .section-title .lock {
+      font-size: 14px;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .section-sub {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* Task card — hairline border, NO shadow (signature Plum). */
+    .tasks {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--hairline);
+      transition: opacity 260ms ease;
+    }
+    .task-card.disabled { opacity: 0.45; }
+    .task-card.completed { opacity: 0.45; }
+
+    /* Circular icon chip (vs the Flutter rounded-square) */
+    .task-ico {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .task-ico i { font-size: 28px; line-height: 1; }
+
+    .task-body { flex: 1; min-width: 0; }
+    .task-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+    }
+    .task-meta {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    .task-cta {
+      font-size: 36px;
+      line-height: 1;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+    .task-cta.locked {
+      font-size: 22px;
+      color: var(--ink-tertiary);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Earn More tiles                                                  */
+    /* ---------------------------------------------------------------- */
+    .earn-sub { margin-top: 4px; }
+
+    .earn-tiles {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      opacity: 0.4;
+      transition: opacity 420ms ease;
+    }
+
+    .earn-tile {
+      flex: 1;
+      background: #fff;
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid var(--hairline);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .earn-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      background: var(--brand-subtle);
+    }
+    .earn-ico i { font-size: 22px; line-height: 1; }
+
+    .earn-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+    }
+    .earn-sub-label {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Nav pill — kept structurally, restyled to Plum                   */
+    /* ---------------------------------------------------------------- */
+    .nav-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 50px 0 calc(16px + 14px);
+      display: flex;
+      justify-content: center;
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 45%
+      );
+      pointer-events: none;
+    }
+
+    .nav-pill {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      padding: 8px;
+      background: #fff;
+      border: 1px solid var(--hairline);
+      border-radius: 40px;
+      box-shadow: 0 10px 30px rgba(15, 27, 45, 0.08);
+    }
+
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 24px;
+      border-radius: 32px;
+      color: var(--ink-secondary);
+      transition:
+        background-color 260ms ease,
+        color 260ms ease;
+    }
+    .nav-item i { font-size: 26px; line-height: 1; }
+    .nav-item .label {
+      display: none;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+    .nav-item.active {
+      background: var(--brand);
+      color: #fff;
+    }
+    .nav-item.active .label { display: inline; }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" role="img" aria-label="EarnWise home screen — Plum theme">
+      <div class="bg"></div>
+      <div class="status-bar" aria-hidden="true">
+        <div class="status-time">9:41</div>
+        <div class="status-icons">
+          <div class="signal"><span></span><span></span><span></span><span></span></div>
+          <div class="wifi"></div>
+          <div class="battery"></div>
+        </div>
+      </div>
+
+      <div class="scroll">
+        <!-- Greeting row -->
+        <header class="greeting">
+          <h1>Good morning, Lisa</h1>
+          <div class="streak" aria-label="Streak 0 days">
+            <!-- Outline flame — Plum's inactive-state treatment -->
+            <i class="ph ph-flame"></i>
+            <span>0</span>
+          </div>
+        </header>
+
+        <!-- Balance row -->
+        <section class="balance-row" aria-label="Goal progress">
+          <div class="stat">
+            <div class="stat-bubble"><i class="ph ph-wallet"></i></div>
+            <div class="stat-value">$0.87</div>
+            <div class="stat-label">Balance</div>
+          </div>
+
+          <div class="ring" aria-label="Daily goal $2.00, 35 percent complete">
+            <!-- Hollow two-arc ring, mirrors Plum's Spend Tracker:
+                 purple = earned (35%), cyan = remaining (65%). r=75, stroke 14.
+                 Circumference ≈ 471.24. Purple draws 164.93; cyan draws 306.31
+                 starting at the purple-end angle (126°), rotated 36° from the
+                 SVG default 0° = 3 o'clock to align. -->
+            <svg class="ring-svg" viewBox="0 0 164 164" aria-hidden="true">
+              <circle
+                cx="82" cy="82" r="75"
+                fill="none"
+                stroke="#1bedd8"
+                stroke-width="14"
+                stroke-linecap="round"
+                stroke-dasharray="306.31 164.93"
+                transform="rotate(36 82 82)"
+              />
+              <circle
+                class="ring-arc"
+                cx="82" cy="82" r="75"
+                fill="none"
+                stroke="#5c2df5"
+                stroke-width="14"
+                stroke-linecap="round"
+                stroke-dasharray="164.93 306.31"
+                transform="rotate(-90 82 82)"
+              />
+            </svg>
+            <div class="ring-text">
+              <div>
+                <div class="ring-caption">Savings goal</div>
+                <div class="ring-amount">$2.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-bubble"><i class="ph ph-money"></i></div>
+            <div class="stat-value">$0.70</div>
+            <div class="stat-label">Today</div>
+          </div>
+        </section>
+
+        <!-- Get Set Up -->
+        <section class="section" aria-label="Starter tasks">
+          <div class="section-title">Get Set Up</div>
+          <div class="section-sub">Earn your first $2 in minutes</div>
+
+          <div class="tasks">
+            <!-- Task 1: Profile -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-fill ph-user-circle" style="color: var(--cyan);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Complete your profile</div>
+                <div class="task-meta">~2 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 2: Survey (unlocked) -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-fill ph-clipboard-text" style="color: var(--cyan);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Complete a survey</div>
+                <div class="task-meta">~5 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 3: Install game (enabled) -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-fill ph-game-controller" style="color: var(--cyan);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Install a game</div>
+                <div class="task-meta">~1 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 4: Milestone -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-fill ph-trophy" style="color: var(--cyan);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Reach first milestone</div>
+                <div class="task-meta">~10 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+          </div>
+        </section>
+
+        <!-- More Ways To Earn -->
+        <section class="section" aria-label="Earn more">
+          <div class="section-title">
+            <i class="ph ph-lock-simple lock"></i>
+            More Ways To Earn
+          </div>
+          <div class="section-sub earn-sub">Unlocked after you finish the setup</div>
+
+          <div class="earn-tiles">
+            <div class="earn-tile">
+              <div class="earn-ico">
+                <i class="ph-fill ph-tag" style="color: var(--category-offers);"></i>
+              </div>
+              <div class="earn-title">Offers</div>
+              <div class="earn-sub-label">Useful offers</div>
+            </div>
+
+            <div class="earn-tile">
+              <div class="earn-ico">
+                <i class="ph-fill ph-clipboard-text" style="color: var(--category-survey);"></i>
+              </div>
+              <div class="earn-title">Surveys</div>
+              <div class="earn-sub-label">Short surveys</div>
+            </div>
+
+            <div class="earn-tile">
+              <div class="earn-ico">
+                <i class="ph-fill ph-game-controller" style="color: var(--category-game);"></i>
+              </div>
+              <div class="earn-title">Games</div>
+              <div class="earn-sub-label">Try games</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Floating glass nav pill (shape preserved, colors restyled) -->
+      <div class="nav-fade">
+        <nav class="nav-pill" aria-label="Bottom navigation">
+          <div class="nav-item active">
+            <i class="ph-fill ph-house"></i>
+            <span class="label">Home</span>
+          </div>
+          <!-- Inactive items use outline icons — signature Plum tic -->
+          <div class="nav-item">
+            <i class="ph ph-wallet"></i>
+            <span class="label">Wallet</span>
+          </div>
+          <div class="nav-item">
+            <i class="ph ph-user"></i>
+            <span class="label">Profile</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

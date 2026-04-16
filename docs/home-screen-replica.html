@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EarnWise — Home</title>
+
+  <!-- Outfit (Flutter app uses Google Fonts Outfit) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Phosphor Icons (web), matches PhosphorIcons used in the Flutter app -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css" />
+
+  <style>
+    /* -------------------------------------------------------------------- */
+    /* Design tokens (mirrors flutter_app/lib/theme/app_theme.dart)          */
+    /* -------------------------------------------------------------------- */
+    :root {
+      /* Surface */
+      --surface: #faf8f5;
+      --surface-raised: #ffffff;
+      --surface-subtle: #f2ede6;
+
+      /* Ink */
+      --ink: #3b3230;
+      --ink-secondary: #6b5e58;
+      --ink-tertiary: #8a7d76;
+
+      /* Brand (teal) */
+      --brand: #0d9488;
+      --brand-subtle: #f0fdfa;
+      --teal-ring: #00c6b2;
+
+      /* Category tints */
+      --category-game: #f97316;
+      --category-game-bg: #fff7ed;
+      --category-survey: #6366f1;
+      --category-survey-bg: #eef2ff;
+      --category-offers: #f59e0b;
+      --category-offers-bg: #fffbeb;
+
+      /* Feedback */
+      --flame: #ff6b35;
+
+      /* Page gutter */
+      --gutter: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: "Outfit", system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-synthesis: none;
+      background: #121419;
+    }
+
+    /* Center the phone-sized viewport on desktop; full-bleed on mobile. */
+    .stage {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.18),
+        0 12px 32px rgba(0, 0, 0, 0.1);
+      isolation: isolate;
+    }
+
+    /* Warm animated-gradient background, exact colors + stops from
+       widgets/animated_gradient_bg.dart. The Flutter alignment goes from
+       (-0.2,-0.5) to (0.3,1.0) -- roughly top-ish-left to bottom-right --
+       which maps to ~165deg in CSS gradient terms. */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        165deg,
+        #faf8f5 0%,
+        #f8f0e8 35%,
+        #f2ede6 70%,
+        #faf5f0 100%
+      );
+      z-index: 0;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 0;
+      color: var(--ink);
+      pointer-events: none;
+    }
+    .status-time {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .status-icons {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .signal span {
+      width: 3px;
+      background: currentColor;
+      border-radius: 999px;
+      opacity: 0.92;
+    }
+    .signal span:nth-child(1) { height: 5px; }
+    .signal span:nth-child(2) { height: 7px; }
+    .signal span:nth-child(3) { height: 9px; }
+    .signal span:nth-child(4) { height: 11px; }
+    .wifi {
+      position: relative;
+      width: 15px;
+      height: 11px;
+    }
+    .wifi::before,
+    .wifi::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 2px solid currentColor;
+      border-color: currentColor transparent transparent transparent;
+      border-radius: 50%;
+    }
+    .wifi::before { top: 0; width: 15px; height: 15px; }
+    .wifi::after { top: 3px; width: 9px; height: 9px; }
+    .battery {
+      position: relative;
+      width: 24px;
+      height: 12px;
+      border: 1.8px solid currentColor;
+      border-radius: 4px;
+    }
+    .battery::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: -3.5px;
+      width: 2px;
+      height: 5px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+    .battery::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      width: 16px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    /* Scrollable content area. Simulated 44px iOS safe area on top. */
+    .scroll {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 76px var(--gutter) 120px;
+      z-index: 1;
+      scrollbar-width: none;
+    }
+    .scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Greeting row                                                     */
+    /* ---------------------------------------------------------------- */
+    .greeting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .greeting h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+
+    .streak {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 999px;
+      color: var(--ink-tertiary); /* streak == 0 in fresh state */
+    }
+    .streak i {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .streak span {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Balance row: Balance bubble  |  Ring  |  Today bubble            */
+    /* ---------------------------------------------------------------- */
+    .balance-row {
+      margin-top: 32px; /* AppSpacing.xl */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stat {
+      flex: 1;
+      padding-top: 40px; /* ring floats 40px above the stat columns */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-bubble {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--surface-subtle);
+      display: grid;
+      place-items: center;
+      color: var(--ink-secondary);
+    }
+    .stat-bubble i {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .stat-value {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .stat-label {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* Ring — disc + (empty at 0%) progress arc, matching _GoalRingPainter.
+       At progress=0 only the filled disc is visible; stroke=22 so the disc
+       sits inset 11px from the outer radius. */
+    .ring {
+      width: 164px;
+      height: 164px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .ring-arc {
+      transition: stroke-dashoffset 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ring-text {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      text-align: center;
+    }
+    .ring-amount {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .ring-caption {
+      margin-top: 2px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Section: Starter Tasks                                           */
+    /* ---------------------------------------------------------------- */
+    .section {
+      margin-top: 32px; /* AppSpacing.xl */
+    }
+    .balance-row + .section {
+      margin-top: 40px;
+    }
+    .section + .section {
+      margin-top: 24px; /* AppSpacing.lg */
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .section-title .lock {
+      font-size: 14px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .section-sub {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-tertiary);
+    }
+
+    /* Task card */
+    .tasks {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: opacity 260ms ease;
+    }
+    .task-card.disabled {
+      opacity: 0.45;
+    }
+
+    .task-ico {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .task-ico i {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .task-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .task-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .task-meta {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .task-cta {
+      font-size: 48px;
+      line-height: 1;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+    .task-cta.locked {
+      font-size: 24px;
+      color: var(--ink-tertiary);
+    }
+    /* Completed cards match Flutter: whole card at 45% opacity + 48px
+       filled check-circle in brand teal. */
+    .task-card.completed {
+      opacity: 0.45;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Section: Earn More (locked)                                      */
+    /* ---------------------------------------------------------------- */
+    .earn-sub {
+      margin-top: 4px; /* AppSpacing.xs */
+    }
+
+    .earn-tiles {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      opacity: 0.4;
+      transition: opacity 420ms ease;
+    }
+
+    .earn-tile {
+      flex: 1;
+      background: #fff;
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .earn-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+    }
+    .earn-ico i {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .earn-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .earn-sub-label {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-tertiary);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Floating glass nav pill with cream fade                           */
+    /* ---------------------------------------------------------------- */
+    .nav-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 50px 0 calc(16px + 14px); /* safe area bottom ~14 + 16 */
+      display: flex;
+      justify-content: center;
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(250, 248, 245, 0) 0%,
+        rgba(250, 248, 245, 1) 45%
+      );
+      pointer-events: none;
+    }
+
+    .nav-pill {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 40px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 24px;
+      border-radius: 32px;
+      color: var(--ink-secondary);
+      transition:
+        background-color 260ms ease,
+        color 260ms ease;
+    }
+    .nav-item i {
+      font-size: 26px;
+      line-height: 1;
+    }
+    .nav-item .label {
+      display: none;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .nav-item.active {
+      background: var(--brand);
+      color: #fff;
+    }
+    .nav-item.active .label {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" role="img" aria-label="EarnWise home screen replica">
+      <div class="bg"></div>
+      <div class="status-bar" aria-hidden="true">
+        <div class="status-time">9:41</div>
+        <div class="status-icons">
+          <div class="signal"><span></span><span></span><span></span><span></span></div>
+          <div class="wifi"></div>
+          <div class="battery"></div>
+        </div>
+      </div>
+
+      <div class="scroll">
+        <!-- Greeting row -->
+        <header class="greeting">
+          <h1>Good morning, Lisa</h1>
+          <div class="streak" aria-label="Streak 0 days">
+            <i class="ph-fill ph-flame"></i>
+            <span>0</span>
+          </div>
+        </header>
+
+        <!-- Balance row: Balance bubble / Ring / Today bubble -->
+        <section class="balance-row" aria-label="Goal progress">
+          <div class="stat">
+            <div class="stat-bubble"><i class="ph-fill ph-wallet"></i></div>
+            <div class="stat-value">$0.87</div>
+            <div class="stat-label">Balance</div>
+          </div>
+
+          <div class="ring" aria-label="Daily goal $2.00, 35 percent complete">
+            <!-- Disc + progress arc, mirrors _GoalRingPainter. Disc and arc
+                 share radius 71 (= size/2 − stroke/2). Arc starts at 12 o'clock
+                 (-90°) and sweeps clockwise. Circumference ≈ 446.1; current
+                 progress 35% ≈ 156.1. Round cap matches the Flutter painter. -->
+            <svg class="ring-svg" viewBox="0 0 164 164" aria-hidden="true">
+              <circle cx="82" cy="82" r="71" fill="#0d9488" />
+              <circle
+                class="ring-arc"
+                cx="82" cy="82" r="71"
+                fill="none"
+                stroke="#00c6b2"
+                stroke-width="22"
+                stroke-linecap="round"
+                stroke-dasharray="156.14 446.11"
+                transform="rotate(-90 82 82)"
+              />
+            </svg>
+            <div class="ring-text">
+              <div>
+                <div class="ring-amount">$2.00</div>
+                <div class="ring-caption">Savings goal</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-bubble"><i class="ph-fill ph-money"></i></div>
+            <div class="stat-value">$0.70</div>
+            <div class="stat-label">Today</div>
+          </div>
+        </section>
+
+        <!-- Get Set Up -->
+        <section class="section" aria-label="Starter tasks">
+          <div class="section-title">Get Set Up</div>
+          <div class="section-sub">Earn your first $2 in minutes</div>
+
+          <div class="tasks">
+            <!-- Task 1: Profile -->
+            <div class="task-card">
+              <div class="task-ico" style="background: rgba(13, 148, 136, 0.1);">
+                <i class="ph-duotone ph-user-circle" style="color: var(--brand);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Complete your profile</div>
+                <div class="task-meta">~2 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 2: Survey (unlocked once profile is done) -->
+            <div class="task-card">
+              <div class="task-ico" style="background: rgba(99, 102, 241, 0.1);">
+                <i class="ph-duotone ph-clipboard-text" style="color: var(--category-survey);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Complete a survey</div>
+                <div class="task-meta">~5 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 3: Install a game (enabled) -->
+            <div class="task-card">
+              <div class="task-ico" style="background: rgba(249, 115, 22, 0.1);">
+                <i class="ph-duotone ph-game-controller" style="color: var(--category-game);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Install a game</div>
+                <div class="task-meta">~1 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 4: Milestone -->
+            <div class="task-card">
+              <div class="task-ico" style="background: rgba(249, 115, 22, 0.1);">
+                <i class="ph-duotone ph-trophy" style="color: var(--category-game);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Reach first milestone</div>
+                <div class="task-meta">~10 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+          </div>
+        </section>
+
+        <!-- More Ways To Earn (locked until starter tasks done) -->
+        <section class="section" aria-label="Earn more">
+          <div class="section-title">
+            <i class="ph ph-lock-simple lock"></i>
+            More Ways To Earn
+          </div>
+          <div class="section-sub earn-sub">Unlocked after you finish the setup</div>
+
+          <div class="earn-tiles">
+            <div class="earn-tile">
+              <div class="earn-ico" style="background: var(--category-offers-bg);">
+                <i class="ph-duotone ph-tag" style="color: var(--category-offers);"></i>
+              </div>
+              <div class="earn-title">Offers</div>
+              <div class="earn-sub-label">Useful offers</div>
+            </div>
+
+            <div class="earn-tile">
+              <div class="earn-ico" style="background: var(--category-survey-bg);">
+                <i class="ph-duotone ph-clipboard-text" style="color: var(--category-survey);"></i>
+              </div>
+              <div class="earn-title">Surveys</div>
+              <div class="earn-sub-label">Short surveys</div>
+            </div>
+
+            <div class="earn-tile">
+              <div class="earn-ico" style="background: var(--category-game-bg);">
+                <i class="ph-duotone ph-game-controller" style="color: var(--category-game);"></i>
+              </div>
+              <div class="earn-title">Games</div>
+              <div class="earn-sub-label">Try games</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Floating glass nav pill -->
+      <div class="nav-fade">
+        <nav class="nav-pill" aria-label="Bottom navigation">
+          <div class="nav-item active">
+            <i class="ph-fill ph-house"></i>
+            <span class="label">Home</span>
+          </div>
+          <div class="nav-item">
+            <i class="ph-fill ph-wallet"></i>
+            <span class="label">Wallet</span>
+          </div>
+          <div class="nav-item">
+            <i class="ph-fill ph-user"></i>
+            <span class="label">Profile</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
