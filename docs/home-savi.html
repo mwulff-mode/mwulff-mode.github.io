@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EarnWise — Home (Savi theme)</title>
+
+  <!-- Savi uses warm cream surfaces, cocoa ink, and orange brand accents -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Phosphor Icons (web), matches PhosphorIcons used in the Flutter app -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css" />
+
+  <style>
+    /* -------------------------------------------------------------------- */
+    /* Savi: actual palette from the original direction                     */
+    /* -------------------------------------------------------------------- */
+    :root {
+      /* Surface */
+      --surface: #fefefe;
+      --surface-raised: #ffffff;
+      --surface-subtle: #fcf6ef;
+      --surface-soft: #fde8d0;
+      --hairline: #f1d8bd;
+
+      /* Ink */
+      --ink: #45170a;
+      --ink-secondary: rgba(69, 23, 10, 0.72);
+      --ink-tertiary: rgba(69, 23, 10, 0.52);
+
+      /* Brand */
+      --brand: #F06836;
+      --brand-deep: #ef923b;
+      --brand-subtle: #f8ddd2;
+      --teal-ring: #FFAE8E;
+      --accent: #8b6f47;
+
+      /* Category tints */
+      --category-game: #F06836;
+      --category-game-bg: #f8ddd2;
+      --category-survey: #8b6f47;
+      --category-survey-bg: #f7efe7;
+      --category-offers: #ffb347;
+      --category-offers-bg: #fff0d7;
+
+      /* Feedback */
+      --flame: #ef923b;
+
+      /* Page gutter */
+      --gutter: 24px;
+      --radius-card: 18px;
+      --radius-shell: 34px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: "Outfit", system-ui, -apple-system, Segoe UI, sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-synthesis: none;
+      background: #121419;
+    }
+
+    /* Center the phone-sized viewport on desktop; full-bleed on mobile. */
+    .stage {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .phone {
+      position: relative;
+      width: 390px;
+      height: 844px;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow:
+        0 40px 80px rgba(0, 0, 0, 0.18),
+        0 12px 32px rgba(0, 0, 0, 0.1);
+      isolation: isolate;
+    }
+
+    /* Savi is mostly white with only a subtle warm cast */
+    .bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        170deg,
+        #ffffff 0%,
+        #fefefe 48%,
+        #fcf8f2 100%
+      );
+      z-index: 0;
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px 0;
+      color: var(--ink);
+      pointer-events: none;
+    }
+    .status-time {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .status-icons {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .signal span {
+      width: 3px;
+      background: currentColor;
+      border-radius: 999px;
+      opacity: 0.92;
+    }
+    .signal span:nth-child(1) { height: 5px; }
+    .signal span:nth-child(2) { height: 7px; }
+    .signal span:nth-child(3) { height: 9px; }
+    .signal span:nth-child(4) { height: 11px; }
+    .wifi {
+      position: relative;
+      width: 15px;
+      height: 11px;
+    }
+    .wifi::before,
+    .wifi::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 2px solid currentColor;
+      border-color: currentColor transparent transparent transparent;
+      border-radius: 50%;
+    }
+    .wifi::before { top: 0; width: 15px; height: 15px; }
+    .wifi::after { top: 3px; width: 9px; height: 9px; }
+    .battery {
+      position: relative;
+      width: 24px;
+      height: 12px;
+      border: 1.8px solid currentColor;
+      border-radius: 4px;
+    }
+    .battery::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: -3.5px;
+      width: 2px;
+      height: 5px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+    .battery::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      width: 16px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    /* Scrollable content area. Simulated 44px iOS safe area on top. */
+    .scroll {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 76px var(--gutter) 120px;
+      z-index: 1;
+      scrollbar-width: none;
+    }
+    .scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Greeting row                                                     */
+    /* ---------------------------------------------------------------- */
+    .greeting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .greeting h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+      font-family: "Bricolage Grotesque", "Outfit", system-ui, sans-serif;
+    }
+
+    .streak {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 999px;
+      color: var(--ink-secondary);
+    }
+    .streak i {
+      font-size: 20px;
+      line-height: 1;
+      color: var(--accent);
+    }
+    .streak span {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Balance row: Balance bubble  |  Ring  |  Today bubble            */
+    /* ---------------------------------------------------------------- */
+    .balance-row {
+      margin-top: 32px; /* AppSpacing.xl */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stat {
+      flex: 1;
+      padding-top: 40px; /* ring floats 40px above the stat columns */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .stat-bubble {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+    }
+    .stat-bubble i {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .stat-value {
+      margin-top: 4px;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .stat-label {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* Ring — slimmer circular progress with pale track and inner ticks. */
+    .ring {
+      width: 164px;
+      height: 164px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .ring-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .ring-track,
+    .ring-progress {
+      fill: none;
+      stroke-linecap: round;
+    }
+    .ring-progress {
+      transition: stroke-dasharray 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ring-text {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--brand-deep);
+      text-align: center;
+    }
+    .ring-amount {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+      color: var(--brand);
+    }
+    .ring-caption {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Section: Starter Tasks                                           */
+    /* ---------------------------------------------------------------- */
+    .section {
+      margin-top: 32px; /* AppSpacing.xl */
+    }
+    .balance-row + .section {
+      margin-top: 40px;
+    }
+    .section + .section {
+      margin-top: 24px; /* AppSpacing.lg */
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .section-title .lock {
+      font-size: 14px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .section-sub {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* Task card */
+    .tasks {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .task-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: var(--radius-card);
+      border: 1px solid rgba(69, 23, 10, 0.08);
+      box-shadow: 0 8px 24px rgba(69, 23, 10, 0.05);
+      transition: opacity 260ms ease;
+    }
+    .task-card.disabled {
+      opacity: 0.58;
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .task-ico {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .task-ico i {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .task-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .task-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .task-meta {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    .task-cta {
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      display: inline-block;
+      font-size: 22px;
+      line-height: 1;
+      background: transparent;
+      color: var(--brand);
+      flex-shrink: 0;
+    }
+    .task-cta.locked {
+      font-size: 18px;
+      color: var(--ink-tertiary);
+    }
+    .task-card.completed {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.98);
+      border-color: rgba(254, 151, 56, 0.18);
+      box-shadow: none;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Section: Earn More (locked)                                      */
+    /* ---------------------------------------------------------------- */
+    .earn-sub {
+      margin-top: 4px; /* AppSpacing.xs */
+    }
+
+    .earn-tiles {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      opacity: 0.72;
+      transition: opacity 420ms ease;
+    }
+
+    .earn-tile {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: var(--radius-card);
+      padding: 16px;
+      border: 1px solid rgba(69, 23, 10, 0.07);
+      box-shadow: 0 8px 24px rgba(69, 23, 10, 0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .earn-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+    }
+    .earn-ico i {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .earn-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .earn-sub-label {
+      margin-top: 2px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Floating glass nav pill with cream fade                           */
+    /* ---------------------------------------------------------------- */
+    .nav-fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 50px 0 calc(16px + 14px);
+      display: flex;
+      justify-content: center;
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 1) 45%
+      );
+      pointer-events: none;
+    }
+
+    .nav-pill {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(69, 23, 10, 0.08);
+      border-radius: var(--radius-shell);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 10px 28px rgba(69, 23, 10, 0.08);
+    }
+
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 24px;
+      border-radius: 28px;
+      color: var(--ink-secondary);
+      transition:
+        background-color 260ms ease,
+        color 260ms ease;
+    }
+    .nav-item i {
+      font-size: 26px;
+      line-height: 1;
+    }
+    .nav-item .label {
+      display: none;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .nav-item.active {
+      background: var(--brand);
+      color: #fff;
+    }
+    .nav-item.active .label {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" role="img" aria-label="EarnWise home screen in Savi direction">
+      <div class="bg"></div>
+      <div class="status-bar" aria-hidden="true">
+        <div class="status-time">9:41</div>
+        <div class="status-icons">
+          <div class="signal"><span></span><span></span><span></span><span></span></div>
+          <div class="wifi"></div>
+          <div class="battery"></div>
+        </div>
+      </div>
+
+      <div class="scroll">
+        <!-- Greeting row -->
+        <header class="greeting">
+          <h1>Good morning, Lisa</h1>
+          <div class="streak" aria-label="Streak 0 days">
+            <i class="ph-fill ph-flame"></i>
+            <span>0</span>
+          </div>
+        </header>
+
+        <!-- Balance row: Balance bubble / Ring / Today bubble -->
+        <section class="balance-row" aria-label="Goal progress">
+          <div class="stat">
+            <div class="stat-bubble"><i class="ph-fill ph-wallet"></i></div>
+            <div class="stat-value">$0.87</div>
+            <div class="stat-label">Balance</div>
+          </div>
+
+          <div class="ring" aria-label="Savings goal $2.00, 35 percent complete">
+            <svg class="ring-svg" viewBox="0 0 164 164" aria-hidden="true">
+              <circle
+                class="ring-track"
+                cx="82" cy="82" r="71"
+                fill="none"
+                stroke="rgba(69, 23, 10, 0.12)"
+                stroke-width="10"
+                stroke-dasharray="396.54 49.57"
+                transform="rotate(290 82 82)"
+              />
+              <circle
+                class="ring-progress"
+                cx="82"
+                cy="82"
+                r="71"
+                stroke="var(--brand)"
+                stroke-width="10"
+                stroke-dasharray="138.79 307.32"
+                transform="rotate(290 82 82)"
+              />
+            </svg>
+            <div class="ring-text">
+              <div>
+                <div class="ring-amount">$2.00</div>
+                <div class="ring-caption">Savings goal</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-bubble"><i class="ph-fill ph-money"></i></div>
+            <div class="stat-value">$0.70</div>
+            <div class="stat-label">Today</div>
+          </div>
+        </section>
+
+        <!-- Get Set Up -->
+        <section class="section" aria-label="Starter tasks">
+          <div class="section-title">Get Set Up</div>
+          <div class="section-sub">Earn your first $2 in minutes</div>
+
+          <div class="tasks">
+            <!-- Task 1: Profile -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-duotone ph-user-circle" style="color: var(--teal-ring);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Complete your profile</div>
+                <div class="task-meta">~2 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 2: Survey (unlocked once profile is done) -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-duotone ph-clipboard-text" style="color: var(--teal-ring);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Complete a survey</div>
+                <div class="task-meta">~5 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 3: Install a game (enabled) -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-duotone ph-game-controller" style="color: var(--teal-ring);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Install a game</div>
+                <div class="task-meta">~1 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+
+            <!-- Task 4: Milestone -->
+            <div class="task-card">
+              <div class="task-ico">
+                <i class="ph-duotone ph-trophy" style="color: var(--teal-ring);"></i>
+              </div>
+              <div class="task-body">
+                <div class="task-title">Reach first milestone</div>
+                <div class="task-meta">~10 min</div>
+              </div>
+              <i class="ph-fill ph-play-circle task-cta"></i>
+            </div>
+          </div>
+        </section>
+
+        <!-- More Ways To Earn (locked until starter tasks done) -->
+        <section class="section" aria-label="Earn more">
+          <div class="section-title">
+            <i class="ph ph-lock-simple lock"></i>
+            More Ways To Earn
+          </div>
+          <div class="section-sub earn-sub">More options open up once setup is done</div>
+
+          <div class="earn-tiles">
+            <div class="earn-tile">
+              <div class="earn-ico" style="background: var(--category-offers-bg);">
+                <i class="ph-duotone ph-tag" style="color: var(--category-offers);"></i>
+              </div>
+              <div class="earn-title">Offers</div>
+              <div class="earn-sub-label">Helpful offers</div>
+            </div>
+
+            <div class="earn-tile">
+              <div class="earn-ico" style="background: var(--category-survey-bg);">
+                <i class="ph-duotone ph-clipboard-text" style="color: var(--category-survey);"></i>
+              </div>
+              <div class="earn-title">Surveys</div>
+              <div class="earn-sub-label">Quick surveys</div>
+            </div>
+
+            <div class="earn-tile">
+              <div class="earn-ico" style="background: var(--category-game-bg);">
+                <i class="ph-duotone ph-game-controller" style="color: var(--category-game);"></i>
+              </div>
+              <div class="earn-title">Games</div>
+              <div class="earn-sub-label">Easy games</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Floating glass nav pill -->
+      <div class="nav-fade">
+        <nav class="nav-pill" aria-label="Bottom navigation">
+          <div class="nav-item active">
+            <i class="ph-fill ph-house"></i>
+            <span class="label">Home</span>
+          </div>
+          <div class="nav-item">
+            <i class="ph-fill ph-wallet"></i>
+            <span class="label">Wallet</span>
+          </div>
+          <div class="nav-item">
+            <i class="ph-fill ph-user"></i>
+            <span class="label">Profile</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

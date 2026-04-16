@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'earnwise_theme.dart';
+
 // ---------------------------------------------------------------------------
 // Design system primitives (private).
 //
@@ -328,18 +330,28 @@ class AppLayout {
 // ---------------------------------------------------------------------------
 
 class AppTheme {
-  static TextTheme get _textTheme => GoogleFonts.outfitTextTheme();
+  AppTheme._();
 
-  static ThemeData get theme => ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: AppColors.cream,
-        textTheme: _textTheme.apply(
-          bodyColor: AppColors.ink,
-          displayColor: AppColors.ink,
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          surface: AppColors.cream,
-        ),
-      );
+  /// Builds the live Material `ThemeData` for a given EarnWise theme.
+  /// Every theme-aware widget in the tree reads `EarnWiseTheme` via
+  /// `context.theme` — the rebuild path is:
+  ///   AppState.setTheme → notifyListeners → Consumer<AppState> in
+  ///   main.dart → MaterialApp rebuilds with a fresh ThemeData → every
+  ///   `Theme.of(context)` consumer picks up the new extension.
+  static ThemeData buildMaterialTheme(EarnWiseTheme t) {
+    final textTheme = GoogleFonts.outfitTextTheme().apply(
+      bodyColor: t.palette.ink,
+      displayColor: t.palette.ink,
+    );
+    return ThemeData(
+      useMaterial3: true,
+      scaffoldBackgroundColor: t.palette.surface,
+      textTheme: textTheme,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: t.palette.brand,
+        surface: t.palette.surface,
+      ),
+      extensions: [t],
+    );
+  }
 }

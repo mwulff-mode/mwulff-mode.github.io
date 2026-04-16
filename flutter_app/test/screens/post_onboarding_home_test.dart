@@ -5,6 +5,8 @@ import 'package:earnwise_mvp/screens/home_shell.dart';
 import 'package:earnwise_mvp/screens/placeholder_list_screen.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
 import 'package:earnwise_mvp/models/installed_game.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/theme/theme_catalog.dart';
 
 Future<void> pumpPostOnboardingHome(
   WidgetTester tester, {
@@ -42,7 +44,10 @@ Future<void> pumpPostOnboardingHome(
   await tester.pumpWidget(
     ChangeNotifierProvider<AppState>.value(
       value: state,
-      child: const MaterialApp(home: HomeShell()),
+      child: MaterialApp(
+        theme: AppTheme.buildMaterialTheme(kCreamTheme),
+        home: const HomeShell(),
+      ),
     ),
   );
   await tester.pump();

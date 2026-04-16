@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 
 /// Standard bottom-sheet shell used across the app:
-/// cream background, rounded top, grab handle, safe-area bottom inset.
+/// raised-surface background, rounded top, grab handle, safe-area bottom inset.
 ///
 /// Prefer calling [showAppBottomSheet] over `showModalBottomSheet` directly so
 /// every sheet picks up this shell automatically.
@@ -12,6 +13,7 @@ class BottomSheetShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Container(
       padding: EdgeInsets.fromLTRB(
         AppLayout.gutter,
@@ -19,21 +21,22 @@ class BottomSheetShell extends StatelessWidget {
         AppLayout.gutter,
         MediaQuery.of(context).padding.bottom + AppLayout.gutter,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.cream,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: t.palette.surfaceRaised,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(t.radii.modal),
+        ),
       ),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Grab handle
             Container(
               width: 40,
               height: 4,
               margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
-                color: AppColors.creamDeep,
+                color: t.palette.surfaceSubtle,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

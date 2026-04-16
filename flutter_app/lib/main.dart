@@ -23,11 +23,13 @@ class EarnWiseApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => AppState(),
-      child: MaterialApp(
-        title: 'EarnWise',
-        theme: AppTheme.theme,
-        debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+      child: Consumer<AppState>(
+        builder: (context, state, _) => MaterialApp(
+          title: 'EarnWise',
+          theme: AppTheme.buildMaterialTheme(state.currentTheme),
+          debugShowCheckedModeBanner: false,
+          home: const SplashScreen(),
+        ),
       ),
     );
   }

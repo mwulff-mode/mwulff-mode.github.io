@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import 'animated_gradient_bg.dart';
 
 /// Thin wrapper around the repeated `Scaffold → SafeArea → Padding` pattern
@@ -51,7 +52,7 @@ class ScreenScaffold extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? AppColors.cream,
+      backgroundColor: backgroundColor ?? context.theme.palette.surface,
       body: content,
       bottomNavigationBar: bottomNavigationBar,
     );

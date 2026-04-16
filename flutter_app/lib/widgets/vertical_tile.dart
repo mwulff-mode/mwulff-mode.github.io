@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import 'surface.dart';
 
 /// Icon-on-top tile: leading (usually a 44-size CategoryIconSquare),
@@ -41,6 +42,7 @@ class VerticalTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -49,21 +51,21 @@ class VerticalTile extends StatelessWidget {
         const SizedBox(height: AppSpacing.inner),
         Text(
           title,
-          style: AppText.bodyStrong.copyWith(color: AppColors.ink),
+          style: AppText.bodyStrong.copyWith(color: t.palette.ink),
         ),
         const SizedBox(height: AppSpacing.tight),
         Text(
           subtitle,
           style: AppText.caption.copyWith(
             fontWeight: FontWeight.w400,
-            color: AppColors.inkSecondary,
+            color: t.palette.inkSecondary,
           ),
         ),
       ],
     );
 
     final surface = Surface(
-      radius: AppRadius.feature,
+      radius: t.radii.feature,
       onTap: disabled ? null : onTap,
       child: content,
     );

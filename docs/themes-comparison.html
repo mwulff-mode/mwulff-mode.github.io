@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EarnWise — Home theme comparison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
+      background: #121419;
+      color: #e8ebf0;
+      -webkit-font-smoothing: antialiased;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    /* Single horizontal row. Scrolls horizontally once themes exceed the
+       viewport width so every variant always sits in a straight line.
+       The wrap fills the viewport and owns BOTH axes of scroll so the
+       horizontal scrollbar always sits at the bottom of the viewport —
+       no need to scroll the page to reach it. */
+    .grid-wrap {
+      width: 100%;
+      height: 100dvh;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .grid {
+      display: flex;
+      gap: 40px;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      padding: 56px 40px 80px;
+      scroll-padding-left: 40px;
+      width: max-content;
+    }
+    .theme { flex: 0 0 auto; }
+
+    .theme {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      justify-content: flex-start;
+    }
+
+    .theme-header {
+      text-align: center;
+      width: 320px;
+      min-height: 92px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .theme-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #9aa3af;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .theme-name {
+      margin-top: 4px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+    .theme-desc {
+      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b7280;
+      max-width: 320px;
+    }
+
+    /* Each iframe shows the theme's own stage (bg + padding + phone).
+       Size = phone (390×844) + stage padding (24×2 = 48) → 438×892. */
+    .theme iframe {
+      width: 438px;
+      height: 892px;
+      border: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+      background: #ececee;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-wrap">
+    <div class="grid">
+      <div class="theme">
+        <div class="theme-header">
+          <div class="theme-label">Baseline</div>
+          <div class="theme-name">EarnWise</div>
+          <div class="theme-desc">Warm cream, teal brand, friendly type (Outfit)</div>
+        </div>
+        <iframe src="home-screen-replica.html" title="EarnWise (original)"></iframe>
+      </div>
+
+      <div class="theme">
+        <div class="theme-header">
+          <div class="theme-label">Theme 01</div>
+          <div class="theme-name">Grew</div>
+          <div class="theme-desc">Nudge layout with EarnWise teal, warm cream surfaces, and softer ink</div>
+        </div>
+        <iframe src="home-nudge-earnwise.html" title="Grew theme"></iframe>
+      </div>
+
+      <div class="theme">
+        <div class="theme-header">
+          <div class="theme-label">Theme 02</div>
+          <div class="theme-name">Savi</div>
+          <div class="theme-desc">Soft white canvas, amber accent, warm brown ink, gentle savings tone</div>
+        </div>
+        <iframe src="home-savi.html" title="Savi theme"></iframe>
+      </div>
+
+      <div class="theme">
+        <div class="theme-header">
+          <div class="theme-label">Theme 03</div>
+          <div class="theme-name">Bloom</div>
+          <div class="theme-desc">Light neutral canvas, magenta brand, navy ink, utility card rails (Manrope)</div>
+        </div>
+        <iframe src="home-super.html" title="Bloom theme"></iframe>
+      </div>
+
+      <div class="theme">
+        <div class="theme-header">
+          <div class="theme-label">Theme 04</div>
+          <div class="theme-name">Tally</div>
+          <div class="theme-desc">White canvas, coral brand, blush cards, heavy rounded sans (Plus Jakarta)</div>
+        </div>
+        <iframe src="home-peanut.html" title="Tally theme"></iframe>
+      </div>
+
+      <div class="theme">
+        <div class="theme-header">
+          <div class="theme-label">Theme 05</div>
+          <div class="theme-name">Nudge</div>
+          <div class="theme-desc">White canvas, vivid purple, cyan progress, hairline borders, Inter</div>
+        </div>
+        <iframe src="home-plum.html" title="Nudge theme"></iframe>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

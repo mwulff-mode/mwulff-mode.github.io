@@ -7,6 +7,7 @@ import '../models/installed_game.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/app_card.dart';
 import '../widgets/app_toast.dart';
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _playGiftAnimation() async {
+    final t = context.theme;
     final state = context.read<AppState>();
     if (state.screen5Played) {
       setState(() {
@@ -101,12 +103,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       'Hey ${state.userName}, let\'s start earning',
       'You joined EarnWise',
       PhosphorIcons.handWaving(PhosphorIconsStyle.duotone),
-      AppColors.primary,
-      AppColors.primaryPale,
+      t.palette.brand,
+      t.palette.brandSubtle,
     );
   }
 
   void _completeTask(String task) {
+    final t = context.theme;
     final state = context.read<AppState>();
     if (state.completedTasks.contains(task)) return;
 
@@ -132,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       'daily_offer': PhosphorIcons.tag(PhosphorIconsStyle.duotone),
     };
     final taskColors = {
-      'profile': AppColors.primary,
+      'profile': t.palette.brand,
       'survey': AppColors.taskSurvey,
       'game_install': AppColors.taskGame,
       'game_milestone': AppColors.taskGame,
@@ -141,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       'daily_offer': AppColors.taskOffers,
     };
     final taskBgs = {
-      'profile': AppColors.primaryPale,
+      'profile': t.palette.brandSubtle,
       'survey': AppColors.taskSurveyBg,
       'game_install': AppColors.taskGameBg,
       'game_milestone': AppColors.taskGameBg,
@@ -156,8 +159,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       'Earned \$$dollars: ${taskNames[task] ?? 'Task completed'}',
       'Task completed',
       taskIcons[task] ?? PhosphorIcons.checkCircle(PhosphorIconsStyle.duotone),
-      taskColors[task] ?? AppColors.primary,
-      taskBgs[task] ?? AppColors.primaryPale,
+      taskColors[task] ?? t.palette.brand,
+      taskBgs[task] ?? t.palette.brandSubtle,
     );
 
     if (state.streakCount == 0) {
@@ -210,8 +213,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 title: 'Earn More is unlocked!',
                 subtitle: 'Offers, Surveys and Games are now available',
                 icon: PhosphorIcons.lockSimpleOpen(PhosphorIconsStyle.duotone),
-                iconColor: AppColors.primary,
-                iconBackground: AppColors.primaryPale,
+                iconColor: t.palette.brand,
+                iconBackground: t.palette.brandSubtle,
               );
             }
           });
@@ -310,6 +313,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _gameOption(BuildContext ctx, String name, String description,
       String iconPath, AppState state) {
+    final t = context.theme;
     return AppCard(
       onTap: () => Navigator.of(ctx).pop(name),
       constraints: const BoxConstraints(minHeight: 72),
@@ -335,12 +339,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Text(description,
                     style: AppText.body.copyWith(
                         fontWeight: FontWeight.w400,
-                        color: AppColors.inkTertiary)),
+                        color: t.palette.inkTertiary)),
               ],
             ),
           ),
           Icon(PhosphorIcons.playCircle(PhosphorIconsStyle.fill),
-              size: 48, color: AppColors.primary),
+              size: 48, color: t.palette.brand),
         ],
       ),
     );
@@ -369,32 +373,33 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildGiftOverlay() {
+    final t = context.theme;
     final state = context.read<AppState>();
     return AnimatedOpacity(
       opacity: _giftFading ? 0 : 1,
       duration: AppDurations.long,
       child: Container(
-        color: AppColors.cream,
+        color: t.palette.surface,
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               RewardGlow(
                 controller: _giftGlow,
-                glowColor: AppColors.primary,
+                glowColor: t.palette.brand,
                 child: Container(
                   width: 96,
                   height: 96,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [AppColors.primary, AppColors.tealSecondary],
+                      colors: [t.palette.brand, AppColors.tealSecondary],
                     ),
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
+                        color: t.palette.brand.withValues(alpha: 0.3),
                         blurRadius: 40,
                         offset: const Offset(0, 12),
                       ),
@@ -420,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   'Welcome gift',
                   style: AppText.prompt.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primary.withValues(alpha: 0.6),
+                    color: t.palette.brand.withValues(alpha: 0.6),
                     letterSpacing: 1,
                     height: null,
                   ),
@@ -487,6 +492,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildGreetingRow(AppState state) {
+    final t = context.theme;
     final greeting = state.userName.isNotEmpty
         ? '${_greeting()}, ${state.userName}'
         : _greeting();
@@ -516,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 size: 22,
                 color: state.streakCount > 0
                     ? AppColors.flame
-                    : AppColors.inkTertiary,
+                    : t.palette.inkTertiary,
               ),
               const SizedBox(width: 5),
               Text(
@@ -526,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   fontWeight: FontWeight.w700,
                   color: state.streakCount > 0
                       ? AppColors.flame
-                      : AppColors.inkTertiary,
+                      : t.palette.inkTertiary,
                 ),
               ),
             ],
@@ -538,6 +544,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildStatBubble(
       IconData icon, int rawValue, String label, AppState state) {
+    final t = context.theme;
     String format(int v) =>
         '\$${(v / AppState.starsPerDollar).toStringAsFixed(2)}';
 
@@ -547,11 +554,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Container(
           width: 56,
           height: 56,
-          decoration: const BoxDecoration(
-            color: AppColors.creamDeep,
+          decoration: BoxDecoration(
+            color: t.palette.surfaceSubtle,
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, size: 26, color: AppColors.inkSecondary),
+          child: Icon(icon, size: 26, color: t.palette.inkSecondary),
         ),
         const SizedBox(height: 10),
         AnimatedCounter(
@@ -567,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           label,
           style: AppText.caption.copyWith(
             fontWeight: FontWeight.w500,
-            color: AppColors.inkSecondary,
+            color: t.palette.inkSecondary,
           ),
           textAlign: TextAlign.center,
         ),
@@ -781,6 +788,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContinueCard(InstalledGame game) {
+    final t = context.theme;
     return AppCard(
       onTap: () => _openGameDetail(game),
       haptic: null,
@@ -797,11 +805,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               errorBuilder: (_, __, ___) => Container(
                 width: 48,
                 height: 48,
-                color: AppColors.creamDeep,
+                color: t.palette.surfaceSubtle,
                 alignment: Alignment.center,
                 child: Text(
                   game.name.isEmpty ? '?' : game.name[0].toUpperCase(),
-                  style: AppText.bodyStrong.copyWith(color: AppColors.ink),
+                  style: AppText.bodyStrong.copyWith(color: t.palette.ink),
                 ),
               ),
             ),
@@ -821,20 +829,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Text(
                   game.nextMilestoneLabel,
                   style: AppText.caption
-                      .copyWith(color: AppColors.inkSecondary),
+                      .copyWith(color: t.palette.inkSecondary),
                 ),
               ],
             ),
           ),
           Text(
             '\$${game.nextMilestoneReward.toStringAsFixed(2)}',
-            style: AppText.bodyStrong.copyWith(color: AppColors.primary),
+            style: AppText.bodyStrong.copyWith(color: t.palette.brand),
           ),
           const SizedBox(width: AppSpacing.sm),
           Icon(
             PhosphorIcons.caretRight(PhosphorIconsStyle.bold),
             size: 18,
-            color: AppColors.inkTertiary,
+            color: t.palette.inkTertiary,
           ),
         ],
       ),
@@ -877,6 +885,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildOnboardingTasks(AppState state) {
+    final t = context.theme;
     final profileDone = state.completedTasks.contains('profile');
     final installDone = state.completedTasks.contains('game_install');
 
@@ -897,7 +906,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           'Complete your profile',
           '~2 min',
           PhosphorIcons.userCircle(PhosphorIconsStyle.duotone),
-          AppColors.primary,
+          t.palette.brand,
           'profile',
           state,
         ),
@@ -938,6 +947,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _taskCard(String title, String meta, IconData icon, Color color,
       String taskKey, AppState state,
       {VoidCallback? onTap, bool locked = false}) {
+    final t = context.theme;
     final completed = state.completedTasks.contains(taskKey);
     final disabled = completed || locked;
     final bg = color.withValues(alpha: 0.10);
@@ -951,7 +961,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: t.palette.surfaceRaised,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
             boxShadow: [
@@ -985,7 +995,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Text(
                       meta,
                       style: AppText.caption.copyWith(
-                        color: AppColors.inkSecondary,
+                        color: t.palette.inkSecondary,
                       ),
                     ),
                   ],
@@ -999,10 +1009,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         : PhosphorIcons.playCircle(PhosphorIconsStyle.fill),
                 size: completed ? 48 : locked ? 24 : 48,
                 color: completed
-                    ? AppColors.primary
+                    ? t.palette.brand
                     : locked
-                        ? AppColors.inkTertiary
-                        : AppColors.primary,
+                        ? t.palette.inkTertiary
+                        : t.palette.brand,
               ),
             ],
           ),
@@ -1012,6 +1022,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildDailyTasks(AppState state) {
+    final t = context.theme;
     final done = state.dailyTasksCompleted;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1026,7 +1037,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             Text(
               '$done/3 done',
               style: AppText.body.copyWith(
-                  fontWeight: FontWeight.w600, color: AppColors.primary),
+                  fontWeight: FontWeight.w600, color: t.palette.brand),
             ),
           ],
         ),
@@ -1068,6 +1079,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
 
   Widget _buildEarnMore(AppState state) {
+    final t = context.theme;
     final unlocked = state.allTasksCompleted;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1075,7 +1087,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Row(
           children: [
             if (!unlocked) ...[
-              Icon(PhosphorIcons.lockSimple(), size: 14, color: AppColors.ink),
+              Icon(PhosphorIcons.lockSimple(), size: 14, color: t.palette.ink),
               const SizedBox(width: 6),
             ],
             Text(
@@ -1089,7 +1101,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           Text(
             'Finish your starter tasks to unlock all modes',
             style: AppText.caption.copyWith(
-                fontWeight: FontWeight.w500, color: AppColors.inkTertiary),
+                fontWeight: FontWeight.w500, color: t.palette.inkTertiary),
           ),
         ],
         const SizedBox(height: 12),
@@ -1128,10 +1140,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _earnTile(
       String title, String sub, IconData icon, Color color, Color bg,
       {VoidCallback? onTap}) {
+    final t = context.theme;
     final tile = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: t.palette.surfaceRaised,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -1235,6 +1248,7 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return AnimatedBuilder(
       animation: _ctrl,
       builder: (context, child) {
@@ -1255,7 +1269,7 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
                 opacity: _cardOpacity.value,
                 child: Transform.scale(
                   scale: _cardScale.value,
-                  child: _buildCard(),
+                  child: _buildCard(t),
                 ),
               ),
             ),
@@ -1265,14 +1279,14 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildCard(EarnWiseTheme t) {
     return Material(
       color: Colors.transparent,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: t.palette.surfaceRaised,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -1293,14 +1307,14 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
                 child: Container(
                   width: 28,
                   height: 28,
-                  decoration: const BoxDecoration(
-                    color: AppColors.creamDeep,
+                  decoration: BoxDecoration(
+                    color: t.palette.surfaceSubtle,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     PhosphorIcons.x(PhosphorIconsStyle.bold),
                     size: 14,
-                    color: AppColors.inkSecondary,
+                    color: t.palette.inkSecondary,
                   ),
                 ),
               ),
@@ -1311,15 +1325,15 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.primary, AppColors.tealSecondary],
+                  colors: [t.palette.brand, AppColors.tealSecondary],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
+                    color: t.palette.brand.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 6),
                   ),
@@ -1348,7 +1362,7 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
               style: AppText.caption.copyWith(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: t.palette.brand,
                 letterSpacing: 1.5,
               ),
             ),
@@ -1371,7 +1385,7 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: t.palette.brand,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -1394,7 +1408,7 @@ class _GoalCelebrationModalState extends State<_GoalCelebrationModal>
                   'Keep earning',
                   style: AppText.body.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: AppColors.inkTertiary,
+                    color: t.palette.inkTertiary,
                   ),
                 ),
               ),
@@ -1470,6 +1484,7 @@ class _WelcomeModalState extends State<_WelcomeModal>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return AnimatedBuilder(
       animation: _ctrl,
       builder: (context, child) {
@@ -1488,7 +1503,7 @@ class _WelcomeModalState extends State<_WelcomeModal>
                 opacity: _cardOpacity.value,
                 child: Transform.scale(
                   scale: _cardScale.value,
-                  child: _buildCard(),
+                  child: _buildCard(t),
                 ),
               ),
             ),
@@ -1498,14 +1513,14 @@ class _WelcomeModalState extends State<_WelcomeModal>
     );
   }
 
-  Widget _buildCard() {
+  Widget _buildCard(EarnWiseTheme t) {
     return Material(
       color: Colors.transparent,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: t.palette.surfaceRaised,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -1523,15 +1538,15 @@ class _WelcomeModalState extends State<_WelcomeModal>
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.primary, AppColors.tealSecondary],
+                  colors: [t.palette.brand, AppColors.tealSecondary],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
+                    color: t.palette.brand.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 6),
                   ),
@@ -1559,7 +1574,7 @@ class _WelcomeModalState extends State<_WelcomeModal>
               'Because actions speak louder than words',
               textAlign: TextAlign.center,
               style: AppText.body.copyWith(
-                color: AppColors.inkSecondary,
+                color: t.palette.inkSecondary,
               ),
             ),
             const SizedBox(height: 48),
@@ -1570,7 +1585,7 @@ class _WelcomeModalState extends State<_WelcomeModal>
                 children: [
                   _WelcomeBullet(
                     icon: PhosphorIcons.checkCircle(PhosphorIconsStyle.fill),
-                    color: AppColors.primary,
+                    color: t.palette.brand,
                     text: 'Finish a few starter tasks',
                   ),
                   const SizedBox(height: 12),
@@ -1597,7 +1612,7 @@ class _WelcomeModalState extends State<_WelcomeModal>
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: t.palette.brand,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

@@ -5,8 +5,11 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/press_scale.dart';
+import '../widgets/primary_button.dart';
+import 'settings_screen.dart';
 import 'welcome_screen.dart';
 
 /// Bottom padding reserved inside the scroll view so the last element
@@ -35,6 +38,7 @@ class ProfileScreen extends StatelessWidget {
       key: const Key('profile_screen_root'),
         child: Consumer<AppState>(
           builder: (context, state, _) {
+            final t = context.theme;
             return SingleChildScrollView(
               padding: const EdgeInsets.only(
                 left: AppLayout.gutter,
@@ -50,7 +54,10 @@ class ProfileScreen extends StatelessWidget {
                         child: Text('Profile', style: AppText.sectionTitle),
                       ),
                       PressScale(
-                        onTap: () {},
+                        key: const Key('profile_gear'),
+                        onTap: () => Navigator.of(context).push(
+                          fadeRoute(const SettingsScreen()),
+                        ),
                         child: Container(
                           width: 40,
                           height: 40,
@@ -64,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                           child: Icon(
                             PhosphorIcons.gear(PhosphorIconsStyle.fill),
                             size: 20,
-                            color: AppColors.inkSecondary,
+                            color: t.palette.inkSecondary,
                           ),
                         ),
                       ),
@@ -113,6 +120,7 @@ class _AvatarCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return SizedBox(
       width: 160,
       height: 160,
@@ -127,8 +135,8 @@ class _AvatarCircle extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  AppColors.primary.withValues(alpha: 0.3),
-                  AppColors.primary.withValues(alpha: 0),
+                  t.palette.brand.withValues(alpha: 0.3),
+                  t.palette.brand.withValues(alpha: 0),
                 ],
               ),
             ),
@@ -137,9 +145,9 @@ class _AvatarCircle extends StatelessWidget {
           Container(
             width: 120,
             height: 120,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primary,
+              color: t.palette.brand,
             ),
             child: Center(
               child: Text(
@@ -162,19 +170,20 @@ class _ProviderBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           'via',
-          style: AppText.caption.copyWith(color: AppColors.inkTertiary),
+          style: AppText.caption.copyWith(color: t.palette.inkTertiary),
         ),
         const SizedBox(width: 6),
         const _GoogleLogo(size: 20),
         const SizedBox(width: 6),
         Text(
           provider,
-          style: AppText.caption.copyWith(color: AppColors.ink),
+          style: AppText.caption.copyWith(color: t.palette.ink),
         ),
       ],
     );
@@ -207,6 +216,7 @@ class _SectionHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Align(
@@ -214,7 +224,7 @@ class _SectionHeading extends StatelessWidget {
         child: Text(
           label,
           style: AppText.caption.copyWith(
-            color: AppColors.inkTertiary,
+            color: t.palette.inkTertiary,
             letterSpacing: _kSectionHeadingLetterSpacing,
             fontWeight: FontWeight.w700,
           ),
@@ -225,10 +235,10 @@ class _SectionHeading extends StatelessWidget {
 }
 
 /// Outer card wrapping three _InfoRow children with thin dividers.
-/// Replicates the AppCard visual recipe inline (white, 18 radius,
-/// cream-deep border, soft shadow) because the profile info card is
-/// a fixed three-row layout that does not need the AppCard widget's
-/// tap-target behavior.
+/// Replicates the AppCard visual recipe inline (surfaceRaised,
+/// radii.card, hairline border, elevation.card) because the profile
+/// info card is a fixed three-row layout that does not need the
+/// AppCard widget's tap-target behavior.
 class _InfoCard extends StatelessWidget {
   final AppState state;
 
@@ -236,18 +246,13 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.creamDeep, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: t.palette.surfaceRaised,
+        borderRadius: BorderRadius.circular(t.radii.card),
+        border: Border.all(color: t.palette.hairline, width: 1.5),
+        boxShadow: t.elevation.card,
       ),
       child: Column(
         children: [
@@ -290,6 +295,7 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -299,10 +305,10 @@ class _InfoRow extends StatelessWidget {
             height: 44,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primary.withValues(alpha: 0.12),
+              color: t.palette.brand.withValues(alpha: 0.12),
             ),
             child: Center(
-              child: Icon(icon, size: 22, color: AppColors.primary),
+              child: Icon(icon, size: 22, color: t.palette.brand),
             ),
           ),
           const SizedBox(width: AppSpacing.md),
@@ -313,7 +319,7 @@ class _InfoRow extends StatelessWidget {
                 Text(
                   label,
                   style:
-                      AppText.caption.copyWith(color: AppColors.inkSecondary),
+                      AppText.caption.copyWith(color: t.palette.inkSecondary),
                 ),
                 const SizedBox(height: 2),
                 Text(value, style: AppText.listItem),
@@ -324,7 +330,7 @@ class _InfoRow extends StatelessWidget {
           Icon(
             PhosphorIcons.pencilSimpleLine(PhosphorIconsStyle.regular),
             size: 20,
-            color: AppColors.inkTertiary,
+            color: t.palette.inkTertiary,
           ),
         ],
       ),
@@ -339,21 +345,22 @@ class _RowDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+    final t = context.theme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       child: Divider(
         height: 1,
         thickness: 1,
-        color: AppColors.creamDeep,
+        color: t.palette.hairline,
       ),
     );
   }
 }
 
 /// Outer card for the connected account row. Same AppCard visual
-/// recipe as _InfoCard (white, 18 radius, cream-deep border, soft
-/// shadow) but holds only one row because there is only one connected
-/// account in v1.
+/// recipe as _InfoCard (surfaceRaised, radii.card, hairline border,
+/// elevation.card) but holds only one row because there is only one
+/// connected account in v1.
 class _AccountCard extends StatelessWidget {
   final AppState state;
 
@@ -361,18 +368,13 @@ class _AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.creamDeep, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: t.palette.surfaceRaised,
+        borderRadius: BorderRadius.circular(t.radii.card),
+        border: Border.all(color: t.palette.hairline, width: 1.5),
+        boxShadow: t.elevation.card,
       ),
       child: _AccountRow(state: state),
     );
@@ -390,6 +392,7 @@ class _AccountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
@@ -403,7 +406,7 @@ class _AccountRow extends StatelessWidget {
                 Text(
                   'Connected Account',
                   style:
-                      AppText.caption.copyWith(color: AppColors.inkSecondary),
+                      AppText.caption.copyWith(color: t.palette.inkSecondary),
                 ),
                 const SizedBox(height: 2),
                 Text(state.email, style: AppText.listItem),
@@ -414,7 +417,7 @@ class _AccountRow extends StatelessWidget {
           Icon(
             PhosphorIcons.lock(PhosphorIconsStyle.regular),
             size: 20,
-            color: AppColors.inkTertiary,
+            color: t.palette.inkTertiary,
           ),
         ],
       ),
@@ -422,17 +425,19 @@ class _AccountRow extends StatelessWidget {
   }
 }
 
-/// Red-outlined pill button. Full width. Tap calls AppState.reset()
+/// Destructive pill button. Full width. Tap calls AppState.reset()
 /// and then pushes the welcome screen onto a cleared navigation stack.
-/// Wrapped in [PressScale] with [HapticIntensity.warning] so the
-/// destructive action feels different from a normal confirm CTA.
+/// Uses the destructive variant of PrimaryButton so the haptic feedback
+/// and color treatment both signal a destructive action.
 class _SignOutButton extends StatelessWidget {
   const _SignOutButton();
 
   @override
   Widget build(BuildContext context) {
-    return PressScale(
+    return PrimaryButton(
       key: const Key('profile_sign_out'),
+      label: 'Sign Out',
+      destructive: true,
       haptic: HapticIntensity.warning,
       onTap: () {
         context.read<AppState>().reset();
@@ -441,26 +446,6 @@ class _SignOutButton extends StatelessWidget {
           (route) => false,
         );
       },
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: _kSignOutRed, width: 1.5),
-        ),
-        child: Center(
-          child: Text(
-            'Sign Out',
-            style: AppText.ctaLabel.copyWith(color: _kSignOutRed),
-          ),
-        ),
-      ),
     );
   }
 }
-
-/// Red used by the Sign Out button. Not in AppColors because Sign Out
-/// is the only red surface in the app today; if a second red element
-/// ever ships, promote this to AppColors.
-const Color _kSignOutRed = Color(0xFFDC2626);

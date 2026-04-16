@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/app_text.dart';
-import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import '../theme/motion.dart';
 import '../widgets/animated_gradient_bg.dart';
 import '../widgets/press_scale.dart';
@@ -23,7 +23,7 @@ const double _kNavPillRadius = 40.0;
 
 /// Top-level tab shell that sits between onboarding and the tab content.
 /// Owns the floating glass nav pill that overlays every tab with a
-/// cream-to-transparent gradient fade above it. Children are swapped via
+/// surface-to-transparent gradient fade above it. Children are swapped via
 /// [IndexedStack] so each tab's state survives tab switches.
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -37,8 +37,9 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      backgroundColor: t.palette.surface,
       body: AnimatedGradientBg(
         child: Stack(
         children: [
@@ -56,7 +57,7 @@ class _HomeShellState extends State<HomeShell> {
               ],
             ),
           ),
-          // Floating glass nav pill with cream-to-transparent gradient fade
+          // Floating glass nav pill with surface-to-transparent gradient fade
           // above it, matching the pattern the home screen used to own.
           Positioned(
             left: 0,
@@ -72,8 +73,8 @@ class _HomeShellState extends State<HomeShell> {
                   begin: Alignment.topCenter,
                   end: const Alignment(0, -0.1),
                   colors: [
-                    AppColors.cream.withValues(alpha: 0),
-                    AppColors.cream,
+                    t.palette.surface.withValues(alpha: 0),
+                    t.palette.surface,
                   ],
                 ),
               ),
@@ -137,6 +138,7 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Widget _navItem(int index, IconData icon, String label, {required Key key}) {
+    final t = context.theme;
     final isActive = _navIndex == index;
     return PressScale(
       key: key,
@@ -146,7 +148,7 @@ class _HomeShellState extends State<HomeShell> {
         curve: AppCurves.warmOut,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.primary : Colors.transparent,
+          color: isActive ? t.palette.brand : Colors.transparent,
           borderRadius: BorderRadius.circular(32),
         ),
         child: Row(
@@ -155,7 +157,7 @@ class _HomeShellState extends State<HomeShell> {
             Icon(
               icon,
               size: 26,
-              color: isActive ? Colors.white : AppColors.inkSecondary,
+              color: isActive ? Colors.white : t.palette.inkSecondary,
             ),
             AnimatedSize(
               duration: AppDurations.medium,

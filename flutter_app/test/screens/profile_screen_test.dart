@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:earnwise_mvp/screens/profile_screen.dart';
+import 'package:earnwise_mvp/screens/settings_screen.dart';
 import 'package:earnwise_mvp/state/app_state.dart';
+import 'package:earnwise_mvp/theme/app_theme.dart';
+import 'package:earnwise_mvp/theme/theme_catalog.dart';
 
 /// Pumps [ProfileScreen] inside a minimal Provider + MaterialApp harness.
 /// Optionally accepts a pre-built [AppState] so tests can set userName
@@ -14,8 +17,9 @@ Future<void> pumpProfile(
   await tester.pumpWidget(
     ChangeNotifierProvider<AppState>.value(
       value: state ?? AppState(),
-      child: const MaterialApp(
-        home: Scaffold(body: ProfileScreen()),
+      child: MaterialApp(
+        theme: AppTheme.buildMaterialTheme(kCreamTheme),
+        home: const Scaffold(body: ProfileScreen()),
       ),
     ),
   );
@@ -143,6 +147,17 @@ void main() {
       // The Sign Out button is no longer in the tree because the profile
       // screen was popped (and the WelcomeScreen is now on top).
       expect(find.text('Sign Out'), findsNothing);
+    });
+
+    testWidgets('tapping the gear icon pushes SettingsScreen',
+        (tester) async {
+      await pumpProfile(tester);
+      expect(find.byType(SettingsScreen), findsNothing);
+
+      await tester.tap(find.byKey(const Key('profile_gear')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SettingsScreen), findsOneWidget);
     });
   });
 }

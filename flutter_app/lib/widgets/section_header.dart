@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_text.dart';
 import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 
 /// Section title row: the canonical way to introduce a section on a
 /// screen. Renders the title in [AppText.title], an optional subtitle
@@ -24,6 +25,7 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -32,7 +34,10 @@ class SectionHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: Text(title, style: AppText.title),
+              child: Text(
+                title,
+                style: AppText.title.copyWith(color: t.palette.ink),
+              ),
             ),
             if (action != null) action!,
           ],
@@ -41,7 +46,7 @@ class SectionHeader extends StatelessWidget {
           const SizedBox(height: AppSpacing.tight),
           Text(
             subtitle!,
-            style: AppText.caption.copyWith(color: AppColors.inkSecondary),
+            style: AppText.caption.copyWith(color: t.palette.inkSecondary),
           ),
         ],
       ],

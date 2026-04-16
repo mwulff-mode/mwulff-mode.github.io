@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import '../theme/earnwise_theme.dart';
 import '../theme/motion.dart';
 import 'press_scale.dart';
 
 /// The repeating "choice card" surface used for list items and selectable
-/// rows: white background, AppRadius.card (16) radius, cream-deep 1.5 border, subtle shadow.
+/// rows: `palette.surfaceRaised` background, `radii.card` radius,
+/// `palette.hairline` 1.5-pt border, and `elevation.card` shadow. Every slot
+/// is resolved from the active `EarnWiseTheme` at build time.
 ///
 /// Supports a `selected` state (primary-pale fill, primary border) for use
 /// in multi-select lists like the onboarding preference picker.
@@ -35,24 +37,20 @@ class AppCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.theme;
+    final fill = selected ? t.palette.surfaceSelected : t.palette.surfaceRaised;
+    final borderColor = selected ? t.palette.brand : t.palette.hairline;
+    final boxShadow = t.elevation.card;
+
     final decorated = AnimatedContainer(
       duration: AppDurations.short,
       constraints: constraints,
       padding: padding,
       decoration: BoxDecoration(
-        color: selected ? AppColors.primaryPale : AppColors.white,
-        borderRadius: BorderRadius.circular(AppRadius.card),
-        border: Border.all(
-          color: selected ? AppColors.primary : AppColors.creamDeep,
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: fill,
+        borderRadius: BorderRadius.circular(t.radii.card),
+        border: Border.all(color: borderColor, width: 1.5),
+        boxShadow: boxShadow,
       ),
       child: child,
     );
