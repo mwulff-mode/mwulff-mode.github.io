@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarnWise — Naming Brief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Sora:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --page: #F5F1EA;
+    --paper: #FFFDF8;
+    --paper-deep: #F4EAD5;
+    --ink: #0E2235;
+    --ink-soft: #3D4B5C;
+    --ink-faint: #7E8896;
+    --coral: #C9523D;
+    --teal: #2FA68A;
+    --rule: rgba(14, 34, 53, 0.14);
+    --rule-soft: rgba(14, 34, 53, 0.08);
+    --serif: "Bitter", "Iowan Old Style", Georgia, serif;
+    --sans: "Sora", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .doc {
+    max-width: 760px;
+    margin: 48px auto;
+    background: var(--paper);
+    padding: 80px 88px 88px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.8) inset,
+      0 24px 60px rgba(14, 34, 53, 0.08),
+      0 6px 14px rgba(14, 34, 53, 0.04);
+    border-radius: 4px;
+  }
+
+  /* ---------- TITLE ---------- */
+  .titleblock {
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+  }
+  h1 .accent { color: var(--coral); }
+  .subtitle {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--ink-soft);
+    line-height: 1.3;
+    margin-bottom: 18px;
+    max-width: 520px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .meta strong { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- SECTIONS ---------- */
+  section { margin-bottom: 44px; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 14px;
+  }
+  h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    margin: 18px 0 6px;
+  }
+  p {
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  strong { color: var(--ink); font-weight: 600; }
+
+  /* lists */
+  ul.bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 6px;
+  }
+  ul.bullets li {
+    position: relative;
+    padding: 4px 0 4px 18px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    border-bottom: 1px dashed var(--rule-soft);
+  }
+  ul.bullets li:last-child { border-bottom: none; }
+  ul.bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+  }
+
+  ul.bullets.pos li::before { background: var(--teal); }
+  ul.bullets.neg li::before { background: var(--coral); }
+
+  /* quotes / emotional goal */
+  .quotes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0 8px;
+  }
+  .quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.3;
+    color: var(--ink);
+    padding: 12px 14px;
+    background: rgba(244, 234, 213, 0.45);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* constraints two-col */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 10px;
+  }
+  .col-head {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .two-col .neg .col-head { color: var(--coral); }
+  .two-col .pos .col-head { color: var(--teal); }
+
+  /* name chips */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 6px 0 14px;
+  }
+  .chip {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    letter-spacing: -0.005em;
+    line-height: 1;
+  }
+  .chip.good {
+    background: rgba(47, 166, 138, 0.10);
+    color: var(--teal);
+    border: 1px solid rgba(47, 166, 138, 0.30);
+  }
+  .chip.bad {
+    background: rgba(201, 82, 61, 0.08);
+    color: var(--coral);
+    border: 1px solid rgba(201, 82, 61, 0.28);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(201, 82, 61, 0.5);
+  }
+  .chip-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 14px 0 6px;
+  }
+  .chip-label.good { color: var(--teal); }
+  .chip-label.bad { color: var(--coral); }
+
+  /* closer */
+  .closer {
+    margin-top: 48px;
+    padding-top: 22px;
+    border-top: 1px solid var(--ink);
+  }
+  .closer p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.35;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .closer .h-coral { color: var(--coral); font-style: normal; font-weight: 600; }
+  .signature {
+    margin-top: 16px;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .signature strong { color: var(--ink-soft); font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .doc { margin: 0; padding: 36px 22px 48px; border-radius: 0; }
+    .quotes, .two-col { grid-template-columns: 1fr; }
+    h1 { font-size: 38px; }
+    h2 { font-size: 22px; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 18mm 16mm; }
+    html, body { background: white; }
+    .doc { margin: 0; padding: 0; box-shadow: none; max-width: 100%; }
+    section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  <article class="doc">
+
+    <header class="titleblock">
+      <div class="eyebrow">Naming Brief · For brainstorm</div>
+      <h1>Naming <span class="accent">brief</span></h1>
+      <div class="subtitle">What this app is, who it's for, and the shape of a name that fits.</div>
+      <div class="meta">
+        <span><strong>Working name</strong> · EarnWise</span>
+        <span>Phase 1 · June 2026</span>
+      </div>
+    </header>
+
+    <!-- PRODUCT -->
+    <section>
+      <div class="section-label">Product</div>
+      <h2>A rewarded app that pays in real dollars.</h2>
+      <p>
+        Small, reliable rewards for things she already does on her phone, paid out in real money — no points, no tokens. Built to be trusted in thirty seconds and useful in five minutes.
+      </p>
+      <h3>Core value proposition</h3>
+      <p>
+        Her time, turned into real dollars. Calm, transparent, no tricks.
+      </p>
+      <h3>Main earning methods</h3>
+      <ul class="bullets">
+        <li><strong>Surveys</strong> — quick opinion tasks, paid per completion.</li>
+        <li><strong>Games</strong> — install a game, hit a milestone, get paid.</li>
+        <li><strong>Cashout</strong> — direct to PayPal. The proof the system works.</li>
+      </ul>
+    </section>
+
+    <!-- AUDIENCE -->
+    <section>
+      <div class="section-label">Audience</div>
+      <h2>Women 45+, US. Cautious, not desperate.</h2>
+      <ul class="bullets">
+        <li>Financially cautious.</li>
+        <li>Scam-aware. Deletes anything that feels off.</li>
+        <li>Wants predictability and visible trust.</li>
+        <li>Responds to a calm, respectful tone.</li>
+        <li>Avoids hype, casino energy, and anything that looks gimmicky.</li>
+      </ul>
+    </section>
+
+    <!-- EMOTIONAL GOAL -->
+    <section>
+      <div class="section-label">Emotional goal</div>
+      <h2>What she should think when she reads the name.</h2>
+      <div class="quotes">
+        <div class="quote">"This feels safe."</div>
+        <div class="quote">"This feels practical."</div>
+        <div class="quote">"I understand this immediately."</div>
+        <div class="quote">"This won't waste my time."</div>
+      </div>
+    </section>
+
+    <!-- CONSTRAINTS -->
+    <section>
+      <div class="section-label">Naming constraints</div>
+      <h2>The shape of a name that fits — and the shapes that don't.</h2>
+      <div class="two-col">
+        <div class="neg">
+          <div class="col-head">Avoid</div>
+          <ul class="bullets neg">
+            <li>Crypto or startup energy.</li>
+            <li>"Hustle / grind / max / boost" language.</li>
+            <li>Childish, gamified, or cartoonish feel.</li>
+            <li>Hard-to-spell or invented SaaS words.</li>
+            <li>App-store-sensitive terms (cash, earn, money).</li>
+          </ul>
+        </div>
+        <div class="pos">
+          <div class="col-head">Prefer</div>
+          <ul class="bullets pos">
+            <li>Calm and trustworthy.</li>
+            <li>Understandable on first read.</li>
+            <li>Real English words over coinages.</li>
+            <li>Warm but grown-up.</li>
+            <li>Pronounceable, spellable, searchable.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLES -->
+    <section>
+      <div class="section-label">Directional examples</div>
+      <h2>Not for use — for orientation.</h2>
+
+      <div class="chip-label good">Right neighborhood</div>
+      <div class="chip-row">
+        <span class="chip good">Tally</span>
+        <span class="chip good">Gather</span>
+        <span class="chip good">Worthy</span>
+        <span class="chip good">Earnest</span>
+        <span class="chip good">Flourish</span>
+      </div>
+
+      <div class="chip-label bad">Wrong neighborhood</div>
+      <div class="chip-row">
+        <span class="chip bad">CashBlaze</span>
+        <span class="chip bad">Grindify</span>
+        <span class="chip bad">RewardStorm</span>
+        <span class="chip bad">CryptoMint</span>
+        <span class="chip bad">BoostUp</span>
+      </div>
+    </section>
+
+    <!-- CLOSER -->
+    <footer class="closer">
+      <p>
+        The right name should sound like something she'd recommend to a friend over coffee — not something she'd <span class="h-coral">have to defend</span>.
+      </p>
+      <div class="signature"><strong>EarnWise</strong> · Naming Brief · 2026-05-14</div>
+    </footer>
+
+  </article>
+</body>
+</html>
