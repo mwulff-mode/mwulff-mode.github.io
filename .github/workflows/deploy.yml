@@ -1,4 +1,4 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Deploy Docs to GitHub Pages
 
 on:
   push:
@@ -20,25 +20,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-
-      - name: Install dependencies
-        working-directory: flutter_app
-        run: flutter pub get
-
-      - name: Build web
-        working-directory: flutter_app
-        run: flutter build web --release --base-href /
-
-      - name: Copy docs into build
-        run: cp -r docs flutter_app/build/web/docs
+      - name: Stage site
+        run: |
+          mkdir -p _site/docs
+          cp -r docs/. _site/docs/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: flutter_app/build/web
+          path: _site
 
   deploy:
     environment:
