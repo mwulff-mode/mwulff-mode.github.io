@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>figma-ds — your design system, run by AI</title>
+<meta name="description" content="figma-ds plugs into Claude Code and turns Claude into a design-system specialist for Figma — it builds, documents, and audits your design system, and learns your brand as you go." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#F6F2E9;
+    --paper-2:#FCFAF4;
+    --ink:#16140F;
+    --ink-soft:#5C564A;
+    --ink-faint:#8B8473;
+    --line:#E2DBCB;
+    --line-strong:#CFC6B1;
+    --accent:#D83C18;        /* vermilion — primary */
+    --accent-deep:#A82C10;
+    --c-foundation:#BD7E26;  /* ochre   */
+    --c-build:#D83C18;       /* vermilion */
+    --c-document:#2E7D6B;    /* pine    */
+    --c-audit:#33588A;       /* slate   */
+    --c-orchestrate:#7A4A82; /* plum    */
+    --maxw:1180px;
+    --r:14px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --serif:"Fraunces",Georgia,serif;
+    --sans:"Hanken Grotesk",-apple-system,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit;text-decoration:none}
+  /* atmospheric background: faint grid + warm vignette */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(120% 90% at 85% -10%, rgba(216,60,24,.06), transparent 55%),
+      radial-gradient(90% 70% at 5% 100%, rgba(51,88,138,.05), transparent 55%),
+      var(--paper);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    -webkit-mask-image:radial-gradient(120% 100% at 50% 0,#000,transparent 80%);
+            mask-image:radial-gradient(120% 100% at 50% 0,#000,transparent 80%);
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .mono{font-family:var(--mono)}
+  .kicker{
+    font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:500;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(140%) blur(10px);
+    background:color-mix(in srgb,var(--paper) 82%,transparent);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-in{display:flex;align-items:center;gap:28px;height:62px}
+  .brand{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(216,60,24,.18)}
+  .nav-links{display:flex;gap:4px;margin-left:auto}
+  .nav-links a{
+    font-size:13.5px;color:var(--ink-soft);padding:7px 12px;border-radius:8px;
+    transition:.2s var(--ease);font-weight:500;
+  }
+  .nav-links a:hover{color:var(--ink);background:rgba(0,0,0,.04)}
+  .nav-links a.active{color:var(--accent)}
+  .nav-cta{
+    font-family:var(--mono);font-size:12.5px;font-weight:500;
+    border:1px solid var(--ink);border-radius:999px;padding:8px 16px;
+    transition:.22s var(--ease);white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--ink);color:var(--paper)}
+  @media(max-width:820px){.nav-links{display:none}}
+
+  /* ---------- HERO ---------- */
+  header{padding:88px 0 60px;position:relative}
+  .h-kick{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+  .h-kick .bar{height:1px;width:46px;background:var(--line-strong)}
+  h1{
+    font-family:var(--serif);font-weight:600;font-optical-sizing:auto;
+    font-size:clamp(40px,8vw,96px);line-height:.98;letter-spacing:-.035em;
+    margin-bottom:8px;text-wrap:balance;
+  }
+  h1 .em{font-style:italic;font-weight:500;color:var(--accent)}
+  .h-lead{
+    font-family:var(--serif);font-weight:400;font-size:clamp(21px,2.8vw,30px);
+    line-height:1.35;max-width:26ch;margin:22px 0 0;color:var(--ink)
+  }
+  .h-sub{margin-top:20px;max-width:54ch;color:var(--ink-soft);font-size:18px}
+  .h-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+  .pill{
+    font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+    border:1px solid var(--line-strong);border-radius:999px;padding:6px 13px;color:var(--ink-soft);
+    background:var(--paper-2);
+  }
+  .pill b{color:var(--ink);font-weight:700}
+  .h-cmd{margin-top:36px;max-width:640px}
+
+  /* thesis band */
+  .thesis{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(28px,4.6vw,52px);line-height:1.14;letter-spacing:-.025em;
+    max-width:26ch;text-wrap:balance;
+  }
+  .thesis .em{font-style:italic;color:var(--accent)}
+  .thesis-sub{margin-top:22px;max-width:58ch;color:var(--ink-soft);font-size:18.5px}
+
+  /* code block */
+  .code{
+    position:relative;background:var(--ink);color:#F4EFE4;border-radius:12px;
+    font-family:var(--mono);font-size:14px;line-height:1.9;
+    padding:18px 20px;overflow:auto;border:1px solid #2a2620;
+    box-shadow:0 22px 40px -28px rgba(22,20,15,.6);
+  }
+  .code .c-prompt{color:var(--accent);user-select:none}
+  .code .c-com{color:#8c8470}
+  .code .copy{
+    position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:11px;
+    color:#cfc8b6;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+    border-radius:7px;padding:5px 9px;cursor:pointer;transition:.18s;letter-spacing:.05em
+  }
+  .code .copy:hover{background:rgba(255,255,255,.16);color:#fff}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:74px 0;border-top:1px solid var(--line)}
+  .sec-head{margin-bottom:44px;max-width:60ch}
+  .sec-head h2{
+    font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.4vw,46px);
+    line-height:1.04;letter-spacing:-.025em;margin:14px 0 0
+  }
+  .sec-head p{margin-top:16px;color:var(--ink-soft);font-size:18.5px}
+
+  /* WHY/WHAT/HOW cards */
+  .triptych{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);
+    padding:26px 24px;position:relative;transition:.3s var(--ease)
+  }
+  .card:hover{border-color:var(--line-strong);transform:translateY(-3px)}
+  .card .idx{font-family:var(--mono);font-size:12px;color:var(--ink-faint);letter-spacing:.1em}
+  .card h3{font-family:var(--serif);font-size:24px;font-weight:600;margin:10px 0 10px;letter-spacing:-.01em}
+  .card p{color:var(--ink-soft);font-size:15.5px;line-height:1.62}
+  .card p+p{margin-top:11px}
+  @media(max-width:820px){.triptych{grid-template-columns:1fr}}
+
+  /* MENTAL MODEL diagram */
+  .model{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}
+  .flow{display:flex;flex-direction:column;gap:14px}
+  .node{
+    border:1px solid var(--line-strong);border-radius:12px;background:var(--paper-2);
+    padding:16px 18px;display:flex;align-items:center;gap:14px
+  }
+  .node .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);min-width:74px}
+  .node .body{font-size:15.5px;color:var(--ink)}
+  .node.hl{border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(216,60,24,.08)}
+  .node.profile{border-style:dashed;border-color:var(--c-document)}
+  .arrow{font-family:var(--mono);color:var(--ink-faint);text-align:center;font-size:13px}
+  .model-note{color:var(--ink-soft);font-size:16.5px}
+  .model-note strong{color:var(--ink);font-weight:600}
+  .model-note .hi{color:var(--accent);font-weight:600}
+  @media(max-width:820px){.model{grid-template-columns:1fr}}
+
+  /* SKILLS INDEX */
+  .group{margin-bottom:34px}
+  .group-h{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
+  .group-h .gd{width:10px;height:10px;border-radius:3px;align-self:center}
+  .group-h h3{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+  .group-h .gn{font-size:14px;color:var(--ink-faint)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  @media(max-width:740px){.grid{grid-template-columns:1fr}}
+  .scard{
+    display:block;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;transition:.25s var(--ease);position:relative;overflow:hidden
+  }
+  .scard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gc,var(--accent));transform:scaleY(0);transform-origin:top;transition:.28s var(--ease)}
+  .scard:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .scard:hover::before{transform:scaleY(1)}
+  .scard .top{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+  .scard .num{font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+  .scard .nm{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.01em}
+  .scard .desc{font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+  .scard .go{font-family:var(--mono);font-size:11.5px;color:var(--gc,var(--accent));margin-top:11px;display:inline-flex;gap:5px;letter-spacing:.04em}
+
+  /* DEEP DIVES */
+  .dive{padding:46px 0;border-top:1px dashed var(--line-strong);scroll-margin-top:80px}
+  .dive:first-of-type{border-top:none}
+  .dive-head{display:flex;align-items:flex-start;gap:22px;margin-bottom:24px}
+  .dive-num{font-family:var(--serif);font-size:clamp(40px,6vw,64px);font-weight:600;line-height:.8;color:var(--line-strong)}
+  .dive-id .gt{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .dive-id h3{font-family:var(--mono);font-size:clamp(22px,3.4vw,30px);font-weight:700;letter-spacing:-.02em;margin:4px 0 0}
+  .dive-tagline{font-family:var(--serif);font-size:19px;color:var(--ink);margin:4px 0 0;font-style:italic;font-weight:400}
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  @media(max-width:740px){.specs{grid-template-columns:1fr}}
+  .spec{background:var(--paper-2);padding:18px 20px}
+  .spec.full{grid-column:1/-1}
+  .spec .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;display:flex;align-items:center;gap:7px}
+  .spec .lbl .d{width:7px;height:7px;border-radius:50%}
+  .spec p{font-size:15px;color:var(--ink);line-height:1.58}
+  .spec.stop p{color:var(--ink-soft)}
+  .spec code{font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.05);padding:1px 6px;border-radius:5px;color:var(--accent-deep)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:3px}
+  .chip{font-family:var(--mono);font-size:12px;border:1px solid var(--line-strong);border-radius:7px;padding:4px 10px;color:var(--ink-soft);background:var(--paper)}
+
+  /* GET STARTED */
+  .steps{display:flex;flex-direction:column;gap:0}
+  .step{display:grid;grid-template-columns:64px 1fr;gap:24px;padding:28px 0;border-top:1px solid var(--line)}
+  .step:first-child{border-top:none}
+  .step-n{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--accent);line-height:1}
+  .step h3{font-family:var(--serif);font-size:23px;font-weight:600;margin-bottom:8px;letter-spacing:-.01em}
+  .step p{color:var(--ink-soft);font-size:16px;margin-bottom:14px;max-width:62ch}
+  .step p code,.inline-code{font-family:var(--mono);font-size:13.5px;background:rgba(0,0,0,.05);padding:1px 6px;border-radius:5px;color:var(--accent-deep)}
+  .ex-prompts{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .ex{font-family:var(--mono);font-size:12.5px;border:1px dashed var(--line-strong);border-radius:8px;padding:7px 12px;color:var(--ink-soft);background:var(--paper-2)}
+  .ex b{color:var(--accent);font-weight:700}
+  .note{margin-top:18px;font-size:14px;color:var(--ink-faint);border-left:2px solid var(--line-strong);padding-left:14px}
+  @media(max-width:560px){.step{grid-template-columns:1fr;gap:8px}}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--line);padding:46px 0 70px;color:var(--ink-faint);font-size:14px}
+  .foot-in{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
+  .foot-in .mono{color:var(--ink-soft)}
+  footer a{color:var(--ink-soft);border-bottom:1px solid var(--line-strong);padding-bottom:1px}
+  footer a:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* reveal animation */
+  .rv{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .rv.in{opacity:1;transform:none}
+  .hero-rv{opacity:0;transform:translateY(20px);animation:rise .9s var(--ease) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .d1{animation-delay:.05s}.d2{animation-delay:.16s}.d3{animation-delay:.27s}.d4{animation-delay:.38s}.d5{animation-delay:.49s}.d6{animation-delay:.6s}
+  @media(prefers-reduced-motion:reduce){.rv,.hero-rv{animation:none!important;opacity:1!important;transform:none!important;transition:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a href="#top" class="brand"><span class="dot"></span>figma-ds</a>
+    <div class="nav-links">
+      <a href="#why">Why</a>
+      <a href="#model">How it works</a>
+      <a href="#skills">Capabilities</a>
+      <a href="#start">Get started</a>
+    </div>
+    <a href="#start" class="nav-cta">Install →</a>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="wrap">
+    <div class="h-kick hero-rv d1"><span class="kicker">Mode · figma-ds</span><span class="bar"></span><span class="kicker">An AI toolkit for design systems</span></div>
+    <h1 class="hero-rv d2">Your design system, <span class="em">run by AI.</span></h1>
+    <p class="h-lead hero-rv d3">Describe what you need in plain words. The AI builds it, documents it, and keeps everything consistent.</p>
+    <div class="h-meta hero-rv d4">
+      <span class="pill"><b>Builds</b> · components &amp; screens</span>
+      <span class="pill"><b>Documents</b> · as it goes</span>
+      <span class="pill"><b>Audits</b> · finds drift before users do</span>
+      <span class="pill"><b>Learns</b> · your brand &amp; conventions</span>
+    </div>
+    <div class="h-cmd hero-rv d5">
+      <div class="code" data-copy="/plugin marketplace add mwulff-mode/claude-plugins&#10;/plugin install figma-ds@mode">
+        <button class="copy">COPY</button>
+        <div><span class="c-com"># add the marketplace, then install</span></div>
+        <div><span class="c-prompt">&gt;</span> /plugin marketplace add mwulff-mode/claude-plugins</div>
+        <div><span class="c-prompt">&gt;</span> /plugin install figma-ds@mode</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- THE THESIS -->
+<section id="thesis">
+  <div class="wrap">
+    <p class="thesis rv">Figma is the most powerful design canvas there is — and it’s already your source of truth. The one thing it lacks is <span class="em">AI&nbsp;control</span>.</p>
+    <p class="thesis-sub rv">figma-ds is that control layer. The AI works directly in your live Figma file — with your components, under your rules — not in a separate tool that produces a second source of truth.</p>
+  </div>
+</section>
+
+<!-- WHY / WHAT / HOW -->
+<section id="why">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">The short version</span>
+      <h2>Why this exists, what it is, how it runs.</h2>
+    </div>
+    <div class="triptych">
+      <div class="card rv">
+        <div class="idx">01 / WHY</div>
+        <h3>Consistency is the hard part</h3>
+        <p>A design system is hundreds of small decisions — what things are called, how they’re built, when something becomes reusable, what gets documented. Teams re-make those decisions every week, slightly differently each time. That’s how brands drift and quality erodes.</p>
+        <p>figma-ds makes each decision <em>once</em> — then applies it every time, for everyone.</p>
+      </div>
+      <div class="card rv">
+        <div class="idx">02 / WHAT</div>
+        <h3>A team of eight AI specialists</h3>
+        <p>Eight skills for Claude that cover the full life of a design system: laying the foundations, building components and screens, writing the documentation, and running the quality checks that keep it all in sync.</p>
+        <p>Like a meticulous systems designer who never forgets a convention — available to the whole team, <em>on demand</em>.</p>
+      </div>
+      <div class="card rv">
+        <div class="idx">03 / HOW</div>
+        <h3>It learns your system</h3>
+        <p>The toolkit ships knowing the craft, not your brand. Each project keeps a living profile — your colors, your conventions, your past decisions. The AI reads it before every task, and records new decisions after.</p>
+        <p>The more you use it, the more it works like <em>one of your own</em>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MENTAL MODEL -->
+<section id="model">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">The mental model</span>
+      <h2>You describe the task. The right skill takes it.</h2>
+      <p>Each capability ships as a “skill” — a playbook the AI follows. You rarely pick one by name: describe what you want, the coordinator routes it to the right specialist, and every specialist consults your project profile before it touches the file.</p>
+    </div>
+    <div class="model">
+      <div class="flow rv">
+        <div class="node"><span class="tag">You</span><span class="body">“Build a Button.” · “Set up our colors &amp; type.” · “Are the docs current?”</span></div>
+        <div class="arrow">│</div>
+        <div class="node hl"><span class="tag">Router</span><span class="body"><b class="mono">figma-design-system</b> reads intent &amp; hands off</span></div>
+        <div class="arrow">│</div>
+        <div class="node"><span class="tag">Specialist</span><span class="body">one of the seven does the work</span></div>
+        <div class="arrow">⇅</div>
+        <div class="node profile"><span class="tag">Profile</span><span class="body"><b class="mono">project_profile.md</b> — read first, updated after</span></div>
+      </div>
+      <div class="model-note rv">
+        <p>Documentation isn’t an afterthought here. Every component is documented in <strong>three layers</strong> — the component itself, its short description, and a visual spec sheet right on the canvas — and each layer is kept honest by a different skill.</p>
+        <p style="margin-top:16px">Two habits are <span class="hi">built into every workflow</span>: <strong>read the project profile first</strong>, and <strong>write lasting decisions back</strong> when the task lands. That feedback loop is what turns a generic toolkit into one that knows your system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS INDEX -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Capabilities</span>
+      <h2>What is this system capable of?</h2>
+      <p>Eight specialists, grouped by the job they do for you.</p>
+    </div>
+
+    <div class="group rv">
+      <div class="group-h"><span class="gd" style="background:var(--c-foundation)"></span><h3>Foundation</h3><span class="gn">everything below the component layer</span></div>
+      <div class="grid">
+        <div class="scard" style="--gc:var(--c-foundation)">
+          <div class="top"><span class="num">01</span><span class="nm">figma-tokens</span></div>
+          <div class="desc">Lays the foundation: your colors, typography, and spacing as a single source of truth every component draws from. Change it once — it updates everywhere.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group rv">
+      <div class="group-h"><span class="gd" style="background:var(--c-build)"></span><h3>Build</h3><span class="gn">make the thing</span></div>
+      <div class="grid">
+        <div class="scard" style="--gc:var(--c-build)">
+          <div class="top"><span class="num">02</span><span class="nm">figma-component-build</span></div>
+          <div class="desc">Builds or fixes a single component — a button, a card, a form field — with all its sizes, states, and options, structured to scale.</div>
+        </div>
+        <div class="scard" style="--gc:var(--c-build)">
+          <div class="top"><span class="num">03</span><span class="nm">figma-screen-build</span></div>
+          <div class="desc">Assembles full screens from the components you already have — building with the official kit instead of redrawing from scratch.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group rv">
+      <div class="group-h"><span class="gd" style="background:var(--c-document)"></span><h3>Document</h3><span class="gn">make it legible to everyone else</span></div>
+      <div class="grid">
+        <div class="scard" style="--gc:var(--c-document)">
+          <div class="top"><span class="num">04</span><span class="nm">figma-component-document</span></div>
+          <div class="desc">Writes the spec sheet that sits beside each component: what it is, when to use it, and what options it offers.</div>
+        </div>
+        <div class="scard" style="--gc:var(--c-document)">
+          <div class="top"><span class="num">05</span><span class="nm">figma-doc-verify</span></div>
+          <div class="desc">The fact-checker: finds documentation that no longer matches reality after things change — and repairs it.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group rv">
+      <div class="group-h"><span class="gd" style="background:var(--c-audit)"></span><h3>Audit &amp; maintain</h3><span class="gn">find drift, fix it safely</span></div>
+      <div class="grid">
+        <div class="scard" style="--gc:var(--c-audit)">
+          <div class="top"><span class="num">06</span><span class="nm">figma-system-audit</span></div>
+          <div class="desc">The detective: finds duplicates and near-duplicates across the system and proposes what to merge or clean up.</div>
+        </div>
+        <div class="scard" style="--gc:var(--c-audit)">
+          <div class="top"><span class="num">07</span><span class="nm">figma-execute-audit</span></div>
+          <div class="desc">The fixer: works through that cleanup list, choosing the lightest safe way to handle each item.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group rv">
+      <div class="group-h"><span class="gd" style="background:var(--c-orchestrate)"></span><h3>Orchestrate</h3><span class="gn">the front door</span></div>
+      <div class="grid">
+        <div class="scard" style="--gc:var(--c-orchestrate)">
+          <div class="top"><span class="num">08</span><span class="nm">figma-design-system</span></div>
+          <div class="desc">The front door: describe the task, it dispatches the right specialist. The work lives in the other seven.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GET STARTED -->
+<section id="start">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Quick start</span>
+      <h2>From zero to your first build.</h2>
+      <p>Four steps. The only real setup is the project profile — that’s what makes the toolkit speak your system’s language.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv">
+        <div class="step-n">1</div>
+        <div>
+          <h3>Install the plugin</h3>
+          <p>Add the marketplace once, then install. You’ll need read access to the <span class="inline-code">mwulff-mode/claude-plugins</span> repo. Restart Claude Code (or run <span class="inline-code">/reload-plugins</span>) afterward.</p>
+          <div class="code" data-copy="/plugin marketplace add mwulff-mode/claude-plugins&#10;/plugin install figma-ds@mode">
+            <button class="copy">COPY</button>
+            <div><span class="c-prompt">&gt;</span> /plugin marketplace add mwulff-mode/claude-plugins</div>
+            <div><span class="c-prompt">&gt;</span> /plugin install figma-ds@mode</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step rv">
+        <div class="step-n">2</div>
+        <div>
+          <h3>Create your project profile</h3>
+          <p>The skills read project facts from a per-project profile. Copy the bundled template into your project’s memory folder and fill in the file key, brand, type ramp, and conventions. <span class="inline-code">&lt;project&gt;</span> is your repo path with slashes turned to dashes.</p>
+          <div class="code" data-copy="mkdir -p ~/.claude/projects/<project>/memory&#10;cp project-profile.template.md ~/.claude/projects/<project>/memory/project_profile.md">
+            <button class="copy">COPY</button>
+            <div><span class="c-com"># the template ships inside the plugin (plugins/figma-ds/)</span></div>
+            <div>mkdir -p ~/.claude/projects/&lt;project&gt;/memory</div>
+            <div>cp project-profile.template.md ~/.claude/projects/&lt;project&gt;/memory/project_profile.md</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step rv">
+        <div class="step-n">3</div>
+        <div>
+          <h3>Just describe the task</h3>
+          <p>You don’t need to memorize skill names — say what you want and the right one triggers. A few that work well:</p>
+          <div class="ex-prompts">
+            <span class="ex"><b>“</b>Set up tokens for a new design system<b>”</b></span>
+            <span class="ex"><b>“</b>Build a Button component with variants<b>”</b></span>
+            <span class="ex"><b>“</b>Build this screen from the screenshot<b>”</b></span>
+            <span class="ex"><b>“</b>Audit the system for duplication<b>”</b></span>
+            <span class="ex"><b>“</b>Are our specimens up to date?<b>”</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step rv">
+        <div class="step-n">4</div>
+        <div>
+          <h3>Let it learn your system</h3>
+          <p>Every skill reads the profile before it starts and writes durable decisions back when it finishes — a component promoted to a template, a new variant axis, a naming call. The more you use it, the less you re-explain.</p>
+          <p class="note">One writer owns the canonical profile; teammates read the same source of truth. Keep brand-specific facts in the profile, never in the skills — that’s what keeps the toolkit portable.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>
+      <div class="mono" style="font-weight:700;color:var(--ink)">figma-ds <span style="color:var(--ink-faint);font-weight:400">· v0.1.0</span></div>
+      <div style="margin-top:4px">Mode internal · a Claude Code design-system toolkit</div>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap" class="mono">
+      <a href="https://github.com/mwulff-mode/claude-plugins">repository ↗</a>
+      <a href="#top">back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // copy buttons
+  document.querySelectorAll('.code').forEach(function(block){
+    var btn=block.querySelector('.copy'); if(!btn) return;
+    btn.addEventListener('click',function(){
+      var text=(block.getAttribute('data-copy')||'').replace(/&#10;/g,'\n');
+      navigator.clipboard.writeText(text).then(function(){
+        var old=btn.textContent; btn.textContent='COPIED'; btn.style.color='#fff';
+        setTimeout(function(){btn.textContent=old;btn.style.color='';},1300);
+      }).catch(function(){});
+    });
+  });
+
+  // scroll reveal
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+  // nav scroll-spy
+  var sections=['why','model','skills','start'].map(function(id){return document.getElementById(id)});
+  var links={};
+  document.querySelectorAll('.nav-links a').forEach(function(a){links[a.getAttribute('href').slice(1)]=a});
+  var spy=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        Object.values(links).forEach(function(l){l.classList.remove('active')});
+        var id=e.target.id; if(links[id]) links[id].classList.add('active');
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  sections.forEach(function(s){if(s) spy.observe(s)});
+</script>
+</body>
+</html>
